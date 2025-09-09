@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Tencent/WeKnora/internal/types"
-	"github.com/Tencent/WeKnora/internal/types/interfaces"
+	"github.com/Tencent/WeKnowRust/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/types/interfaces"
 	"github.com/redis/go-redis/v9"
 )
 

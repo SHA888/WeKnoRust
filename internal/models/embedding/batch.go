@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/Tencent/WeKnora/internal/models/utils"
+	"github.com/Tencent/WeKnowRust/internal/models/utils"
 	"github.com/panjf2000/ants/v2"
 )
 

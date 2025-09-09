@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Tencent/WeKnora/services/docreader/src/proto"
+	"github.com/Tencent/WeKnowRust/services/docreader/src/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/resolver"

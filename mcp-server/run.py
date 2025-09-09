@@ -18,8 +18,8 @@ def main():
         sys.path.insert(0, str(current_dir))
     
     # 检查环境变量
-    base_url = os.getenv("WEKNORA_BASE_URL", "http://localhost:8080/api/v1")
-    api_key = os.getenv("WEKNORA_API_KEY", "")
+    base_url = os.getenv("WEKNOWRUST_BASE_URL", "http://localhost:8080/api/v1")
+    api_key = os.getenv("WEKNOWRUST_API_KEY", "")
     
     print("WeKnora MCP Server")
     print(f"Base URL: {base_url}")

@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Tencent/WeKnora/internal/tracing"
-	"github.com/Tencent/WeKnora/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/tracing"
+	"github.com/Tencent/WeKnowRust/internal/types"
 	"go.opentelemetry.io/otel/attribute"
 )
 

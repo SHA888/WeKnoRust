@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Tencent/WeKnora/internal/types"
-	"github.com/Tencent/WeKnora/internal/types/interfaces"
+	"github.com/Tencent/WeKnowRust/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/types/interfaces"
 )
 
 // 内存流信息

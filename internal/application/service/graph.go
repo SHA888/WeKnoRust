@@ -10,12 +10,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Tencent/WeKnora/internal/common"
-	"github.com/Tencent/WeKnora/internal/config"
-	"github.com/Tencent/WeKnora/internal/logger"
-	"github.com/Tencent/WeKnora/internal/models/chat"
-	"github.com/Tencent/WeKnora/internal/models/utils"
-	"github.com/Tencent/WeKnora/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/common"
+	"github.com/Tencent/WeKnowRust/internal/config"
+	"github.com/Tencent/WeKnowRust/internal/logger"
+	"github.com/Tencent/WeKnowRust/internal/models/chat"
+	"github.com/Tencent/WeKnowRust/internal/models/utils"
+	"github.com/Tencent/WeKnowRust/internal/types"
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 )

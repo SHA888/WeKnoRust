@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/Tencent/WeKnora/internal/logger"
+	"github.com/Tencent/WeKnowRust/internal/logger"
 	"github.com/ollama/ollama/api"
 )
 

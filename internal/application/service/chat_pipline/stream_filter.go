@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 
-	"github.com/Tencent/WeKnora/internal/logger"
-	"github.com/Tencent/WeKnora/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/logger"
+	"github.com/Tencent/WeKnowRust/internal/types"
 )
 
 // PluginStreamFilter implements stream filtering functionality for chat pipeline

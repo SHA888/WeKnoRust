@@ -3,7 +3,7 @@ package common
 import (
 	"log"
 
-	"github.com/Tencent/WeKnora/internal/config"
+	"github.com/Tencent/WeKnowRust/internal/config"
 	"github.com/hibiken/asynq"
 )
 

@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Tencent/WeKnora/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/types"
 	"github.com/sashabaranov/go-openai"
 )
 

@@ -8,14 +8,14 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/Tencent/WeKnora/internal/config"
-	"github.com/Tencent/WeKnora/internal/logger"
-	"github.com/Tencent/WeKnora/internal/models/chat"
-	"github.com/Tencent/WeKnora/internal/models/embedding"
-	"github.com/Tencent/WeKnora/internal/models/rerank"
-	"github.com/Tencent/WeKnora/internal/models/utils/ollama"
-	"github.com/Tencent/WeKnora/internal/types"
-	"github.com/Tencent/WeKnora/internal/types/interfaces"
+	"github.com/Tencent/WeKnowRust/internal/config"
+	"github.com/Tencent/WeKnowRust/internal/logger"
+	"github.com/Tencent/WeKnowRust/internal/models/chat"
+	"github.com/Tencent/WeKnowRust/internal/models/embedding"
+	"github.com/Tencent/WeKnowRust/internal/models/rerank"
+	"github.com/Tencent/WeKnowRust/internal/models/utils/ollama"
+	"github.com/Tencent/WeKnowRust/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/types/interfaces"
 )
 
 // TestDataService 测试数据服务

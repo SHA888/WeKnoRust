@@ -2,7 +2,7 @@
 
 # Show help
 help:
-	@echo "WeKnora Makefile 帮助"
+	@echo "WeKnowRust Makefile 帮助"
 	@echo ""
 	@echo "基础命令:"
 	@echo "  build             构建应用"
@@ -39,11 +39,11 @@ help:
 	@echo "  docs              生成 API 文档"
 
 # Go related variables
-BINARY_NAME=WeKnora
+BINARY_NAME=WeKnowRust
 MAIN_PATH=./cmd/server
 
 # Docker related variables
-DOCKER_IMAGE=WeKnora
+DOCKER_IMAGE=WeKnowRust
 DOCKER_TAG=latest
 
 # Build the application
@@ -141,14 +141,14 @@ build-prod:
 
 clean-db:
 	@echo "Cleaning database..."
-	@if [ $$(docker volume ls -q -f name=weknora_postgres-data) ]; then \
-		docker volume rm weknora_postgres-data; \
+	@if [ $$(docker volume ls -q -f name=weknowrust_postgres-data) ]; then \
+		docker volume rm weknowrust_postgres-data; \
 	fi
-	@if [ $$(docker volume ls -q -f name=weknora_minio_data) ]; then \
-		docker volume rm weknora_minio_data; \
+	@if [ $$(docker volume ls -q -f name=weknowrust_minio_data) ]; then \
+		docker volume rm weknowrust_minio_data; \
 	fi
-	@if [ $$(docker volume ls -q -f name=weknora_redis_data) ]; then \
-		docker volume rm weknora_redis_data; \
+	@if [ $$(docker volume ls -q -f name=weknowrust_redis_data) ]; then \
+		docker volume rm weknowrust_redis_data; \
 	fi
 
 

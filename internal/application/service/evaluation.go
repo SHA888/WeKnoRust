@@ -7,10 +7,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Tencent/WeKnora/internal/config"
-	"github.com/Tencent/WeKnora/internal/logger"
-	"github.com/Tencent/WeKnora/internal/types"
-	"github.com/Tencent/WeKnora/internal/types/interfaces"
+	"github.com/Tencent/WeKnowRust/internal/config"
+	"github.com/Tencent/WeKnowRust/internal/logger"
+	"github.com/Tencent/WeKnowRust/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/types/interfaces"
 	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 )

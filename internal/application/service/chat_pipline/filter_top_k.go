@@ -3,8 +3,8 @@ package chatpipline
 import (
 	"context"
 
-	"github.com/Tencent/WeKnora/internal/logger"
-	"github.com/Tencent/WeKnora/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/logger"
+	"github.com/Tencent/WeKnowRust/internal/types"
 )
 
 // PluginFilterTopK is a plugin that filters search results to keep only the top K items

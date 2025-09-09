@@ -3,7 +3,7 @@ package interfaces
 import (
 	"context"
 
-	"github.com/Tencent/WeKnora/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/types"
 )
 
 // EvaluationService defines operations for evaluation tasks

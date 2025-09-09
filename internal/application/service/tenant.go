@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Tencent/WeKnora/internal/logger"
-	"github.com/Tencent/WeKnora/internal/types"
-	"github.com/Tencent/WeKnora/internal/types/interfaces"
+	"github.com/Tencent/WeKnowRust/internal/logger"
+	"github.com/Tencent/WeKnowRust/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/types/interfaces"
 )
 
 var apiKeySecret = []byte(os.Getenv("TENANT_AES_KEY"))

@@ -1,17 +1,17 @@
 <p align="center">
   <picture>
-    <img src="./docs/images/logo.png" alt="WeKnora Logo" height="120"/>
+    <img src="./docs/images/logo.png" alt="WeKnowRust Logo" height="120"/>
   </picture>
 </p>
 
 <p align="center">
-    <a href="https://weknora.weixin.qq.com" target="_blank">
-        <img alt="官方网站" src="https://img.shields.io/badge/官方网站-WeKnora-4e6b99">
+    <a href="https://weknowrust.weixin.qq.com" target="_blank">
+        <img alt="Official Website" src="https://img.shields.io/badge/Official%20Website-WeKnowRust-4e6b99">
     </a>
     <a href="https://chatbot.weixin.qq.com" target="_blank">
-        <img alt="微信对话开放平台" src="https://img.shields.io/badge/微信对话开放平台-5ac725">
+        <img alt="WeChat Dialog Open Platform" src="https://img.shields.io/badge/WeChat%20Dialog%20Open%20Platform-5ac725">
     </a>
-    <a href="https://github.com/Tencent/WeKnora/blob/main/LICENSE">
+    <a href="https://github.com/Tencent/WeKnowRust/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-MIT-ffffff?labelColor=d4eaf7&color=2e6cc4" alt="License">
     </a>
     <a href="./CHANGELOG.md">
@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-| <b>English</b> | <a href="./README_CN.md"><b>简体中文</b></a> | <a href="./README_JA.md"><b>日本語</b></a> |
+| <b>English</b> | <a href="./README_CN.md"><b>Simplified Chinese</b></a> | <a href="./README_JA.md"><b>Japanese</b></a> |
 </p>
 
 <p align="center">
@@ -31,21 +31,21 @@
   </h4>
 </p>
 
-# 💡 WeKnora - LLM-Powered Document Understanding & Retrieval Framework
+# 💡 WeKnowRust - LLM-Powered Document Understanding & Retrieval Framework
 
 ## 📌 Overview
 
-[**WeKnora**](https://weknora.weixin.qq.com) is an LLM-powered framework designed for deep document understanding and semantic retrieval, especially for handling complex, heterogeneous documents. 
+[**WeKnowRust**](https://weknowrust.weixin.qq.com) is an LLM-powered framework designed for deep document understanding and semantic retrieval, especially for handling complex, heterogeneous documents. 
 
-It adopts a modular architecture that combines multimodal preprocessing, semantic vector indexing, intelligent retrieval, and large language model inference. At its core, WeKnora follows the **RAG (Retrieval-Augmented Generation)** paradigm, enabling high-quality, context-aware answers by combining relevant document chunks with model reasoning.
+It adopts a modular architecture that combines multimodal preprocessing, semantic vector indexing, intelligent retrieval, and large language model inference. At its core, WeKnowRust follows the **RAG (Retrieval-Augmented Generation)** paradigm, enabling high-quality, context-aware answers by combining relevant document chunks with model reasoning.
 
-**Website:** https://weknora.weixin.qq.com
+**Website:** https://weknowrust.weixin.qq.com
 
 ## 🏗️ Architecture
 
-![weknora-pipeline.png](./docs/images/pipeline.jpg)
+![weknowrust-pipeline.png](./docs/images/pipeline.jpg)
 
-WeKnora employs a modern modular design to build a complete document understanding and retrieval pipeline. The system primarily includes document parsing, vector processing, retrieval engine, and large model inference as core modules, with each component being flexibly configurable and extendable.
+WeKnowRust employs a modern modular design to build a complete document understanding and retrieval pipeline. The system primarily includes document parsing, vector processing, retrieval engine, and large model inference as core modules, with each component being flexibly configurable and extendable.
 
 ## 🎯 Key Features
 
@@ -96,8 +96,8 @@ Make sure the following tools are installed on your system:
 
 ```bash
 # Clone the main repository
-git clone https://github.com/Tencent/WeKnora.git
-cd WeKnora
+git clone https://github.com/Tencent/WeKnowRust.git
+cd WeKnowRust
 ```
 
 #### ② Configure environment variables
@@ -147,17 +147,17 @@ Once started, services will be available at:
 
 ### 🔌 Using WeChat Dialog Open Platform
 
-WeKnora serves as the core technology framework for the [WeChat Dialog Open Platform](https://chatbot.weixin.qq.com), providing a more convenient usage approach:
+WeKnowRust serves as the core technology framework for the [WeChat Dialog Open Platform](https://chatbot.weixin.qq.com), providing a more convenient usage approach:
 
 - **Zero-code Deployment**: Simply upload knowledge to quickly deploy intelligent Q&A services within the WeChat ecosystem, achieving an "ask and answer" experience
 - **Efficient Question Management**: Support for categorized management of high-frequency questions, with rich data tools to ensure accurate, reliable, and easily maintainable answers
-- **WeChat Ecosystem Integration**: Through the WeChat Dialog Open Platform, WeKnora's intelligent Q&A capabilities can be seamlessly integrated into WeChat Official Accounts, Mini Programs, and other WeChat scenarios, enhancing user interaction experiences
+- **WeChat Ecosystem Integration**: Through the WeChat Dialog Open Platform, WeKnowRust's intelligent Q&A capabilities can be seamlessly integrated into WeChat Official Accounts, Mini Programs, and other WeChat scenarios, enhancing user interaction experiences
 
-### 🔗 Access WeKnora via MCP Server
+### 🔗 Access WeKnowRust via MCP Server
 
 #### 1️⃣ Clone the repository
 ```
-git clone https://github.com/Tencent/WeKnora
+git clone https://github.com/Tencent/WeKnowRust
 ```
 
 #### 2️⃣ Configure MCP Server
@@ -165,14 +165,14 @@ Configure the MCP client to connect to the server:
 ```json
 {
   "mcpServers": {
-    "weknora": {
+    "weknowrust": {
       "args": [
-        "path/to/WeKnora/mcp-server/run_server.py"
+        "path/to/WeKnowRust/mcp-server/run_server.py"
       ],
       "command": "python",
       "env":{
-        "WEKNORA_API_KEY":"Enter your WeKnora instance, open developer tools, check the request header x-api-key starting with sk",
-        "WEKNORA_BASE_URL":"http(s)://your-weknora-address/api/v1"
+        "WEKNOWRUST_API_KEY":"Enter your WeKnowRust instance, open developer tools, check the request header x-api-key starting with sk",
+        "WEKNOWRUST_BASE_URL":"http(s)://your-weknowrust-address/api/v1"
       }
     }
   }
@@ -181,8 +181,8 @@ Configure the MCP client to connect to the server:
 
 Run directly using stdio command:
 ```
-pip install weknora-mcp-server
-python -m weknora-mcp-server
+pip install weknowrust-mcp-server
+python -m weknowrust-mcp-server
 ```
 
 ## 🔧 Initialization Configuration Guide
@@ -241,7 +241,7 @@ On first access, it will automatically redirect to the initialization configurat
   </tr>
 </table>
 
-WeKnora supports transforming documents into knowledge graphs, displaying the relationships between different sections of the documents. Once the knowledge graph feature is enabled, the system analyzes and constructs an internal semantic association network that not only helps users understand document content but also provides structured support for indexing and retrieval, enhancing the relevance and breadth of search results.
+WeKnowRust supports transforming documents into knowledge graphs, displaying the relationships between different sections of the documents. Once the knowledge graph feature is enabled, the system analyzes and constructs an internal semantic association network that not only helps users understand document content but also provides structured support for indexing and retrieval, enhancing the relevance and breadth of search results.
 
 ### MCP Server Integration Effects
 <img width="950" height="2063" alt="MCP Server Integration Demo" src="https://github.com/user-attachments/assets/09111ec8-0489-415c-969d-aa3835778e14" />
@@ -257,7 +257,7 @@ Detailed API documentation is available at: [API Docs](./docs/API.md)
 ### 📁 Directory Structure
 
 ```
-WeKnora/
+WeKnowRust/
 ├── cmd/         # Main entry point
 ├── internal/    # Core business logic
 ├── config/      # Configuration files
@@ -277,7 +277,7 @@ make clean-db
 
 ## 🤝 Contributing
 
-We welcome community contributions! For suggestions, bugs, or feature requests, please submit an [Issue](https://github.com/Tencent/WeKnora/issues) or directly create a Pull Request.
+We welcome community contributions! For suggestions, bugs, or feature requests, please submit an [Issue](https://github.com/Tencent/WeKnowRust/issues) or directly create a Pull Request.
 
 ### 🎯 How to Contribute
 

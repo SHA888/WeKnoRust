@@ -7,7 +7,7 @@ package interfaces
 import (
 	"context"
 
-	"github.com/Tencent/WeKnora/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/types"
 )
 
 // KnowledgeBaseService defines the knowledge base service interface

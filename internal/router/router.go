@@ -7,10 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/dig"
 
-	"github.com/Tencent/WeKnora/internal/config"
-	"github.com/Tencent/WeKnora/internal/handler"
-	"github.com/Tencent/WeKnora/internal/middleware"
-	"github.com/Tencent/WeKnora/internal/types/interfaces"
+	"github.com/Tencent/WeKnowRust/internal/config"
+	"github.com/Tencent/WeKnowRust/internal/handler"
+	"github.com/Tencent/WeKnowRust/internal/middleware"
+	"github.com/Tencent/WeKnowRust/internal/types/interfaces"
 )
 
 // RouterParams 路由参数

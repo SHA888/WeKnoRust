@@ -14,11 +14,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/Tencent/WeKnora/internal/config"
-	"github.com/Tencent/WeKnora/internal/container"
-	"github.com/Tencent/WeKnora/internal/runtime"
-	"github.com/Tencent/WeKnora/internal/tracing"
-	"github.com/Tencent/WeKnora/internal/types/interfaces"
+	"github.com/Tencent/WeKnowRust/internal/config"
+	"github.com/Tencent/WeKnowRust/internal/container"
+	"github.com/Tencent/WeKnowRust/internal/runtime"
+	"github.com/Tencent/WeKnowRust/internal/tracing"
+	"github.com/Tencent/WeKnowRust/internal/types/interfaces"
 )
 
 func main() {

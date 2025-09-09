@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"sort"
 
-	"github.com/Tencent/WeKnora/internal/logger"
-	"github.com/Tencent/WeKnora/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/logger"
+	"github.com/Tencent/WeKnowRust/internal/types"
 )
 
 // PluginMerge handles merging of search result chunks

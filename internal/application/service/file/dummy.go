@@ -6,7 +6,7 @@ import (
 	"io"
 	"mime/multipart"
 
-	"github.com/Tencent/WeKnora/internal/types/interfaces"
+	"github.com/Tencent/WeKnowRust/internal/types/interfaces"
 	"github.com/google/uuid"
 )
 

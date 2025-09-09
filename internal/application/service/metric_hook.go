@@ -4,10 +4,10 @@ import (
 	"context"
 	"sync"
 
-	"github.com/Tencent/WeKnora/internal/application/service/metric"
-	"github.com/Tencent/WeKnora/internal/logger"
-	"github.com/Tencent/WeKnora/internal/types"
-	"github.com/Tencent/WeKnora/internal/types/interfaces"
+	"github.com/Tencent/WeKnowRust/internal/application/service/metric"
+	"github.com/Tencent/WeKnowRust/internal/logger"
+	"github.com/Tencent/WeKnowRust/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/types/interfaces"
 )
 
 // MetricList stores and aggregates metric results

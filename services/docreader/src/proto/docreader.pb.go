@@ -747,7 +747,7 @@ const file_docreader_proto_rawDesc = "" +
 	"\x05MINIO\x10\x022\x9f\x01\n" +
 	"\tDocReader\x12I\n" +
 	"\fReadFromFile\x12\x1e.docreader.ReadFromFileRequest\x1a\x17.docreader.ReadResponse\"\x00\x12G\n" +
-	"\vReadFromURL\x12\x1d.docreader.ReadFromURLRequest\x1a\x17.docreader.ReadResponse\"\x00B5Z3github.com/Tencent/WeKnora/internal/docreader/protob\x06proto3"
+	"\vReadFromURL\x12\x1d.docreader.ReadFromURLRequest\x1a\x17.docreader.ReadResponse\"\x00B5Z3github.com/Tencent/WeKnowRust/internal/docreader/protob\x06proto3"
 
 var (
 	file_docreader_proto_rawDescOnce sync.Once

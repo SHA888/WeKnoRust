@@ -1,4 +1,4 @@
-module github.com/Tencent/WeKnora
+module github.com/Tencent/WeKnowRust
 
 go 1.24.0
 

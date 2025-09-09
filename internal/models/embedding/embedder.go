@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Tencent/WeKnora/internal/models/utils/ollama"
-	"github.com/Tencent/WeKnora/internal/runtime"
-	"github.com/Tencent/WeKnora/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/models/utils/ollama"
+	"github.com/Tencent/WeKnowRust/internal/runtime"
+	"github.com/Tencent/WeKnowRust/internal/types"
 )
 
 // Embedder defines the interface for text vectorization

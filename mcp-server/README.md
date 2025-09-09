@@ -1,6 +1,6 @@
-# WeKnora MCP Server
+# WeKnowRust MCP Server
 
-这是一个 Model Context Protocol (MCP) 服务器，提供对 WeKnora 知识管理 API 的访问。
+这是一个 Model Context Protocol (MCP) 服务器，提供对 WeKnowRust 知识管理 API 的访问。
 
 ## 快速开始
 
@@ -12,16 +12,16 @@ pip install -r requirements.txt
 ### 2. 配置环境变量
 ```bash
 # Linux/macOS
-export WEKNORA_BASE_URL="http://localhost:8080/api/v1"
-export WEKNORA_API_KEY="your_api_key_here"
+export WEKNOWRUST_BASE_URL="http://localhost:8080/api/v1"
+export WEKNOWRUST_API_KEY="your_api_key_here"
 
 # Windows PowerShell
-$env:WEKNORA_BASE_URL="http://localhost:8080/api/v1"
-$env:WEKNORA_API_KEY="your_api_key_here"
+$env:WEKNOWRUST_BASE_URL="http://localhost:8080/api/v1"
+$env:WEKNOWRUST_API_KEY="your_api_key_here"
 
 # Windows CMD
-set WEKNORA_BASE_URL=http://localhost:8080/api/v1
-set WEKNORA_API_KEY=your_api_key_here
+set WEKNOWRUST_BASE_URL=http://localhost:8080/api/v1
+set WEKNOWRUST_API_KEY=your_api_key_here
 ```
 
 ### 3. 运行服务器
@@ -40,10 +40,10 @@ python run_server.py
 python run.py
 
 # 直接运行服务器模块
-python weknora_mcp_server.py
+python weknowrust_mcp_server.py
 
 # 作为 Python 模块运行
-python -m weknora_mcp_server
+python -m weknowrust_mcp_server
 ```
 
 ### 4. 命令行选项
@@ -63,9 +63,9 @@ pip install -e .
 
 安装后可以使用命令行工具：
 ```bash
-weknora-mcp-server
+weknowrust-mcp-server
 # 或
-weknora-server
+weknowrust-server
 ```
 
 ### 生产模式安装

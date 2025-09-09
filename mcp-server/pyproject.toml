@@ -3,18 +3,18 @@ requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "weknora-mcp-server"
+name = "weknowrust-mcp-server"
 version = "1.0.0"
-description = "WeKnora MCP Server - Model Context Protocol server for WeKnora API"
+description = "WeKnowRust MCP Server - Model Context Protocol server for WeKnowRust API"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "WeKnora Team", email = "support@weknora.com"}
+    {name = "WeKnowRust Team", email = "support@weknowrust.com"}
 ]
 maintainers = [
-    {name = "WeKnora Team", email = "support@weknora.com"}
+    {name = "WeKnowRust Team", email = "support@weknowrust.com"}
 ]
-keywords = ["mcp", "model-context-protocol", "weknora", "knowledge-management", "api-server"]
+keywords = ["mcp", "model-context-protocol", "weknowrust", "knowledge-management", "api-server"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -51,13 +51,16 @@ test = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/NannaOlympicBroadcast/WeKnoraMCP"
-Documentation = "https://docs.weknora.com"
-Repository = "https://github.com/NannaOlympicBroadcast/WeKnoraMCP"
-"Bug Reports" = "https://github.com/NannaOlympicBroadcast/WeKnoraMCP/issues"
-Changelog = "https://github.com/NannaOlympicBroadcast/WeKnoraMCP/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/NannaOlympicBroadcast/WeKnowRustMCP"
+Documentation = "https://docs.weknowrust.com"
+Repository = "https://github.com/NannaOlympicBroadcast/WeKnowRustMCP"
+"Bug Reports" = "https://github.com/NannaOlympicBroadcast/WeKnowRustMCP/issues"
+Changelog = "https://github.com/NannaOlympicBroadcast/WeKnowRustMCP/blob/main/CHANGELOG.md"
 
 [project.scripts]
+weknowrust-mcp-server = "main:sync_main"
+weknowrust-server = "run_server:main"
+# Backward compatibility scripts (optional)
 weknora-mcp-server = "main:sync_main"
 weknora-server = "run_server:main"
 

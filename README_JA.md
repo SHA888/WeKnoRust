@@ -1,17 +1,17 @@
 <p align="center">
   <picture>
-    <img src="./docs/images/logo.png" alt="WeKnora Logo" height="120"/>
+    <img src="./docs/images/logo.png" alt="WeKnowRust Logo" height="120"/>
   </picture>
 </p>
 
 <p align="center">
-    <a href="https://weknora.weixin.qq.com" target="_blank">
-        <img alt="公式サイト" src="https://img.shields.io/badge/公式サイト-WeKnora-4e6b99">
+    <a href="https://weknowrust.weixin.qq.com" target="_blank">
+        <img alt="公式サイト" src="https://img.shields.io/badge/公式サイト-WeKnowRust-4e6b99">
     </a>
     <a href="https://chatbot.weixin.qq.com" target="_blank">
         <img alt="WeChat対話オープンプラットフォーム" src="https://img.shields.io/badge/WeChat対話オープンプラットフォーム-5ac725">
     </a>
-    <a href="https://github.com/Tencent/WeKnora/blob/main/LICENSE">
+    <a href="https://github.com/Tencent/WeKnowRust/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-MIT-ffffff?labelColor=d4eaf7&color=2e6cc4" alt="License">
     </a>
     <a href="./CHANGELOG.md">
@@ -31,21 +31,21 @@
   </h4>
 </p>
 
-# 💡 WeKnora - 大規模言語モデルベースの文書理解検索フレームワーク
+# 💡 WeKnowRust - 大規模言語モデルベースの文書理解検索フレームワーク
 
 ## 📌 プロジェクト紹介
 
-[**WeKnora（ウィーノラ）**](https://weknora.weixin.qq.com) は、大規模言語モデル（LLM）をベースとした文書理解と意味検索フレームワークで、構造が複雑で内容が異質な文書シナリオ向けに特別に設計されています。
+[**WeKnowRust（ウィーノラ）**](https://weknowrust.weixin.qq.com) は、大規模言語モデル（LLM）をベースとした文書理解と意味検索フレームワークで、構造が複雑で内容が異質な文書シナリオ向けに特別に設計されています。
 
 フレームワークはモジュラーアーキテクチャを採用し、マルチモーダル前処理、意味ベクトルインデックス、インテリジェント検索、大規模モデル生成推論を統合して、効率的で制御可能な文書Q&Aワークフローを構築します。コア検索プロセスは **RAG（Retrieval-Augmented Generation）** メカニズムに基づいており、文脈関連フラグメントと言語モデルを組み合わせて、より高品質な意味的回答を実現します。
 
-**公式サイト：** https://weknora.weixin.qq.com
+**公式サイト：** https://weknowrust.weixin.qq.com
 
 ## 🏗️ アーキテクチャ設計
 
-![weknora-pipelone.png](./docs/images/pipeline.jpg)
+![weknowrust-pipelone.png](./docs/images/pipeline.jpg)
 
-WeKnoraは現代的なモジュラー設計を採用し、完全な文書理解と検索パイプラインを構築しています。システムには主に文書解析、ベクトル化処理、検索エンジン、大規模モデル推論などのコアモジュールが含まれ、各コンポーネントは柔軟に設定および拡張できます。
+WeKnowRustは現代的なモジュラー設計を採用し、完全な文書理解と検索パイプラインを構築しています。システムには主に文書解析、ベクトル化処理、検索エンジン、大規模モデル推論などのコアモジュールが含まれ、各コンポーネントは柔軟に設定および拡張できます。
 
 ## 🎯 コア機能
 
@@ -96,8 +96,8 @@ WeKnoraは現代的なモジュラー設計を採用し、完全な文書理解�
 
 ```bash
 # メインリポジトリをクローン
-git clone https://github.com/Tencent/WeKnora.git
-cd WeKnora
+git clone https://github.com/Tencent/WeKnowRust.git
+cd WeKnowRust
 ```
 
 #### ② 環境変数の設定
@@ -147,30 +147,30 @@ make stop-all
 
 ### 🔌 WeChat対話オープンプラットフォームの使用
 
-WeKnoraは[WeChat対話オープンプラットフォーム](https://chatbot.weixin.qq.com)のコア技術フレームワークとして、より簡単な使用方法を提供します：
+WeKnowRustは[WeChat対話オープンプラットフォーム](https://chatbot.weixin.qq.com)のコア技術フレームワークとして、より簡単な使用方法を提供します：
 
 - **ノーコードデプロイメント**：知識をアップロードするだけで、WeChatエコシステムで迅速にインテリジェントQ&Aサービスをデプロイし、「即座に質問して即座に回答」の体験を実現
 - **効率的な問題管理**：高頻度の問題の独立した分類管理をサポートし、豊富なデータツールを提供して、正確で信頼性が高く、メンテナンスが容易な回答を保証
-- **WeChatエコシステムカバレッジ**：WeChat対話オープンプラットフォームを通じて、WeKnoraのインテリジェントQ&A能力を公式アカウント、ミニプログラムなどのWeChatシナリオにシームレスに統合し、ユーザーインタラクション体験を向上
+- **WeChatエコシステムカバレッジ**：WeChat対話オープンプラットフォームを通じて、WeKnowRustのインテリジェントQ&A能力を公式アカウント、ミニプログラムなどのWeChatシナリオにシームレスに統合し、ユーザーインタラクション体験を向上
 
-### 🔗MCPサーバーを使用してデプロイ済みのWeKnoraにアクセス
+### 🔗MCPサーバーを使用してデプロイ済みのWeKnowRustにアクセス
 #### 1️⃣リポジトリのクローン
 ```
-git clone https://github.com/Tencent/WeKnora
+git clone https://github.com/Tencent/WeKnowRust
 ```
 #### 2️⃣MCPサーバーの設定
 MCPクライアントでサーバーを設定
 ```json
 {
   "mcpServers": {
-    "weknora": {
+    "weknowrust": {
       "args": [
-        "path/to/WeKnora/mcp-server/run_server.py"
+        "path/to/WeKnowRust/mcp-server/run_server.py"
       ],
       "command": "python",
       "env":{
-        "WEKNORA_API_KEY":"WeKnoraインスタンスに入り、開発者ツールを開いて、リクエストヘッダーx-api-keyを確認、skで始まる",
-        "WEKNORA_BASE_URL":"http(s)://あなたのWeKnoraアドレス/api/v1"
+        "WEKNORA_API_KEY":"WeKnowRustインスタンスに入り、開発者ツールを開いて、リクエストヘッダーx-api-keyを確認、skで始まる",
+        "WEKNORA_BASE_URL":"http(s)://あなたのWeKnowRustアドレス/api/v1"
       }
     }
   }
@@ -178,8 +178,8 @@ MCPクライアントでサーバーを設定
 ```
 stdioコマンドで直接実行
 ```
-pip install weknora-mcp-server
-python -m weknora-mcp-server
+pip install weknowrust-mcp-server
+python -m weknowrust-mcp-server
 ```
 
 ## 🔧 初期設定ガイド
@@ -239,7 +239,7 @@ http://localhost
   </tr>
 </table>
 
-WeKnoraは文書をナレッジグラフに変換し、文書内の異なる段落間の関連関係を表示することをサポートします。ナレッジグラフ機能を有効にすると、システムは文書内部の意味関連ネットワークを分析・構築し、ユーザーが文書内容を理解するのを助けるだけでなく、インデックスと検索に構造化サポートを提供し、検索結果の関連性と幅を向上させます。
+WeKnowRustは文書をナレッジグラフに変換し、文書内の異なる段落間の関連関係を表示することをサポートします。ナレッジグラフ機能を有効にすると、システムは文書内部の意味関連ネットワークを分析・構築し、ユーザーが文書内容を理解するのを助けるだけでなく、インデックスと検索に構造化サポートを提供し、検索結果の関連性と幅を向上させます。
 
 ### 対応MCPサーバー呼び出し効果
 <img width="950" height="2063" alt="118d078426f42f3d4983c13386085d7f" src="https://github.com/user-attachments/assets/09111ec8-0489-415c-969d-aa3835778e14" />
@@ -256,7 +256,7 @@ WeKnoraは文書をナレッジグラフに変換し、文書内の異なる段�
 ### 📁 プロジェクトディレクトリ構造
 
 ```
-WeKnora/
+WeKnowRust/
 ├── cmd/         # アプリケーションエントリー
 ├── internal/    # コアビジネスロジック
 ├── config/      # 設定ファイル
@@ -276,7 +276,7 @@ make clean-db
 
 ## 🤝 貢献ガイド
 
-コミュニティユーザーの貢献を歓迎します！提案、バグ、新機能のリクエストがある場合は、[Issue](https://github.com/Tencent/WeKnora/issues)を通じて提出するか、直接Pull Requestを提出してください。
+コミュニティユーザーの貢献を歓迎します！提案、バグ、新機能のリクエストがある場合は、[Issue](https://github.com/Tencent/WeKnowRust/issues)を通じて提出するか、直接Pull Requestを提出してください。
 
 ### 🎯 貢献方法
 

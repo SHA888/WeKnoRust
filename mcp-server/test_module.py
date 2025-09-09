@@ -45,17 +45,17 @@ def test_environment():
     """测试环境配置"""
     print("\n=== 测试环境配置 ===")
     
-    base_url = os.getenv("WEKNORA_BASE_URL")
-    api_key = os.getenv("WEKNORA_API_KEY")
+    base_url = os.getenv("WEKNOWRUST_BASE_URL")
+    api_key = os.getenv("WEKNOWRUST_API_KEY")
     
-    print(f"WEKNORA_BASE_URL: {base_url or '未设置 (将使用默认值)'}")
-    print(f"WEKNORA_API_KEY: {'已设置' if api_key else '未设置'}")
+    print(f"WEKNOWRUST_BASE_URL: {base_url or '未设置 (将使用默认值)'}")
+    print(f"WEKNOWRUST_API_KEY: {'已设置' if api_key else '未设置'}")
     
     if not base_url:
-        print("提示: 可以设置环境变量 WEKNORA_BASE_URL")
+        print("提示: 可以设置环境变量 WEKNOWRUST_BASE_URL")
     
     if not api_key:
-        print("提示: 建议设置环境变量 WEKNORA_API_KEY")
+        print("提示: 建议设置环境变量 WEKNOWRUST_API_KEY")
     
     return True
 
@@ -66,8 +66,8 @@ def test_client_creation():
     try:
         from weknora_mcp_server import WeKnoraClient
         
-        base_url = os.getenv("WEKNORA_BASE_URL", "http://localhost:8080/api/v1")
-        api_key = os.getenv("WEKNORA_API_KEY", "test_key")
+        base_url = os.getenv("WEKNOWRUST_BASE_URL", "http://localhost:8080/api/v1")
+        api_key = os.getenv("WEKNOWRUST_API_KEY", "test_key")
         
         client = WeKnoraClient(base_url, api_key)
         print("✓ WeKnoraClient 创建成功")

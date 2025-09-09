@@ -5,7 +5,7 @@ import (
 	"io"
 	"mime/multipart"
 
-	"github.com/Tencent/WeKnora/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/types"
 )
 
 // KnowledgeService defines the interface for knowledge services.

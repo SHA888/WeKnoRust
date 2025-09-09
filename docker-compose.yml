@@ -1,7 +1,7 @@
 services:
   app:
-    image: wechatopenai/weknora-app:latest
-    container_name: WeKnora-app
+    image: wechatopenai/weknowrust-app:latest
+    container_name: WeKnowRust-app
     ports:
       - "8080:8080"
     volumes:
@@ -24,7 +24,7 @@ services:
       - DB_NAME=${DB_NAME}
       - TZ=Asia/Shanghai
       - OTEL_EXPORTER_OTLP_ENDPOINT=jaeger:4317
-      - OTEL_SERVICE_NAME=WeKnora
+      - OTEL_SERVICE_NAME=WeKnowRust
       - OTEL_TRACES_EXPORTER=otlp
       - OTEL_METRICS_EXPORTER=none
       - OTEL_LOGS_EXPORTER=none
@@ -69,14 +69,14 @@ services:
       minio:
         condition: service_started
     networks:
-      - WeKnora-network
+      - WeKnowRust-network
     restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
   minio:
     image: minio/minio:latest
-    container_name: WeKnora-minio
+    container_name: WeKnowRust-minio
     ports:
       - "${MINIO_PORT:-9000}:9000"
       - "${MINIO_CONSOLE_PORT:-9001}:9001"
@@ -92,22 +92,22 @@ services:
       timeout: 20s
       retries: 3
     networks:
-      - WeKnora-network
+      - WeKnowRust-network
 
   frontend:
-    image: wechatopenai/weknora-ui:latest
-    container_name: WeKnora-frontend
+    image: wechatopenai/weknowrust-ui:latest
+    container_name: WeKnowRust-frontend
     ports:
       - "80:80"
     depends_on:
       - app
     networks:
-      - WeKnora-network
+      - WeKnowRust-network
     restart: unless-stopped
 
   docreader:
-    image: wechatopenai/weknora-docreader:latest
-    container_name: WeKnora-docreader
+    image: wechatopenai/weknowrust-docreader:latest
+    container_name: WeKnowRust-docreader
     ports:
       - "50051:50051"
     environment:
@@ -153,12 +153,12 @@ services:
     volumes:
       - jaeger_data:/var/lib/jaeger # 持久化 Jaeger 数据
     networks:
-      - WeKnora-network
+      - WeKnowRust-network
     restart: unless-stopped
   # 修改的PostgreSQL配置
   postgres:
     image: paradedb/paradedb:latest
-    container_name: WeKnora-postgres
+    container_name: WeKnowRust-postgres
     ports:
       - "${DB_PORT}:5432"
     environment:
@@ -171,7 +171,7 @@ services:
       - ./migrations/paradedb/00-init-db.sql:/docker-entrypoint-initdb.d/00-init-db.sql
       - ./migrations/paradedb/01-migrate-to-paradedb.sql:/docker-entrypoint-initdb.d/01-migrate-to-paradedb.sql
     networks:
-      - WeKnora-network
+      - WeKnowRust-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       interval: 10s # 增加时间间隔
@@ -184,7 +184,7 @@ services:
 
   redis:
     image: redis:7.0-alpine
-    container_name: WeKnora-redis
+    container_name: WeKnowRust-redis
     ports:
       - "${REDIS_PORT}:6379"
     volumes:
@@ -192,10 +192,10 @@ services:
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
     restart: always
     networks:
-      - WeKnora-network
+      - WeKnowRust-network
 
 networks:
-  WeKnora-network:
+  WeKnowRust-network:
     driver: bridge
 
 volumes:

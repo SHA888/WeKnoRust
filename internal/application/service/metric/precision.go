@@ -1,7 +1,7 @@
 package metric
 
 import (
-	"github.com/Tencent/WeKnora/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/types"
 )
 
 // PrecisionMetric calculates precision for retrieval evaluation

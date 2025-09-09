@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-WeKnora MCP Server
+WeKnowRust MCP Server
 
-A Model Context Protocol server that provides access to the WeKnora knowledge management API.
+A Model Context Protocol server that provides access to the WeKnowRust knowledge management API.
 """
 
 import os
@@ -22,11 +22,11 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Configuration
-WEKNORA_BASE_URL = os.getenv("WEKNORA_BASE_URL", "http://localhost:8080/api/v1")
-WEKNORA_API_KEY = os.getenv("WEKNORA_API_KEY", "")
+WEKNOWRUST_BASE_URL = os.getenv("WEKNOWRUST_BASE_URL", "http://localhost:8080/api/v1")
+WEKNOWRUST_API_KEY = os.getenv("WEKNOWRUST_API_KEY", "")
 
-class WeKnoraClient:
-    """Client for interacting with WeKnora API"""
+class WeKnowRustClient:
+    """Client for interacting with WeKnowRust API"""
     
     def __init__(self, base_url: str, api_key: str):
         self.base_url = base_url
@@ -38,7 +38,7 @@ class WeKnoraClient:
         })
     
     def _request(self, method: str, endpoint: str, **kwargs) -> Dict[str, Any]:
-        """Make a request to the WeKnora API"""
+        """Make a request to the WeKnowRust API"""
         url = f"{self.base_url}{endpoint}"
         try:
             response = self.session.request(method, url, **kwargs)
@@ -201,13 +201,13 @@ class WeKnoraClient:
         return self._request("DELETE", f"/chunks/{knowledge_id}/{chunk_id}")
 
 # Initialize MCP server
-app = Server("weknora-server")
-client = WeKnoraClient(WEKNORA_BASE_URL, WEKNORA_API_KEY)
+app = Server("weknowrust-server")
+client = WeKnowRustClient(WEKNOWRUST_BASE_URL, WEKNOWRUST_API_KEY)
 
 # Tool definitions
 @app.list_tools()
 async def handle_list_tools() -> list[types.Tool]:
-    """List all available WeKnora tools"""
+    """List all available WeKnowRust tools"""
     return [
         # Tenant Management
         types.Tool(

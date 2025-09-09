@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Tencent/WeKnora/internal/common"
-	"github.com/Tencent/WeKnora/internal/types"
+	"github.com/Tencent/WeKnowRust/internal/common"
+	"github.com/Tencent/WeKnowRust/internal/types"
 	"github.com/pgvector/pgvector-go"
 )
 
