@@ -1,43 +1,43 @@
-name: 🐛 Bug 报告
-description: 报告一个 bug 或问题
+name: 🐛 Bug Report
+description: Report a bug or problem
 title: "[Bug]: "
 labels: ["bug", "needs-triage"]
 body:
   - type: markdown
     attributes:
       value: |
-        感谢您报告 bug！请填写以下信息帮助我们快速定位和解决问题。
+        Thank you for reporting a bug! Please provide the information below to help us quickly reproduce and fix the issue.
 
   - type: dropdown
     id: component
     attributes:
-      label: 相关组件
-      description: 选择出现问题的组件
+      label: Affected Component
+      description: Select the component where the issue occurs
       options:
-        - 前端界面
-        - 后端服务及API
-        - 文档解析服务
-        - 向量数据库
-        - 模型服务
-        - 其他
+        - Frontend UI
+        - Backend service/API
+        - Document Reader Service
+        - Vector database
+        - Model service
+        - Other
     validations:
       required: true
 
   - type: textarea
     id: description
     attributes:
-      label: Bug 描述
-      description: 请详细描述遇到的问题
-      placeholder: "请描述 bug 的具体表现..."
+      label: Bug Description
+      description: Describe the problem in detail
+      placeholder: "Describe what happens..."
     validations:
       required: true
 
   - type: textarea
     id: expected
     attributes:
-      label: 期望行为
-      description: 描述您期望的正确行为
-      placeholder: "应该发生什么..."
+      label: Expected Behavior
+      description: Describe what you expected to happen
+      placeholder: "What should happen..."
     validations:
       required: true
 
@@ -45,47 +45,47 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## 📋 日志收集指南
+        ## 📋 Log Collection Guide
         
-        请按照以下步骤收集相关日志：
+        Please collect relevant logs with the following steps:
         
-        **1. 应用模块日志：**
+        **1. App module logs:**
         ```bash
-        docker exec -it WeKnora-app tail -f /var/log/WeKnora.log
+        docker exec -it WeKnowRust-app tail -f /var/log/WeKnowRust.log
         ```
         
-        **2. 文档解析模块日志：**
+        **2. Document reader logs:**
         ```bash
-        docker exec -it WeKnora-docreader tail -f /var/log/docreader.log
+        docker exec -it WeKnowRust-docreader tail -f /var/log/docreader.log
         ```
         
-        请重现问题并收集相关日志，然后粘贴到下面的日志字段中。
+        Reproduce the issue and paste the relevant logs into the field below.
 
   - type: textarea
     id: logs
     attributes:
-      label: 相关日志
-      description: 请按照上面的指南收集并粘贴相关日志
+      label: Relevant Logs
+      description: Paste logs collected per the guide above
       placeholder: |
-        请粘贴从以下命令收集的日志：
-        - docker exec -it WeKnora-app tail -f /var/log/WeKnora.log
-        - docker exec -it WeKnora-docreader tail -f /var/log/docreader.log
+        Paste logs collected via:
+        - docker exec -it WeKnowRust-app tail -f /var/log/WeKnowRust.log
+        - docker exec -it WeKnowRust-docreader tail -f /var/log/docreader.log
       render: shell
 
   - type: input
     id: os
     attributes:
-      label: 操作系统
-      description: 您当前使用的操作系统
-      placeholder: "例如: macOS 13.0, Ubuntu 20.04, Windows 11"
+      label: Operating System
+      description: Your current operating system
+      placeholder: "e.g., macOS 13, Ubuntu 20.04, Windows 11"
     validations:
       required: true
 
   - type: checkboxes
     id: terms
     attributes:
-      label: 确认事项
-      description: 请确认以下事项
+      label: Confirmation
+      description: Please confirm the following
       options:
-        - label: 我已经搜索了现有的 issues，确认这是一个新问题
+        - label: I have searched existing issues and confirm this is new
           required: true
