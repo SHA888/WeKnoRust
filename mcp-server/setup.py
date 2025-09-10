@@ -12,7 +12,7 @@ def read_readme():
         with open("README.md", "r", encoding="utf-8") as f:
             return f.read()
     except FileNotFoundError:
-        return "WeKnowRust MCP Server - Model Context Protocol server for WeKnowRust API"
+        return "WeKnoRust MCP Server - Model Context Protocol server for WeKnowRust API"
 
 # Read requirements
 def read_requirements():
@@ -30,7 +30,7 @@ setup(
     description="WeKnoRust MCP Server - Model Context Protocol server for WeKnoRust API",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
-    url="https://github.com/SHA888/WeKnoRustMCP",
+    url="https://github.com/SHA888/WeKnoRust",
     py_modules=["weknorust_mcp_server", "main", "run_server", "run", "test_module"],
     classifiers=[
         "Development Status :: 4 - Beta",

@@ -21,9 +21,18 @@ from mcp.server.models import InitializationOptions
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Configuration
-WEKNORUST_BASE_URL = os.getenv("WEKNORUST_BASE_URL", "http://localhost:8080/api/v1")
-WEKNORUST_API_KEY = os.getenv("WEKNORUST_API_KEY", "")
+# Configuration (backward compatible)
+def _get_env(name_new: str, name_old: str, default: str = "") -> str:
+    value = os.getenv(name_new)
+    if value is not None and value != "":
+        return value
+    value = os.getenv(name_old)
+    if value is not None and value != "":
+        return value
+    return default
+
+WEKNORUST_BASE_URL = _get_env("WEKNORUST_BASE_URL", "WEKNOWRUST_BASE_URL", "http://localhost:8080/api/v1")
+WEKNORUST_API_KEY = _get_env("WEKNORUST_API_KEY", "WEKNOWRUST_API_KEY", "")
 
 class WeKnoRustClient:
     """Client for interacting with WeKnoRust API"""
@@ -202,7 +211,7 @@ class WeKnoRustClient:
 
 # Initialize MCP server
 app = Server("weknorust-server")
-client = WeKnoRustClient(os.getenv("WEKNORUST_BASE_URL", "http://localhost:8080/api/v1"), os.getenv("WEKNORUST_API_KEY", ""))
+client = WeKnoRustClient(WEKNORUST_BASE_URL, WEKNORUST_API_KEY)
 
 # Tool definitions
 @app.list_tools()

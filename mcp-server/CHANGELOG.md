@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 - Initial release
-- WeKnowRust MCP Server core features
-- Full WeKnowRust API integration
+- WeKnoRust MCP Server core features
+- Full WeKnoRust API integration
 - Tenant management tools
 - Knowledge base management tools
 - Knowledge management tools
@@ -50,12 +50,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### File Structure
 ```
-WeKnowRustMCP/
+WeKnoRustMCP/
 ├── __init__.py              # Package init
 ├── main.py                  # Main entry point (recommended)
 ├── run.py                   # Helper startup script
 ├── run_server.py            # Original startup script
-├── weknowrust_mcp_server.py # MCP server implementation
+├── weknorust_mcp_server.py  # MCP server implementation
 ├── test_module.py           # Module test
 ├── requirements.txt         # Dependencies
 ├── setup.py                 # Setup script (legacy)
@@ -71,10 +71,10 @@ WeKnowRustMCP/
 1. `python main.py` - Main entry point (recommended)
 2. `python run_server.py` - Original startup script
 3. `python run.py` - Helper startup script
-4. `python weknowrust_mcp_server.py` - Run directly
-5. `python -m weknowrust_mcp_server` - Module execution
-6. `weknowrust-mcp-server` - CLI after install
-7. `weknowrust-server` - CLI alias after install
+4. `python weknorust_mcp_server.py` - Run directly
+5. `python -m weknorust_mcp_server` - Module execution
+6. `weknorust-mcp-server` - CLI after install
+7. `weknorust-server` - CLI alias after install
 
 ### Technical Features
 - Based on Model Context Protocol (MCP) 1.0.0+

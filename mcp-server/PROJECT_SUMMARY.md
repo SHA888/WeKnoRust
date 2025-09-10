@@ -1,279 +1,269 @@
-# WeKnowRust MCP Server 可运行模组包 - 项目总结
+# WeKnoRust MCP Server Packaged Module – Project Summary
 
-## 🎉 项目完成状态
+## 🎉 Project Completion Status
 
-✅ **所有测试通过** - 模组已成功打包并可正常运行
+✅ All tests passed — the module is packaged and runs correctly
 
-## 📁 项目结构
+## 📁 Project Structure
 
 ```
-WeKnowRustMCP/
-├── 📦 核心文件
-│   ├── __init__.py              # 包初始化文件
-│   ├── weknowrust_mcp_server.py   # MCP 服务器核心实现
-│   └── requirements.txt        # 项目依赖
+WeKnoRustMCP/
+├── __init__.py              # Package init
+├── weknorust_mcp_server.py  # MCP server core implementation
+├── requirements.txt         # Project dependencies
 │
-├── 🚀 启动脚本 (多种方式)
-│   ├── main.py                 # 主入口点 (推荐) ⭐
-│   ├── run_server.py          # 原始启动脚本
-│   └── run.py                 # 便捷启动脚本
+├── main.py                  # Main entry point (recommended) ⭐
+├── run_server.py            # Original startup script
+├── run.py                   # Convenience startup script
 │
-├── 📋 配置文件
-│   ├── setup.py               # 传统安装脚本
-│   ├── pyproject.toml         # 现代项目配置
-│   └── MANIFEST.in            # 包含文件清单
+├── setup.py                 # Legacy setup script
+├── pyproject.toml           # Modern project configuration
+├── MANIFEST.in              # Package data manifest
 │
-├── 🧪 测试文件
-│   ├── test_module.py         # 模组功能测试
-│   └── test_imports.py        # 导入测试
+├── test_module.py           # Module functionality tests
+├── test_imports.py          # Import tests
 │
-├── 📚 文档文件
-│   ├── README.md              # 项目说明
-│   ├── INSTALL.md             # 详细安装指南
-│   ├── EXAMPLES.md            # 使用示例
-│   ├── CHANGELOG.md           # 更新日志
-│   ├── PROJECT_SUMMARY.md     # 项目总结 (本文件)
-│   └── LICENSE                # MIT 许可证
-│
-└── 📂 其他
-    ├── __pycache__/           # Python 缓存 (自动生成)
-    ├── .codebuddy/           # CodeBuddy 配置
-    └── .venv/                # 虚拟环境 (可选)
+├── README.md                # Project overview
+├── INSTALL.md               # Installation guide
+├── EXAMPLES.md              # Usage examples
+├── CHANGELOG.md             # Change log
+├── PROJECT_SUMMARY.md       # Project summary (this file)
+└── LICENSE                  # MIT License
 ```
 
-## 🚀 启动方式 (7种)
+## 🚀 Startup Methods (7)
 
-### 1. 主入口点 (推荐) ⭐
+### 1. Main entry point (recommended) ⭐
 ```bash
-python main.py                    # 基本启动
-python main.py --check-only       # 仅检查环境
-python main.py --verbose          # 详细日志
-python main.py --help            # 显示帮助
+python main.py                    # Basic start
+python main.py --check-only       # Check environment only
+python main.py --verbose          # Verbose logging
+python main.py --help             # Help
 ```
 
-### 2. 原始启动脚本
+### 2. Original startup script
 ```bash
 python run_server.py
 ```
 
-### 3. 便捷启动脚本
+### 3. Convenience startup script
 ```bash
 python run.py
 ```
 
-### 4. 直接运行服务器
+### 4. Run the server module directly
 ```bash
-python weknowrust_mcp_server.py
+python weknorust_mcp_server.py
 ```
 
-### 5. 作为模块运行
+### 5. Run as a module
 ```bash
-python -m weknowrust_mcp_server
+python -m weknorust_mcp_server
 ```
 
-### 6. 安装后命令行工具
+### 6. CLI after installation
 ```bash
-pip install -e .                  # 开发模式安装
-weknowrust-mcp-server               # 主命令
-weknowrust-server                   # 别名命令
+pip install -e .                  # Development install
+weknorust-mcp-server              # Main command
+weknorust-server                  # Alias command
 ```
 
-### 7. 生产环境安装
+### 7. Production install
 ```bash
-pip install .                    # 生产安装
-weknowrust-mcp-server              # 全局命令
+pip install .                    # Production install
+weknorust-mcp-server             # Global command
 ```
 
-## 🔧 环境配置
+## 🔧 Environment Configuration
 
-### 必需环境变量
+### Required environment variables
 ```bash
 # Linux/macOS
-export WEKNOWRUST_BASE_URL="http://localhost:8080/api/v1"
-export WEKNOWRUST_API_KEY="your_api_key_here"
+export WEKNORUST_BASE_URL="http://localhost:8080/api/v1"
+export WEKNORUST_API_KEY="your_api_key_here"
 
 # Windows PowerShell
-$env:WEKNOWRUST_BASE_URL="http://localhost:8080/api/v1"
-$env:WEKNOWRUST_API_KEY="your_api_key_here"
+$env:WEKNORUST_BASE_URL="http://localhost:8080/api/v1"
+$env:WEKNORUST_API_KEY="your_api_key_here"
 
 # Windows CMD
-set WEKNOWRUST_BASE_URL=http://localhost:8080/api/v1
-set WEKNOWRUST_API_KEY=your_api_key_here
+set WEKNORUST_BASE_URL=http://localhost:8080/api/v1
+set WEKNORUST_API_KEY=your_api_key_here
 ```
 
-## 🛠️ 功能特性
+## 🛠️ Features
 
-### MCP 工具 (21个)
-- **租户管理**: `create_tenant`, `list_tenants`
-- **知识库管理**: `create_knowledge_base`, `list_knowledge_bases`, `get_knowledge_base`, `delete_knowledge_base`, `hybrid_search`
-- **知识管理**: `create_knowledge_from_url`, `list_knowledge`, `get_knowledge`, `delete_knowledge`
-- **模型管理**: `create_model`, `list_models`, `get_model`
-- **会话管理**: `create_session`, `get_session`, `list_sessions`, `delete_session`
-- **聊天功能**: `chat`
-- **块管理**: `list_chunks`, `delete_chunk`
+### MCP Tools (21)
+- Tenant management: `create_tenant`, `list_tenants`
+- Knowledge base management: `create_knowledge_base`, `list_knowledge_bases`, `get_knowledge_base`, `delete_knowledge_base`, `hybrid_search`
+- Knowledge management: `create_knowledge_from_url`, `list_knowledge`, `get_knowledge`, `delete_knowledge`
+- Model management: `create_model`, `list_models`, `get_model`
+- Session management: `create_session`, `get_session`, `list_sessions`, `delete_session`
+- Chat: `chat`
+- Chunk management: `list_chunks`, `delete_chunk`
 
-### 技术特性
-- ✅ 异步 I/O 支持
-- ✅ 完整错误处理
-- ✅ 详细日志记录
-- ✅ 环境变量配置
-- ✅ 命令行参数支持
-- ✅ 多种安装方式
-- ✅ 开发和生产模式
-- ✅ 完整测试覆盖
+### Technical Highlights
+- ✅ Async I/O support
+- ✅ Comprehensive error handling
+- ✅ Detailed logging
+- ✅ Environment variable configuration
+- ✅ CLI arguments support
+- ✅ Multiple installation methods
+- ✅ Dev and production modes
+- ✅ Comprehensive test coverage
 
-## 📦 安装方式
+## 📦 Installation Methods
 
-### 快速开始
+### Quick Start
 ```bash
-# 1. 安装依赖
+# 1. Install dependencies
 pip install -r requirements.txt
 
-# 2. 设置环境变量
-export WEKNOWRUST_BASE_URL="http://localhost:8080/api/v1"
-export WEKNOWRUST_API_KEY="your_api_key"
+# 2. Set environment variables
+export WEKNORUST_BASE_URL="http://localhost:8080/api/v1"
+export WEKNORUST_API_KEY="your_api_key"
 
-# 3. 启动服务器
+# 3. Start the server
 python main.py
 ```
 
-### 开发模式安装
+### Development install
 ```bash
 pip install -e .
 weknowrust-mcp-server
 ```
 
-### 生产模式安装
+### Production install
 ```bash
 pip install .
-weknowrust-mcp-server
+weknorust-mcp-server
 ```
 
-### 构建分发包
+### Build distributions
 ```bash
-# 传统方式
+# Legacy method
 python setup.py sdist bdist_wheel
 
-# 现代方式
+# Modern method
 pip install build
 python -m build
 ```
 
-## 🧪 测试验证
+## 🧪 Testing
 
-### 运行完整测试
+### Run the full tests
 ```bash
 python test_module.py
 ```
 
-### 测试结果
+### Test Results
 ```
-WeKnowRust MCP Server 模组测试
+WeKnoRust MCP Server Module Tests
 ==================================================
-✓ 模块导入测试通过
-✓ 环境配置测试通过  
-✓ 客户端创建测试通过
-✓ 文件结构测试通过
-✓ 入口点测试通过
-✓ 包安装测试通过
+✓ Module import tests passed
+✓ Environment configuration tests passed  
+✓ Client creation tests passed
+✓ File structure tests passed
+✓ Entry point tests passed
+✓ Package installation tests passed
 ==================================================
-测试结果: 6/6 通过
-✓ 所有测试通过！模组可以正常使用。
+Result: 6/6 passed
+✓ All tests passed! The module is ready for use.
 ```
 
-## 🔍 兼容性
+## 🔍 Compatibility
 
-### Python 版本
+### Python versions
 - ✅ Python 3.8+
 - ✅ Python 3.9
 - ✅ Python 3.10
 - ✅ Python 3.11
 - ✅ Python 3.12
 
-### 操作系统
+### Operating systems
 - ✅ Windows 10/11
 - ✅ macOS 10.15+
 - ✅ Linux (Ubuntu, CentOS, etc.)
 
-### 依赖包
+### Dependencies
 - `mcp >= 1.0.0` - Model Context Protocol 核心库
 - `requests >= 2.31.0` - HTTP 请求库
 
-## 📖 文档资源
+## 📖 Documentation
 
-1. **README.md** - 项目概述和快速开始
-2. **INSTALL.md** - 详细安装和配置指南
-3. **EXAMPLES.md** - 完整使用示例和工作流程
-4. **CHANGELOG.md** - 版本更新记录
-5. **PROJECT_SUMMARY.md** - 项目总结 (本文件)
+1. **README.md** - Overview and Quick Start
+2. **INSTALL.md** - Detailed installation and configuration
+3. **EXAMPLES.md** - Usage examples and workflows
+4. **CHANGELOG.md** - Version history
+5. **PROJECT_SUMMARY.md** - Project summary (this file)
 
-## 🎯 使用场景
+## 🎯 Usage Scenarios
 
-### 1. 开发环境
+### 1. Development
 ```bash
 python main.py --verbose
 ```
 
-### 2. 生产环境
+### 2. Production
 ```bash
 pip install .
 weknowrust-mcp-server
 ```
 
-### 3. Docker 部署
+### 3. Docker deployment
 ```dockerfile
 FROM python:3.11-slim
 WORKDIR /app
 COPY . .
 RUN pip install .
-CMD ["weknowrust-mcp-server"]
+CMD ["weknorust-mcp-server"]
 ```
 
-### 4. 系统服务
+### 4. System service
 ```ini
 [Unit]
-Description=WeKnowRust MCP Server
+Description=WeKnoRust MCP Server
 
 [Service]
-ExecStart=/usr/local/bin/weknowrust-mcp-server
-Environment=WEKNOWRUST_BASE_URL=http://localhost:8080/api/v1
+ExecStart=/usr/local/bin/weknorust-mcp-server
+Environment=WEKNORUST_BASE_URL=http://localhost:8080/api/v1
 ```
 
-## 🔧 故障排除
+## 🔧 Troubleshooting
 
-### 常见问题
-1. **导入错误**: 运行 `pip install -r requirements.txt`
-2. **连接错误**: 检查 `WEKNOWRUST_BASE_URL` 设置
-3. **认证错误**: 验证 `WEKNOWRUST_API_KEY` 配置
-4. **环境检查**: 运行 `python main.py --check-only`
+### Common issues
+1. Import errors: run `pip install -r requirements.txt`
+2. Connection errors: check `WEKNORUST_BASE_URL`
+3. Authentication errors: verify `WEKNORUST_API_KEY`
+4. Environment check: run `python main.py --check-only`
 
-### 调试模式
+### Debug mode
 ```bash
-python main.py --verbose          # 详细日志
-python test_module.py            # 运行测试
+python main.py --verbose          # Verbose logs
+python test_module.py             # Run tests
 ```
 
-## 🎉 项目成就
+## 🎉 Project Achievements
 
-✅ **完整的可运行模组** - 从单个脚本转换为完整的 Python 包
-✅ **多种启动方式** - 提供 7 种不同的启动方法
-✅ **完善的文档** - 包含安装、使用、示例等完整文档
-✅ **全面的测试** - 所有功能都经过测试验证
-✅ **现代化配置** - 支持 setup.py 和 pyproject.toml
-✅ **跨平台兼容** - 支持 Windows、macOS、Linux
-✅ **生产就绪** - 可用于开发和生产环境
+✅ Fully runnable module — evolved from a single script to a complete Python package
+✅ Multiple startup methods — 7 different ways to run
+✅ Comprehensive docs — install, usage, examples
+✅ Extensive testing — all features validated
+✅ Modern configuration — supports setup.py and pyproject.toml
+✅ Cross-platform — Windows, macOS, Linux
+✅ Production-ready — suitable for dev and prod
 
-## 🚀 下一步
+## 🚀 Next Steps
 
-1. **部署到生产环境**
-2. **集成到 CI/CD 流程**
-3. **发布到 PyPI**
-4. **添加更多测试用例**
-5. **性能优化和监控**
+1. Deploy to production
+2. Integrate with CI/CD
+3. Publish to PyPI
+4. Add more test cases
+5. Performance optimization and monitoring
 
 ---
 
-**项目状态**: ✅ 完成并可投入使用
-**项目仓库**: https://github.com/SHA888/WeKnoRustMCP
-**最后更新**: 2024年1月
-**版本**: 1.0.0
+**Status**: ✅ Complete and ready to use
+**Repository**: https://github.com/SHA888/WeKnoRust
+**Last updated**: Jan 2024
+**Version**: 1.0.0

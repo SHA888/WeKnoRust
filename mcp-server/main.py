@@ -5,8 +5,8 @@ WeKnoRust MCP Server main entry point
 This file provides a unified entry to start the WeKnoRust MCP server.
 You can run it in multiple ways:
 1. python main.py
-2. python -m weknora_mcp_server
-3. weknowrust-mcp-server (after installation)
+2. python -m weknorust_mcp_server
+3. weknorust-mcp-server (after installation)
 """
 
 import os

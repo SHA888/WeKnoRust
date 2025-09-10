@@ -1,6 +1,6 @@
-# WeKnowRust MCP Server Examples
+# WeKnoRust MCP Server Examples
 
-This document provides detailed usage examples for the WeKnowRust MCP Server.
+This document provides detailed usage examples for the WeKnoRust MCP Server.
 
 ## Basic Usage
 
@@ -21,12 +21,12 @@ python main.py --verbose
 
 ```bash
 # Set environment variables
-export WEKNOWRUST_BASE_URL="http://localhost:8080/api/v1"
-export WEKNOWRUST_API_KEY="your_api_key_here"
+export WEKNORUST_BASE_URL="http://localhost:8080/api/v1"
+export WEKNORUST_API_KEY="your_api_key_here"
 
 # Or set them in a .env file
-echo "WEKNOWRUST_BASE_URL=http://localhost:8080/api/v1" > .env
-echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
+echo "WEKNORUST_BASE_URL=http://localhost:8080/api/v1" > .env
+echo "WEKNORUST_API_KEY=your_api_key_here" >> .env
 ```
 
 ## MCP Tool Examples
@@ -40,8 +40,8 @@ Below are examples for various MCP tools:
 {
   "tool": "create_tenant",
   "arguments": {
-    "name": "我的公司",
-    "description": "公司知识管理系统",
+    "name": "My Company",
+    "description": "Company knowledge management system",
     "business": "technology",
     "retriever_engines": {
       "engines": [
@@ -68,8 +68,8 @@ Below are examples for various MCP tools:
 {
   "tool": "create_knowledge_base",
   "arguments": {
-    "name": "产品文档库",
-    "description": "产品相关文档和资料",
+    "name": "Product Docs",
+    "description": "Product-related documents and materials",
     "embedding_model_id": "text-embedding-ada-002",
     "summary_model_id": "gpt-3.5-turbo"
   }
@@ -100,7 +100,7 @@ Below are examples for various MCP tools:
   "tool": "hybrid_search",
   "arguments": {
     "kb_id": "kb_123456",
-    "query": "如何使用API",
+    "query": "How to use the API",
     "vector_threshold": 0.7,
     "keyword_threshold": 0.5,
     "match_count": 10
@@ -154,7 +154,7 @@ Below are examples for various MCP tools:
     "name": "GPT-4 Chat Model",
     "type": "KnowledgeQA",
     "source": "openai",
-    "description": "OpenAI GPT-4 模型用于知识问答",
+    "description": "OpenAI GPT-4 model for knowledge QA",
     "base_url": "https://api.openai.com/v1",
     "api_key": "sk-...",
     "is_default": true
@@ -215,7 +215,7 @@ Below are examples for various MCP tools:
   "tool": "chat",
   "arguments": {
     "session_id": "sess_345678",
-    "query": "请介绍一下产品的主要功能"
+    "query": "Please introduce the main features of the product"
   }
 }
 ```
@@ -250,7 +250,7 @@ Below are examples for various MCP tools:
 ### Scenario: Build a complete knowledge Q&A system
 
 ```bash
-# 1. 启动服务器
+# 1. Start the server
 python main.py --verbose
 
 # 2. In your MCP client, perform the following steps:
@@ -322,7 +322,7 @@ python main.py --verbose
 ```json
 {
   "error": "Connection refused",
-  "solution": "Verify WEKNOWRUST_BASE_URL and ensure the service is running"
+  "solution": "Verify WEKNORUST_BASE_URL and ensure the service is running"
 }
 ```
 
@@ -330,7 +330,7 @@ python main.py --verbose
 ```json
 {
   "error": "Unauthorized",
-  "solution": "Check WEKNOWRUST_API_KEY is set correctly"
+  "solution": "Check WEKNORUST_API_KEY is set correctly"
 }
 ```
 
@@ -385,19 +385,19 @@ Add the following to your Claude Desktop configuration:
 ```json
 {
   "mcpServers": {
-    "weknowrust": {
+    "weknorust": {
       "command": "python",
       "args": ["path/to/main.py"],
       "env": {
-        "WEKNOWRUST_BASE_URL": "http://localhost:8080/api/v1",
-        "WEKNOWRUST_API_KEY": "your_api_key"
+        "WEKNORUST_BASE_URL": "http://localhost:8080/api/v1",
+        "WEKNORUST_API_KEY": "your_api_key"
       }
     }
   }
 }
 ```
 
-Project repository: https://github.com/SHA888/WeKnoRustMCP
+Project repository: https://github.com/SHA888/WeKnoRust
 
 ### Integration with other MCP clients
 Refer to each client’s documentation to configure the server command and environment variables.
@@ -407,5 +407,5 @@ Refer to each client’s documentation to configure the server command and envir
 If you encounter issues:
 1. Run `python main.py --check-only` to check the environment
 2. Use `python main.py --verbose` for detailed logs
-3. Ensure the WeKnowRust service is running
+3. Ensure the WeKnoRust service is running
 4. Verify network connectivity and firewall rules
