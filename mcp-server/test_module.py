@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-WeKnora MCP Server 模组测试脚本
+WeKnowRust MCP Server module test script
 
-测试模组的各种启动方式和功能
+Test various startup methods and features of the module.
 """
 
 import os
@@ -12,56 +12,56 @@ import importlib.util
 from pathlib import Path
 
 def test_imports():
-    """测试模块导入"""
-    print("=== 测试模块导入 ===")
+    """Test module imports"""
+    print("=== Test Module Imports ===")
     
     try:
-        # 测试基础依赖
+        # Test base dependencies
         import mcp
-        print("✓ mcp 模块导入成功")
+        print("✓ mcp module import OK")
         
         import requests
-        print("✓ requests 模块导入成功")
+        print("✓ requests module import OK")
         
-        # 测试主模块
+        # Test main module
         import weknora_mcp_server
-        print("✓ weknora_mcp_server 模块导入成功")
+        print("✓ weknora_mcp_server module import OK")
         
-        # 测试包导入
+        # Test package imports
         from weknora_mcp_server import WeKnoraClient, run
-        print("✓ WeKnoraClient 和 run 函数导入成功")
+        print("✓ WeKnoraClient and run import OK")
         
-        # 测试主入口点
+        # Test main entry point
         import main
-        print("✓ main 模块导入成功")
+        print("✓ main module import OK")
         
         return True
         
     except ImportError as e:
-        print(f"✗ 导入失败: {e}")
+        print(f"✗ Import FAILED: {e}")
         return False
 
 def test_environment():
-    """测试环境配置"""
-    print("\n=== 测试环境配置 ===")
+    """Test environment configuration"""
+    print("\n=== Test Environment Configuration ===")
     
     base_url = os.getenv("WEKNOWRUST_BASE_URL")
     api_key = os.getenv("WEKNOWRUST_API_KEY")
     
-    print(f"WEKNOWRUST_BASE_URL: {base_url or '未设置 (将使用默认值)'}")
-    print(f"WEKNOWRUST_API_KEY: {'已设置' if api_key else '未设置'}")
+    print(f"WEKNOWRUST_BASE_URL: {base_url or 'NOT SET (will use default)'}")
+    print(f"WEKNOWRUST_API_KEY: {'SET' if api_key else 'NOT SET'}")
     
     if not base_url:
-        print("提示: 可以设置环境变量 WEKNOWRUST_BASE_URL")
+        print("Tip: You can set environment variable WEKNOWRUST_BASE_URL")
     
     if not api_key:
-        print("提示: 建议设置环境变量 WEKNOWRUST_API_KEY")
+        print("Tip: Consider setting environment variable WEKNOWRUST_API_KEY")
     
     return True
 
 def test_client_creation():
-    """测试客户端创建"""
-    print("\n=== 测试客户端创建 ===")
+    """Test client creation"""
+    print("\n=== Test Client Creation ===")
     
     try:
         from weknora_mcp_server import WeKnoraClient
@@ -70,22 +70,22 @@ def test_client_creation():
         api_key = os.getenv("WEKNOWRUST_API_KEY", "test_key")
         
         client = WeKnoraClient(base_url, api_key)
-        print("✓ WeKnoraClient 创建成功")
+        print("✓ WeKnoraClient created successfully")
         
-        # 检查客户端属性
+        # Verify client properties
         assert client.base_url == base_url
         assert client.api_key == api_key
-        print("✓ 客户端配置正确")
+        print("✓ Client configuration OK")
         
         return True
         
     except Exception as e:
-        print(f"✗ 客户端创建失败: {e}")
+        print(f"✗ Client creation FAILED: {e}")
         return False
 
 def test_file_structure():
-    """测试文件结构"""
-    print("\n=== 测试文件结构 ===")
+    """Test file structure"""
+    print("\n=== Test File Structure ===")
     
     required_files = [
         "__init__.py",
@@ -106,21 +106,21 @@ def test_file_structure():
         if Path(file).exists():
             print(f"✓ {file}")
         else:
-            print(f"✗ {file} (缺失)")
+            print(f"✗ {file} (MISSING)")
             missing_files.append(file)
     
     if missing_files:
-        print(f"缺失文件: {missing_files}")
+        print(f"Missing files: {missing_files}")
         return False
     
-    print("✓ 所有必需文件都存在")
+    print("✓ All required files exist")
     return True
 
 def test_entry_points():
-    """测试入口点"""
-    print("\n=== 测试入口点 ===")
+    """Test entry points"""
+    print("\n=== Test Entry Points ===")
     
-    # 测试 main.py 的帮助选项
+    # Test main.py --help option
     try:
         result = subprocess.run(
             [sys.executable, "main.py", "--help"],
@@ -129,18 +129,18 @@ def test_entry_points():
             timeout=10
         )
         if result.returncode == 0:
-            print("✓ main.py --help 工作正常")
+            print("✓ main.py --help OK")
         else:
-            print(f"✗ main.py --help 失败: {result.stderr}")
+            print(f"✗ main.py --help FAILED: {result.stderr}")
             return False
     except subprocess.TimeoutExpired:
-        print("✗ main.py --help 超时")
+        print("✗ main.py --help TIMEOUT")
         return False
     except Exception as e:
-        print(f"✗ main.py --help 错误: {e}")
+        print(f"✗ main.py --help ERROR: {e}")
         return False
     
-    # 测试环境检查
+    # Test environment check
     try:
         result = subprocess.run(
             [sys.executable, "main.py", "--check-only"],
@@ -149,25 +149,25 @@ def test_entry_points():
             timeout=10
         )
         if result.returncode == 0:
-            print("✓ main.py --check-only 工作正常")
+            print("✓ main.py --check-only OK")
         else:
-            print(f"✗ main.py --check-only 失败: {result.stderr}")
+            print(f"✗ main.py --check-only FAILED: {result.stderr}")
             return False
     except subprocess.TimeoutExpired:
-        print("✗ main.py --check-only 超时")
+        print("✗ main.py --check-only TIMEOUT")
         return False
     except Exception as e:
-        print(f"✗ main.py --check-only 错误: {e}")
+        print(f"✗ main.py --check-only ERROR: {e}")
         return False
     
     return True
 
 def test_package_installation():
-    """测试包安装 (开发模式)"""
-    print("\n=== 测试包安装 ===")
+    """Test package installation (dev mode)"""
+    print("\n=== Test Package Installation ===")
     
     try:
-        # 检查是否可以以开发模式安装
+        # Check setup.py basic invocation
         result = subprocess.run(
             [sys.executable, "setup.py", "check"],
             capture_output=True,
@@ -176,32 +176,32 @@ def test_package_installation():
         )
         
         if result.returncode == 0:
-            print("✓ setup.py 检查通过")
+            print("✓ setup.py check OK")
         else:
-            print(f"✗ setup.py 检查失败: {result.stderr}")
+            print(f"✗ setup.py check FAILED: {result.stderr}")
             return False
             
     except subprocess.TimeoutExpired:
-        print("✗ setup.py 检查超时")
+        print("✗ setup.py check TIMEOUT")
         return False
     except Exception as e:
-        print(f"✗ setup.py 检查错误: {e}")
+        print(f"✗ setup.py check ERROR: {e}")
         return False
     
     return True
 
 def main():
-    """运行所有测试"""
-    print("WeKnora MCP Server 模组测试")
+    """Run all tests"""
+    print("WeKnowRust MCP Server module tests")
     print("=" * 50)
     
     tests = [
-        ("模块导入", test_imports),
-        ("环境配置", test_environment),
-        ("客户端创建", test_client_creation),
-        ("文件结构", test_file_structure),
-        ("入口点", test_entry_points),
-        ("包安装", test_package_installation),
+        ("Module imports", test_imports),
+        ("Environment", test_environment),
+        ("Client creation", test_client_creation),
+        ("File structure", test_file_structure),
+        ("Entry points", test_entry_points),
+        ("Package installation", test_package_installation),
     ]
     
     passed = 0
@@ -212,18 +212,18 @@ def main():
             if test_func():
                 passed += 1
             else:
-                print(f"测试失败: {test_name}")
+                print(f"Test FAILED: {test_name}")
         except Exception as e:
-            print(f"测试异常: {test_name} - {e}")
+            print(f"Test ERROR: {test_name} - {e}")
     
     print("\n" + "=" * 50)
-    print(f"测试结果: {passed}/{total} 通过")
+    print(f"Test results: {passed}/{total} passed")
     
     if passed == total:
-        print("✓ 所有测试通过！模组可以正常使用。")
+        print("✓ All tests passed! Module is usable.")
         return True
     else:
-        print("✗ 部分测试失败，请检查上述错误。")
+        print("✗ Some tests FAILED. See errors above.")
         return False
 
 if __name__ == "__main__":

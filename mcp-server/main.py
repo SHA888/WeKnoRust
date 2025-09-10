@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-WeKnowRust MCP Server 主入口点
+WeKnowRust MCP Server main entry point
 
-这个文件提供了一个统一的入口点来启动 WeKnowRust MCP 服务器。
-可以通过多种方式运行：
+This file provides a unified entry to start the WeKnowRust MCP server.
+You can run it in multiple ways:
 1. python main.py
 2. python -m weknora_mcp_server
-3. weknowrust-mcp-server (安装后)
+3. weknowrust-mcp-server (after installation)
 """
 
 import os
@@ -16,68 +16,68 @@ import argparse
 from pathlib import Path
 
 def setup_environment():
-    """设置环境和路径"""
-    # 确保当前目录在 Python 路径中
+    """Set up environment and paths"""
+    # Ensure current dir is on Python path
     current_dir = Path(__file__).parent.absolute()
     if str(current_dir) not in sys.path:
         sys.path.insert(0, str(current_dir))
 
 def check_dependencies():
-    """检查依赖是否已安装"""
+    """Check required dependencies are installed"""
     try:
         import mcp
         import requests
         return True
     except ImportError as e:
-        print(f"缺少依赖: {e}")
-        print("请运行: pip install -r requirements.txt")
+        print(f"Missing dependency: {e}")
+        print("Please run: pip install -r requirements.txt")
         return False
 
 def check_environment_variables():
-    """检查环境变量配置"""
+    """Check environment variable configuration"""
     base_url = os.getenv("WEKNOWRUST_BASE_URL")
     api_key = os.getenv("WEKNOWRUST_API_KEY")
     
-    print("=== WeKnowRust MCP Server 环境检查 ===")
-    print(f"Base URL: {base_url or 'http://localhost:8080/api/v1 (默认)'}")
-    print(f"API Key: {'已设置' if api_key else '未设置 (警告)'}")
+    print("=== WeKnowRust MCP Server Environment Check ===")
+    print(f"Base URL: {base_url or 'http://localhost:8080/api/v1 (default)'}")
+    print(f"API Key: {'SET' if api_key else 'NOT SET (warning)'}")
     
     if not base_url:
-        print("提示: 可以设置 WEKNOWRUST_BASE_URL 环境变量")
+        print("Tip: You can set WEKNOWRUST_BASE_URL environment variable")
     
     if not api_key:
-        print("警告: 建议设置 WEKNOWRUST_API_KEY 环境变量")
+        print("Warning: It is recommended to set WEKNOWRUST_API_KEY environment variable")
     
     print("=" * 40)
     return True
 
 def parse_arguments():
-    """解析命令行参数"""
+    """Parse command line arguments"""
     parser = argparse.ArgumentParser(
         description="WeKnowRust MCP Server - Model Context Protocol server for WeKnowRust API",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-示例:
-  python main.py                    # 使用默认配置启动
-  python main.py --check-only       # 仅检查环境，不启动服务器
-  python main.py --verbose          # 启用详细日志
+Examples:
+  python main.py                    # Start with default configuration
+  python main.py --check-only       # Check environment, do not start server
+  python main.py --verbose          # Enable verbose logging
   
-环境变量:
-  WEKNOWRUST_BASE_URL    WeKnowRust API 基础 URL (默认: http://localhost:8080/api/v1)
-  WEKNOWRUST_API_KEY     WeKnowRust API 密钥
+Environment variables:
+  WEKNOWRUST_BASE_URL    WeKnowRust API base URL (default: http://localhost:8080/api/v1)
+  WEKNOWRUST_API_KEY     WeKnowRust API key
         """
     )
     
     parser.add_argument(
         "--check-only",
         action="store_true",
-        help="仅检查环境配置，不启动服务器"
+        help="Check environment only, do not start server"
     )
     
     parser.add_argument(
         "--verbose", "-v",
         action="store_true",
-        help="启用详细日志输出"
+        help="Enable verbose logging"
     )
     
     parser.add_argument(
@@ -89,52 +89,52 @@ def parse_arguments():
     return parser.parse_args()
 
 async def main():
-    """主函数"""
+    """Main function"""
     args = parse_arguments()
     
-    # 设置环境
+    # Set up environment
     setup_environment()
     
-    # 检查依赖
+    # Check dependencies
     if not check_dependencies():
         sys.exit(1)
     
-    # 检查环境变量
+    # Check environment variables
     check_environment_variables()
     
-    # 如果只是检查环境，则退出
+    # Exit if only checking environment
     if args.check_only:
-        print("环境检查完成。")
+        print("Environment check complete.")
         return
     
-    # 设置日志级别
+    # Configure logging level
     if args.verbose:
         import logging
         logging.basicConfig(level=logging.DEBUG)
-        print("已启用详细日志模式")
+        print("Verbose logging enabled")
     
     try:
-        print("正在启动 WeKnowRust MCP Server...")
+        print("Starting WeKnowRust MCP Server...")
         
-        # 导入并运行服务器
+        # Import and run server
         from weknora_mcp_server import run
         await run()
         
     except ImportError as e:
-        print(f"导入错误: {e}")
-        print("请确保所有文件都在正确的位置")
+        print(f"Import error: {e}")
+        print("Please ensure all files are in the correct locations")
         sys.exit(1)
     except KeyboardInterrupt:
-        print("\n服务器已停止")
+        print("\nServer stopped")
     except Exception as e:
-        print(f"服务器运行错误: {e}")
+        print(f"Server runtime error: {e}")
         if args.verbose:
             import traceback
             traceback.print_exc()
         sys.exit(1)
 
 def sync_main():
-    """同步版本的主函数，用于 entry_points"""
+    """Synchronous entry point for entry_points"""
     asyncio.run(main())
 
 if __name__ == "__main__":

@@ -51,11 +51,11 @@ test = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/NannaOlympicBroadcast/WeKnowRustMCP"
+Homepage = "https://github.com/SHA888/WeKnoRustMCP"
 Documentation = "https://docs.weknowrust.com"
-Repository = "https://github.com/NannaOlympicBroadcast/WeKnowRustMCP"
-"Bug Reports" = "https://github.com/NannaOlympicBroadcast/WeKnowRustMCP/issues"
-Changelog = "https://github.com/NannaOlympicBroadcast/WeKnowRustMCP/blob/main/CHANGELOG.md"
+Repository = "https://github.com/SHA888/WeKnoRustMCP"
+"Bug Reports" = "https://github.com/SHA888/WeKnoRustMCP/issues"
+Changelog = "https://github.com/SHA888/WeKnoRustMCP/blob/main/CHANGELOG.md"
 
 [project.scripts]
 weknowrust-mcp-server = "main:sync_main"

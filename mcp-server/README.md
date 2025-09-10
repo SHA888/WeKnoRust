@@ -1,15 +1,15 @@
 # WeKnowRust MCP Server
 
-这是一个 Model Context Protocol (MCP) 服务器，提供对 WeKnowRust 知识管理 API 的访问。
+This is a Model Context Protocol (MCP) server that provides access to the WeKnowRust knowledge management API.
 
-## 快速开始
+## Quick Start
 
-### 1. 安装依赖
+### 1) Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. 配置环境变量
+### 2) Configure environment variables
 ```bash
 # Linux/macOS
 export WEKNOWRUST_BASE_URL="http://localhost:8080/api/v1"
@@ -24,114 +24,114 @@ set WEKNOWRUST_BASE_URL=http://localhost:8080/api/v1
 set WEKNOWRUST_API_KEY=your_api_key_here
 ```
 
-### 3. 运行服务器
+### 3) Run the server
 
-**推荐方式 - 使用主入口点：**
+**Recommended – using the main entry point:**
 ```bash
 python main.py
 ```
 
-**其他运行方式：**
+**Other ways to run:**
 ```bash
-# 使用原始启动脚本
+# Use the original startup script
 python run_server.py
 
-# 使用便捷脚本
+# Use helper script
 python run.py
 
-# 直接运行服务器模块
+# Run the server module directly
 python weknowrust_mcp_server.py
 
-# 作为 Python 模块运行
+# Run as a Python module
 python -m weknowrust_mcp_server
 ```
 
-### 4. 命令行选项
+### 4) CLI options
 ```bash
-python main.py --help                 # 显示帮助信息
-python main.py --check-only           # 仅检查环境配置
-python main.py --verbose              # 启用详细日志
-python main.py --version              # 显示版本信息
+python main.py --help                 # Show help
+python main.py --check-only           # Check environment only
+python main.py --verbose              # Enable verbose logs
+python main.py --version              # Show version
 ```
 
-## 安装为 Python 包
+## Install as a Python package
 
-### 开发模式安装
+### Development install
 ```bash
 pip install -e .
 ```
 
-安装后可以使用命令行工具：
+After installation you can use the CLI tools:
 ```bash
 weknowrust-mcp-server
-# 或
+# Or
 weknowrust-server
 ```
 
-### 生产模式安装
+### Production install
 ```bash
 pip install .
 ```
 
-### 构建分发包
+### Build distributions
 ```bash
-# 使用 setuptools
+# Using setuptools
 python setup.py sdist bdist_wheel
 
-# 使用现代构建工具
+# Using modern build tools
 pip install build
 python -m build
 ```
 
-## 测试模组
+## Test module
 
-运行测试脚本验证模组是否正常工作：
+Run the test script to verify the module works:
 ```bash
 python test_module.py
 ```
 
-## 功能特性
+## Features
 
-该 MCP 服务器提供以下工具：
+This MCP server provides the following tools:
 
-### 租户管理
-- `create_tenant` - 创建新租户
-- `list_tenants` - 列出所有租户
+### Tenant management
+- `create_tenant` - Create a new tenant
+- `list_tenants` - List all tenants
 
-### 知识库管理
-- `create_knowledge_base` - 创建知识库
-- `list_knowledge_bases` - 列出知识库
-- `get_knowledge_base` - 获取知识库详情
-- `delete_knowledge_base` - 删除知识库
-- `hybrid_search` - 混合搜索
+### Knowledge base management
+- `create_knowledge_base` - Create a knowledge base
+- `list_knowledge_bases` - List knowledge bases
+- `get_knowledge_base` - Get knowledge base details
+- `delete_knowledge_base` - Delete a knowledge base
+- `hybrid_search` - Hybrid search
 
-### 知识管理
-- `create_knowledge_from_url` - 从 URL 创建知识
-- `list_knowledge` - 列出知识
-- `get_knowledge` - 获取知识详情
-- `delete_knowledge` - 删除知识
+### Knowledge management
+- `create_knowledge_from_url` - Create knowledge from URL
+- `list_knowledge` - List knowledge
+- `get_knowledge` - Get knowledge details
+- `delete_knowledge` - Delete knowledge
 
-### 模型管理
-- `create_model` - 创建模型
-- `list_models` - 列出模型
-- `get_model` - 获取模型详情
+### Model management
+- `create_model` - Create model
+- `list_models` - List models
+- `get_model` - Get model details
 
-### 会话管理
-- `create_session` - 创建聊天会话
-- `get_session` - 获取会话详情
-- `list_sessions` - 列出会话
-- `delete_session` - 删除会话
+### Session management
+- `create_session` - Create a chat session
+- `get_session` - Get session details
+- `list_sessions` - List sessions
+- `delete_session` - Delete session
 
-### 聊天功能
-- `chat` - 发送聊天消息
+### Chat
+- `chat` - Send chat messages
 
-### 块管理
-- `list_chunks` - 列出知识块
-- `delete_chunk` - 删除知识块
+### Chunk management
+- `list_chunks` - List knowledge chunks
+- `delete_chunk` - Delete a knowledge chunk
 
-## 故障排除
+## Troubleshooting
 
-如果遇到导入错误，请确保：
-1. 已安装所有必需的依赖包
-2. Python 版本兼容（推荐 3.8+）
-3. 没有文件名冲突（避免使用 `mcp.py` 作为文件名）
+If you encounter import errors, ensure that:
+1. All required dependencies are installed
+2. You are using a compatible Python version (3.8+ recommended)
+3. There are no filename conflicts (avoid naming files `mcp.py`)

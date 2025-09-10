@@ -30,7 +30,7 @@ setup(
     description="WeKnowRust MCP Server - Model Context Protocol server for WeKnowRust API",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
-    url="https://github.com/NannaOlympicBroadcast/WeKnowRustMCP",
+    url="https://github.com/SHA888/WeKnoRustMCP",
     py_modules=["weknora_mcp_server", "main", "run_server", "run", "test_module"],
     classifiers=[
         "Development Status :: 4 - Beta",

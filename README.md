@@ -5,13 +5,13 @@
 </p>
 
 <p align="center">
-    <a href="https://weknowrust.weixin.qq.com" target="_blank">
+    <a href="https://github.com/SHA888/WeKnoRust" target="_blank">
         <img alt="Official Website" src="https://img.shields.io/badge/Official%20Website-WeKnowRust-4e6b99">
     </a>
-    <a href="https://chatbot.weixin.qq.com" target="_blank">
-        <img alt="WeChat Dialog Open Platform" src="https://img.shields.io/badge/WeChat%20Dialog%20Open%20Platform-5ac725">
+    <a href="https://discord.gg/WeKnowRust" target="_blank">
+        <img alt="Discord" src="https://img.shields.io/badge/Discord-5ac725">
     </a>
-    <a href="https://github.com/Tencent/WeKnowRust/blob/main/LICENSE">
+    <a href="./LICENSE">
         <img src="https://img.shields.io/badge/License-MIT-ffffff?labelColor=d4eaf7&color=2e6cc4" alt="License">
     </a>
     <a href="./CHANGELOG.md">

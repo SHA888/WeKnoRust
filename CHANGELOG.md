@@ -14,4 +14,4 @@ All notable changes to this project will be documented in this file.
 - Docker Compose for quick startup and service orchestration.
 - MCP server support for integrating with MCP-compatible clients.
 
-[0.1.0]: https://github.com/Tencent/WeKnowRust/tree/v0.1.0
+[0.1.0]: https://github.com/SHA888/WeKnowRust/tree/v0.1.0

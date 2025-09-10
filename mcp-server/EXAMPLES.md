@@ -1,41 +1,41 @@
-# WeKnowRust MCP Server 使用示例
+# WeKnowRust MCP Server Examples
 
-本文档提供了 WeKnowRust MCP Server 的详细使用示例。
+This document provides detailed usage examples for the WeKnowRust MCP Server.
 
-## 基本使用
+## Basic Usage
 
-### 1. 启动服务器
+### 1) Start the server
 
 ```bash
-# 推荐方式 - 使用主入口点
+# Recommended – main entry point
 python main.py
 
-# 检查环境配置
+# Check environment configuration
 python main.py --check-only
 
-# 启用详细日志
+# Enable verbose logging
 python main.py --verbose
 ```
 
-### 2. 环境配置示例
+### 2) Environment configuration example
 
 ```bash
-# 设置环境变量
+# Set environment variables
 export WEKNOWRUST_BASE_URL="http://localhost:8080/api/v1"
 export WEKNOWRUST_API_KEY="your_api_key_here"
 
-# 或者在 .env 文件中设置
+# Or set them in a .env file
 echo "WEKNOWRUST_BASE_URL=http://localhost:8080/api/v1" > .env
 echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 ```
 
-## MCP 工具使用示例
+## MCP Tool Examples
 
-以下是各种 MCP 工具的使用示例：
+Below are examples for various MCP tools:
 
-### 租户管理
+### Tenant management
 
-#### 创建租户
+#### Create tenant
 ```json
 {
   "tool": "create_tenant",
@@ -53,7 +53,7 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-#### 列出所有租户
+#### List tenants
 ```json
 {
   "tool": "list_tenants",
@@ -61,9 +61,9 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-### 知识库管理
+### Knowledge base management
 
-#### 创建知识库
+#### Create knowledge base
 ```json
 {
   "tool": "create_knowledge_base",
@@ -76,7 +76,7 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-#### 列出知识库
+#### List knowledge bases
 ```json
 {
   "tool": "list_knowledge_bases",
@@ -84,7 +84,7 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-#### 获取知识库详情
+#### Get knowledge base details
 ```json
 {
   "tool": "get_knowledge_base",
@@ -94,7 +94,7 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-#### 混合搜索
+#### Hybrid search
 ```json
 {
   "tool": "hybrid_search",
@@ -108,9 +108,9 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-### 知识管理
+### Knowledge management
 
-#### 从URL创建知识
+#### Create knowledge from URL
 ```json
 {
   "tool": "create_knowledge_from_url",
@@ -122,7 +122,7 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-#### 列出知识
+#### List knowledge
 ```json
 {
   "tool": "list_knowledge",
@@ -134,7 +134,7 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-#### 获取知识详情
+#### Get knowledge details
 ```json
 {
   "tool": "get_knowledge",
@@ -144,9 +144,9 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-### 模型管理
+### Model management
 
-#### 创建模型
+#### Create model
 ```json
 {
   "tool": "create_model",
@@ -162,7 +162,7 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-#### 列出模型
+#### List models
 ```json
 {
   "tool": "list_models",
@@ -170,9 +170,9 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-### 会话管理
+### Session management
 
-#### 创建聊天会话
+#### Create chat session
 ```json
 {
   "tool": "create_session",
@@ -180,13 +180,13 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
     "kb_id": "kb_123456",
     "max_rounds": 10,
     "enable_rewrite": true,
-    "fallback_response": "抱歉，我无法回答这个问题。",
+    "fallback_response": "Sorry, I cannot answer this question.",
     "summary_model_id": "gpt-3.5-turbo"
   }
 }
 ```
 
-#### 获取会话详情
+#### Get session details
 ```json
 {
   "tool": "get_session",
@@ -196,7 +196,7 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-#### 列出会话
+#### List sessions
 ```json
 {
   "tool": "list_sessions",
@@ -207,9 +207,9 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-### 聊天功能
+### Chat
 
-#### 发送聊天消息
+#### Send chat message
 ```json
 {
   "tool": "chat",
@@ -220,9 +220,9 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-### 块管理
+### Chunk management
 
-#### 列出知识块
+#### List knowledge chunks
 ```json
 {
   "tool": "list_chunks",
@@ -234,7 +234,7 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-#### 删除知识块
+#### Delete knowledge chunk
 ```json
 {
   "tool": "delete_chunk",
@@ -245,112 +245,112 @@ echo "WEKNOWRUST_API_KEY=your_api_key_here" >> .env
 }
 ```
 
-## 完整工作流程示例
+## Full Workflow Example
 
-### 场景：创建一个完整的知识问答系统
+### Scenario: Build a complete knowledge Q&A system
 
 ```bash
 # 1. 启动服务器
 python main.py --verbose
 
-# 2. 在 MCP 客户端中执行以下步骤：
+# 2. In your MCP client, perform the following steps:
 ```
 
-#### 步骤 1: 创建租户
+#### Step 1: Create a tenant
 ```json
 {
   "tool": "create_tenant",
   "arguments": {
-    "name": "技术文档中心",
-    "description": "公司技术文档知识管理",
+    "name": "Tech Docs Center",
+    "description": "Company technical documentation knowledge management",
     "business": "technology"
   }
 }
 ```
 
-#### 步骤 2: 创建知识库
+#### Step 2: Create a knowledge base
 ```json
 {
   "tool": "create_knowledge_base",
   "arguments": {
-    "name": "API文档库",
-    "description": "所有API相关文档"
+    "name": "API Docs",
+    "description": "All API-related documentation"
   }
 }
 ```
 
-#### 步骤 3: 添加知识内容
+#### Step 3: Add knowledge content
 ```json
 {
   "tool": "create_knowledge_from_url",
   "arguments": {
-    "kb_id": "返回的知识库ID",
+    "kb_id": "returned_knowledge_base_id",
     "url": "https://docs.company.com/api",
     "enable_multimodel": true
   }
 }
 ```
 
-#### 步骤 4: 创建聊天会话
+#### Step 4: Create a chat session
 ```json
 {
   "tool": "create_session",
   "arguments": {
-    "kb_id": "知识库ID",
+    "kb_id": "knowledge_base_id",
     "max_rounds": 5,
     "enable_rewrite": true
   }
 }
 ```
 
-#### 步骤 5: 开始对话
+#### Step 5: Start a conversation
 ```json
 {
   "tool": "chat",
   "arguments": {
-    "session_id": "会话ID",
-    "query": "如何使用用户认证API？"
+    "session_id": "session_id",
+    "query": "How to use the user authentication API?"
   }
 }
 ```
 
-## 错误处理示例
+## Error Handling Examples
 
-### 常见错误和解决方案
+### Common errors and solutions
 
-#### 1. 连接错误
+#### 1) Connection error
 ```json
 {
   "error": "Connection refused",
-  "solution": "检查 WEKNOWRUST_BASE_URL 是否正确，确认服务正在运行"
+  "solution": "Verify WEKNOWRUST_BASE_URL and ensure the service is running"
 }
 ```
 
-#### 2. 认证错误
+#### 2) Authentication error
 ```json
 {
   "error": "Unauthorized",
-  "solution": "检查 WEKNOWRUST_API_KEY 是否设置正确"
+  "solution": "Check WEKNOWRUST_API_KEY is set correctly"
 }
 ```
 
-#### 3. 资源不存在
+#### 3) Resource not found
 ```json
 {
   "error": "Knowledge base not found",
-  "solution": "确认知识库ID是否正确，或先创建知识库"
+  "solution": "Confirm the knowledge base ID is correct, or create the knowledge base first"
 }
 ```
 
-## 高级配置示例
+## Advanced Configuration Examples
 
-### 自定义检索配置
+### Custom retriever configuration
 ```json
 {
   "tool": "hybrid_search",
   "arguments": {
     "kb_id": "kb_123456",
-    "query": "搜索查询",
+    "query": "search query",
     "vector_threshold": 0.8,
     "keyword_threshold": 0.6,
     "match_count": 15
@@ -358,7 +358,7 @@ python main.py --verbose
 }
 ```
 
-### 自定义会话策略
+### Custom session policy
 ```json
 {
   "tool": "create_session",
@@ -366,22 +366,22 @@ python main.py --verbose
     "kb_id": "kb_123456",
     "max_rounds": 20,
     "enable_rewrite": true,
-    "fallback_response": "根据现有知识，我无法准确回答您的问题。请尝试重新表述或联系技术支持。"
+    "fallback_response": "Based on the current knowledge, I can’t accurately answer your question. Please rephrase or contact support."
   }
 }
 ```
 
-## 性能优化建议
+## Performance Optimization Tips
 
-1. **批量操作**: 尽量批量处理知识创建和更新
-2. **缓存策略**: 合理设置搜索阈值以平衡准确性和性能
-3. **会话管理**: 及时清理不需要的会话以节省资源
-4. **监控日志**: 使用 `--verbose` 选项监控性能指标
+1. **Batch operations**: Batch knowledge creation and updates where possible
+2. **Tuning thresholds**: Adjust search thresholds to balance accuracy and performance
+3. **Session management**: Clean up unneeded sessions to save resources
+4. **Monitor logs**: Use `--verbose` to monitor performance indicators
 
-## 集成示例
+## Integration Examples
 
-### 与 Claude Desktop 集成
-在 Claude Desktop 的配置文件中添加：
+### Integration with Claude Desktop
+Add the following to your Claude Desktop configuration:
 ```json
 {
   "mcpServers": {
@@ -397,15 +397,15 @@ python main.py --verbose
 }
 ```
 
-项目仓库: https://github.com/NannaOlympicBroadcast/WeKnowRustMCP
+Project repository: https://github.com/SHA888/WeKnoRustMCP
 
-### 与其他 MCP 客户端集成
-参考各客户端的文档，配置服务器启动命令和环境变量。
+### Integration with other MCP clients
+Refer to each client’s documentation to configure the server command and environment variables.
 
-## 故障排除
+## Troubleshooting
 
-如果遇到问题：
-1. 运行 `python main.py --check-only` 检查环境
-2. 使用 `python main.py --verbose` 查看详细日志
-3. 检查 WeKnowRust 服务是否正常运行
-4. 验证网络连接和防火墙设置
+If you encounter issues:
+1. Run `python main.py --check-only` to check the environment
+2. Use `python main.py --verbose` for detailed logs
+3. Ensure the WeKnowRust service is running
+4. Verify network connectivity and firewall rules
