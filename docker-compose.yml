@@ -130,7 +130,7 @@ services:
       - MINIO_USE_SSL=${MINIO_USE_SSL}
       - WEB_PROXY=${WEB_PROXY}
     networks:
-      - WeKnora-network
+      - WeKnowRust-network
     restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -138,24 +138,24 @@ services:
   jaeger:
     image: jaegertracing/all-in-one:latest
     ports:
-      - "6831:6831/udp" # Jaeger Thrift接收器
-      - "6832:6832/udp" # Jaeger Thrift接收器(Compact)
-      - "5778:5778" # 配置端口
+      - "6831:6831/udp" # Jaeger Thrift receiver
+      - "6832:6832/udp" # Jaeger Thrift receiver (Compact)
+      - "5778:5778" # Configuration port
       - "16686:16686" # Web UI
-      - "4317:4317" # OTLP gRPC接收器
-      - "4318:4318" # OTLP HTTP接收器
-      - "14250:14250" # 接收模型端口
-      - "14268:14268" # Jaeger HTTP接收器
-      - "9411:9411" # Zipkin兼容性端口
+      - "4317:4317" # OTLP gRPC receiver
+      - "4318:4318" # OTLP HTTP receiver
+      - "14250:14250" # Model receiver port
+      - "14268:14268" # Jaeger HTTP receiver
+      - "9411:9411" # Zipkin compatibility port
     environment:
       - COLLECTOR_OTLP_ENABLED=true
       - COLLECTOR_ZIPKIN_HOST_PORT=:9411
     volumes:
-      - jaeger_data:/var/lib/jaeger # 持久化 Jaeger 数据
+      - jaeger_data:/var/lib/jaeger # Persist Jaeger data
     networks:
       - WeKnowRust-network
     restart: unless-stopped
-  # 修改的PostgreSQL配置
+  # PostgreSQL configuration
   postgres:
     image: paradedb/paradedb:latest
     container_name: WeKnowRust-postgres
@@ -163,7 +163,7 @@ services:
       - "${DB_PORT}:5432"
     environment:
       - POSTGRES_USER=${DB_USER}
-      # NOCC:hardcode-password(工具误报)
+      # NOCC:hardcode-password (tool false positive)
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     volumes:
@@ -174,12 +174,12 @@ services:
       - WeKnowRust-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
-      interval: 10s # 增加时间间隔
-      timeout: 10s # 增加超时时间
-      retries: 3 # 减少重试次数，让失败更快反馈
-      start_period: 30s # 给予初始启动更多时间
+      interval: 10s # Increase interval
+      timeout: 10s # Increase timeout
+      retries: 3 # Fewer retries for faster failure feedback
+      start_period: 30s # Give more time for initial startup
     restart: unless-stopped
-    # 添加停机时的优雅退出时间
+    # Add graceful stop period
     stop_grace_period: 1m
 
   redis:

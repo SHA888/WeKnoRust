@@ -16,28 +16,28 @@ PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 VERSION="1.0.1" # 版本更新
 SCRIPT_NAME=$(basename "$0")
 
-# 显示帮助信息
+# Show help
 show_help() {
-    echo -e "${GREEN}WeKnora 启动脚本 v${VERSION}${NC}"
-    echo -e "${GREEN}用法:${NC} $0 [选项]"
-    echo "选项:"
-    echo "  -h, --help     显示帮助信息"
-    echo "  -o, --ollama   启动Ollama服务"
-    echo "  -d, --docker   启动Docker容器服务"
-    echo "  -a, --all      启动所有服务（默认）"
-    echo "  -s, --stop     停止所有服务"
-    echo "  -c, --check    检查环境并诊断问题"
-    echo "  -r, --restart  重新构建并重启指定容器"
-    echo "  -l, --list     列出所有正在运行的容器"
-    echo "  -p, --pull     拉取最新的Docker镜像"
-    echo "  --no-pull      启动时不拉取镜像（默认会拉取）"
-    echo "  -v, --version  显示版本信息"
+    echo -e "${GREEN}WeKnowRust Start Script v${VERSION}${NC}"
+    echo -e "${GREEN}Usage:${NC} $0 [options]"
+    echo "Options:"
+    echo "  -h, --help     Show help"
+    echo "  -o, --ollama   Start Ollama service"
+    echo "  -d, --docker   Start Docker container services"
+    echo "  -a, --all      Start all services (default)"
+    echo "  -s, --stop     Stop all services"
+    echo "  -c, --check    Check environment and diagnose issues"
+    echo "  -r, --restart  Rebuild and restart a specified container"
+    echo "  -l, --list     List all running containers"
+    echo "  -p, --pull     Pull latest Docker images"
+    echo "  --no-pull      Do not pull images on start (pull by default)"
+    echo "  -v, --version  Show version"
     exit 0
 }
 
-# 显示版本信息
+# Show version
 show_version() {
-    echo -e "${GREEN}WeKnora 启动脚本 v${VERSION}${NC}"
+    echo -e "${GREEN}WeKnowRust Start Script v${VERSION}${NC}"
     exit 0
 }
 
@@ -58,19 +58,19 @@ log_success() {
     echo -e "${GREEN}[SUCCESS]${NC} $1"
 }
 
-# 选择可用的 Docker Compose 命令（优先 docker compose，其次 docker-compose）
+# Select the available Docker Compose command (prefer docker compose, or docker-compose).
 DOCKER_COMPOSE_BIN=""
 DOCKER_COMPOSE_SUBCMD=""
 
 detect_compose_cmd() {
-	# 优先使用 Docker Compose 插件
+	# Prioritize using the Docker Compose plugin
 	if docker compose version &> /dev/null; then
 		DOCKER_COMPOSE_BIN="docker"
 		DOCKER_COMPOSE_SUBCMD="compose"
 		return 0
 	fi
 
-	# 回退到 docker-compose (v1)
+	# Fallback to docker-compose (v1)
 	if command -v docker-compose &> /dev/null; then
 		if docker-compose version &> /dev/null; then
 			DOCKER_COMPOSE_BIN="docker-compose"
@@ -79,31 +79,31 @@ detect_compose_cmd() {
 		fi
 	fi
 
-	# 都不可用
+	# Both are unavailable
 	return 1
 }
 
-# 检查并创建.env文件
+# Check and create .env file
 check_env_file() {
-    log_info "检查环境变量配置..."
+    log_info "Checking environment variable configuration..."
     if [ ! -f "$PROJECT_ROOT/.env" ]; then
-        log_warning ".env 文件不存在，将从模板创建"
+        log_warning ".env file does not exist, will create from template"
         if [ -f "$PROJECT_ROOT/.env.example" ]; then
             cp "$PROJECT_ROOT/.env.example" "$PROJECT_ROOT/.env"
-            log_success "已从 .env.example 创建 .env 文件"
+            log_success "Created .env file from .env.example"
         else
-            log_error "未找到 .env.example 模板文件，无法创建 .env 文件"
+            log_error # Rollback “Could not find .env.example template file, unable to create .env file”
             return 1
         fi
     else
-        log_info ".env 文件已存在"
+        log_info “.env file already exists”
     fi
     
-    # 检查必要的环境变量是否已设置
+    # Verify that the required environment variables are set
     source "$PROJECT_ROOT/.env"
     local missing_vars=()
     
-    # 检查基础变量
+    # Checking Basic Variables
     if [ -z "$DB_DRIVER" ]; then missing_vars+=("DB_DRIVER"); fi
     if [ -z "$STORAGE_TYPE" ]; then missing_vars+=("STORAGE_TYPE"); fi
     
@@ -653,20 +653,20 @@ if [ "$STOP_SERVICES" = true ]; then
     
     # 显示总结
     echo ""
-    log_info "=== 停止结果 ==="
+    log_info "=== Stop Summary ==="
     if [ $OLLAMA_RESULT -eq 0 ]; then
-        log_success "✓ Ollama服务已停止"
+        log_success "✓ Ollama service stopped"
     else
-        log_error "✗ Ollama服务停止失败"
+        log_error "✗ Ollama service stop failed"
     fi
     
     if [ $DOCKER_RESULT -eq 0 ]; then
-        log_success "✓ Docker容器已停止"
+        log_success "✓ Docker containers stopped"
     else
-        log_error "✗ Docker容器停止失败"
+        log_error "✗ Docker containers stop failed"
     fi
     
-    log_success "服务停止完成。"
+    log_success "Service stop complete."
 else
     # 启动服务
     OLLAMA_RESULT=1
@@ -683,40 +683,40 @@ else
     
     # 显示总结
     echo ""
-    log_info "=== 启动结果 ==="
+    log_info "=== Start Summary ==="
     if [ "$START_OLLAMA" = true ]; then
         if [ $OLLAMA_RESULT -eq 0 ]; then
-            log_success "✓ Ollama服务已启动"
+            log_success "✓ Ollama service started"
         else
-            log_error "✗ Ollama服务启动失败"
+            log_error "✗ Ollama service start failed"
         fi
     fi
     
     if [ "$START_DOCKER" = true ]; then
         if [ $DOCKER_RESULT -eq 0 ]; then
-            log_success "✓ Docker容器已启动"
+            log_success "✓ Docker containers started"
         else
-            log_error "✗ Docker容器启动失败"
+            log_error "✗ Docker containers start failed"
         fi
     fi
     
     if [ "$START_OLLAMA" = true ] && [ "$START_DOCKER" = true ]; then
         if [ $OLLAMA_RESULT -eq 0 ] && [ $DOCKER_RESULT -eq 0 ]; then
-            log_success "所有服务启动完成，可通过以下地址访问:"
-            echo -e "${GREEN}  - 前端界面: http://localhost${NC}"
-            echo -e "${GREEN}  - API接口: http://localhost:8080${NC}"
-            echo -e "${GREEN}  - Jaeger链路追踪: http://localhost:16686${NC}"
+            log_success "All services started. Access via:"
+            echo -e "${GREEN}  - Web UI: http://localhost${NC}"
+            echo -e "${GREEN}  - API: http://localhost:8080${NC}"
+            echo -e "${GREEN}  - Jaeger Tracing: http://localhost:16686${NC}"
         else
             log_error "部分服务启动失败，请检查日志并修复问题"
         fi
     elif [ "$START_OLLAMA" = true ] && [ $OLLAMA_RESULT -eq 0 ]; then
-        log_success "Ollama服务启动完成，可通过以下地址访问:"
+        log_success "Ollama service started. Access via:"
         echo -e "${GREEN}  - Ollama API: http://localhost:$OLLAMA_PORT${NC}"
     elif [ "$START_DOCKER" = true ] && [ $DOCKER_RESULT -eq 0 ]; then
-        log_success "Docker容器启动完成，可通过以下地址访问:"
-        echo -e "${GREEN}  - 前端界面: http://localhost${NC}"
-        echo -e "${GREEN}  - API接口: http://localhost:8080${NC}"
-        echo -e "${GREEN}  - Jaeger链路追踪: http://localhost:16686${NC}"
+        log_success "Docker containers started. Access via:"
+        echo -e "${GREEN}  - Web UI: http://localhost${NC}"
+        echo -e "${GREEN}  - API: http://localhost:8080${NC}"
+        echo -e "${GREEN}  - Jaeger Tracing: http://localhost:16686${NC}"
     fi
 fi
 
