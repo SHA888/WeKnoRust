@@ -1,13 +1,13 @@
 import { defineStore } from "pinia";
 
-// 定义设置接口
+// Settings interface
 interface Settings {
   endpoint: string;
   apiKey: string;
   knowledgeBaseId: string;
 }
 
-// 默认设置
+// Default settings
 const defaultSettings: Settings = {
   endpoint: import.meta.env.VITE_IS_DOCKER ? "" : "http://localhost:8080",
   apiKey: "",
@@ -16,34 +16,44 @@ const defaultSettings: Settings = {
 
 export const useSettingsStore = defineStore("settings", {
   state: () => ({
-    // 从本地存储加载设置，如果没有则使用默认设置
-    settings: JSON.parse(localStorage.getItem("WeKnora_settings") || JSON.stringify(defaultSettings)),
+    // Load settings from localStorage; prefer new key then fallback to old key; default if missing
+    settings: (() => {
+      const NEW_KEY = "WeKnoRust_settings";
+      const OLD_KEY = "WeKnora_settings";
+      const raw = localStorage.getItem(NEW_KEY) ?? localStorage.getItem(OLD_KEY);
+      try {
+        return raw ? JSON.parse(raw) : { ...defaultSettings };
+      } catch {
+        return { ...defaultSettings };
+      }
+    })(),
   }),
 
   actions: {
-    // 保存设置
+    // Save settings
     saveSettings(settings: Settings) {
       this.settings = { ...settings };
-      // 保存到localStorage
+      // Save to localStorage (write both keys for backward compatibility)
+      localStorage.setItem("WeKnoRust_settings", JSON.stringify(this.settings));
       localStorage.setItem("WeKnora_settings", JSON.stringify(this.settings));
     },
 
-    // 获取设置
+    // Get settings
     getSettings(): Settings {
       return this.settings;
     },
 
-    // 获取API端点
+    // Get API endpoint
     getEndpoint(): string {
       return this.settings.endpoint || defaultSettings.endpoint;
     },
 
-    // 获取API Key
+    // Get API Key
     getApiKey(): string {
       return this.settings.apiKey;
     },
 
-    // 获取知识库ID
+    // Get knowledge base ID
     getKnowledgeBaseId(): string {
       return this.settings.knowledgeBaseId;
     },

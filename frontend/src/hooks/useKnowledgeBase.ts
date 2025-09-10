@@ -52,14 +52,14 @@ export default function () {
     delKnowledgeDetails(item.id)
       .then((result: any) => {
         if (result.success) {
-          MessagePlugin.info("知识删除成功！");
+          MessagePlugin.info("Knowledge deleted successfully!");
           getKnowled();
         } else {
-          MessagePlugin.error("知识删除失败！");
+          MessagePlugin.error("Failed to delete knowledge.");
         }
       })
       .catch((err) => {
-        MessagePlugin.error("知识删除失败！");
+        MessagePlugin.error("Failed to delete knowledge.");
       });
   };
   const openMore = (index: number) => {
@@ -78,22 +78,22 @@ export default function () {
       uploadKnowledgeBase({ file })
         .then((result: any) => {
           if (result.success) {
-            MessagePlugin.info("上传成功！");
+            MessagePlugin.info("Upload successful!");
             getKnowled();
           } else {
-            // 改进错误信息提取逻辑
-            let errorMessage = "上传失败！";
+            // Improved error extraction
+            let errorMessage = "Upload failed.";
             
-            // 优先从 error 对象中获取错误信息
+            // Prefer message from error object
             if (result.error && result.error.message) {
               errorMessage = result.error.message;
             } else if (result.message) {
               errorMessage = result.message;
             }
             
-            // 检查错误码，如果是重复文件则显示特定提示
+            // Check error code for duplicate file
             if (result.code === 'duplicate_file' || (result.error && result.error.code === 'duplicate_file')) {
-              errorMessage = "文件已存在";
+              errorMessage = "File already exists";
             }
             
             MessagePlugin.error(errorMessage);
@@ -101,11 +101,11 @@ export default function () {
           uploadInput.value.value = "";
         })
         .catch((err: any) => {
-          // 改进 catch 中的错误处理
-          let errorMessage = "上传失败！";
+          // Improved error handling in catch
+          let errorMessage = "Upload failed.";
           
           if (err.code === 'duplicate_file') {
-            errorMessage = "文件已存在";
+            errorMessage = "File already exists";
           } else if (err.error && err.error.message) {
             errorMessage = err.error.message;
           } else if (err.message) {
@@ -116,7 +116,7 @@ export default function () {
           uploadInput.value.value = "";
         });
     } else {
-      MessagePlugin.error("file文件类型错误！");
+      MessagePlugin.error("Invalid file type.");
     }
   };
   const getCardDetails = (item) => {

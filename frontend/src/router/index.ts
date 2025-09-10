@@ -12,7 +12,7 @@ const router = createRouter({
       path: "/initialization",
       name: "initialization",
       component: () => import("../views/initialization/InitializationConfig.vue"),
-      meta: { requiresInit: false } // 初始化页面不需要检查初始化状态
+      meta: { requiresInit: false } // Initialization page does not require init check
     },
     {
       path: "/knowledgeBase",
@@ -56,32 +56,30 @@ const router = createRouter({
   ],
 });
 
-// 路由守卫：检查系统初始化状态
+// Route guard: check system initialization status
 router.beforeEach(async (to, from, next) => {
-  // 如果访问的是初始化页面，直接放行
+  // If visiting the initialization page, allow directly
   if (to.meta.requiresInit === false) {
     next();
     return;
   }
 
-1
-
   try {
-    // 检查系统是否已初始化
+    // Check if the system has been initialized
     const { initialized } = await checkInitializationStatus();
     
     if (initialized) {
-      // 系统已初始化，记录到本地存储并正常跳转
+      // System initialized: record to localStorage and proceed
       localStorage.setItem('system_initialized', 'true');
       next();
     } else {
-      // 系统未初始化，跳转到初始化页面
-      console.log('系统未初始化，跳转到初始化页面');
+      // System not initialized: redirect to initialization page
+      console.log('System not initialized, redirecting to /initialization');
       next('/initialization');
     }
   } catch (error) {
-    console.error('检查初始化状态失败:', error);
-    // 如果检查失败，默认认为需要初始化
+    console.error('Failed to check initialization status:', error);
+    // If the check fails, assume initialization is required
     next('/initialization');
   }
 });
