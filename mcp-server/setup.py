@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-WeKnowRust MCP Server 安装脚本
+WeKnoRust MCP Server setup script
 """
 
 from setuptools import setup
 import os
 
-# 读取 README 文件
+# Read README file
 def read_readme():
     try:
         with open("README.md", "r", encoding="utf-8") as f:
@@ -14,7 +14,7 @@ def read_readme():
     except FileNotFoundError:
         return "WeKnowRust MCP Server - Model Context Protocol server for WeKnowRust API"
 
-# 读取依赖
+# Read requirements
 def read_requirements():
     try:
         with open("requirements.txt", "r", encoding="utf-8") as f:
@@ -23,15 +23,15 @@ def read_requirements():
         return ["mcp>=1.0.0", "requests>=2.31.0"]
 
 setup(
-    name="weknowrust-mcp-server",
+    name="weknorust-mcp-server",
     version="1.0.0",
-    author="WeKnowRust Team",
-    author_email="support@weknowrust.com",
-    description="WeKnowRust MCP Server - Model Context Protocol server for WeKnowRust API",
+    author="WeKnoRust Team",
+    author_email="support@weknorust.com",
+    description="WeKnoRust MCP Server - Model Context Protocol server for WeKnoRust API",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/SHA888/WeKnoRustMCP",
-    py_modules=["weknora_mcp_server", "main", "run_server", "run", "test_module"],
+    py_modules=["weknorust_mcp_server", "main", "run_server", "run", "test_module"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
@@ -51,11 +51,9 @@ setup(
     install_requires=read_requirements(),
     entry_points={
         "console_scripts": [
-            "weknowrust-mcp-server=main:sync_main",
-            "weknowrust-server=run_server:main",
-            # backward compatibility
-            "weknora-mcp-server=main:sync_main",
-            "weknora-server=run_server:main",
+            "weknorust-mcp-server=main:sync_main",
+            "weknorust-server=run_server:main",
+            # no backward compatibility aliases
         ],
     },
     include_package_data=True,

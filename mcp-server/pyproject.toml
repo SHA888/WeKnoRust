@@ -3,18 +3,18 @@ requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "weknowrust-mcp-server"
+name = "weknorust-mcp-server"
 version = "1.0.0"
-description = "WeKnowRust MCP Server - Model Context Protocol server for WeKnowRust API"
+description = "WeKnoRust MCP Server - Model Context Protocol server for WeKnoRust API"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "WeKnowRust Team", email = "support@weknowrust.com"}
+    {name = "WeKnoRust Team", email = "support@weknowrust.com"}
 ]
 maintainers = [
-    {name = "WeKnowRust Team", email = "support@weknowrust.com"}
+    {name = "WeKnoRust Team", email = "support@weknowrust.com"}
 ]
-keywords = ["mcp", "model-context-protocol", "weknowrust", "knowledge-management", "api-server"]
+keywords = ["mcp", "model-context-protocol", "weknorust", "knowledge-management", "api-server"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -51,21 +51,18 @@ test = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/SHA888/WeKnoRustMCP"
-Documentation = "https://docs.weknowrust.com"
-Repository = "https://github.com/SHA888/WeKnoRustMCP"
-"Bug Reports" = "https://github.com/SHA888/WeKnoRustMCP/issues"
-Changelog = "https://github.com/SHA888/WeKnoRustMCP/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/SHA888/WeKnoRust"
+Documentation = "https://github.com/SHA888/WeKnoRust/tree/main/docs"
+Repository = "https://github.com/SHA888/WeKnoRust"
+"Bug Reports" = "https://github.com/SHA888/WeKnoRust/issues"
+Changelog = "https://github.com/SHA888/WeKnoRust/blob/main/mcp-server/CHANGELOG.md"
 
 [project.scripts]
-weknowrust-mcp-server = "main:sync_main"
-weknowrust-server = "run_server:main"
-# Backward compatibility scripts (optional)
-weknora-mcp-server = "main:sync_main"
-weknora-server = "run_server:main"
+weknorust-mcp-server = "main:sync_main"
+weknorust-server = "run_server:main"
 
 [tool.setuptools]
-py-modules = ["weknora_mcp_server", "main", "run_server", "run", "test_module"]
+py-modules = ["weknorust_mcp_server", "main", "run_server", "run", "test_module"]
 include-package-data = true
 
 [tool.setuptools.package-data]

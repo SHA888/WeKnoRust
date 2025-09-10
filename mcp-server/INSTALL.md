@@ -1,4 +1,4 @@
-# WeKnowRust MCP Server Installation and Usage Guide
+# WeKnoRust MCP Server Installation and Usage Guide
 
 ## Quick Start
 
@@ -10,16 +10,16 @@ pip install -r requirements.txt
 ### 2) Set environment variables
 ```bash
 # Linux/macOS
-export WEKNOWRUST_BASE_URL="http://localhost:8080/api/v1"
-export WEKNOWRUST_API_KEY="your_api_key_here"
+export WEKNORUST_BASE_URL="http://localhost:8080/api/v1"
+export WEKNORUST_API_KEY="your_api_key_here"
 
 # Windows PowerShell
-$env:WEKNOWRUST_BASE_URL="http://localhost:8080/api/v1"
-$env:WEKNOWRUST_API_KEY="your_api_key_here"
+$env:WEKNORUST_BASE_URL="http://localhost:8080/api/v1"
+$env:WEKNORUST_API_KEY="your_api_key_here"
 
 # Windows CMD
-set WEKNOWRUST_BASE_URL=http://localhost:8080/api/v1
-set WEKNOWRUST_API_KEY=your_api_key_here
+set WEKNORUST_BASE_URL=http://localhost:8080/api/v1
+set WEKNORUST_API_KEY=your_api_key_here
 ```
 
 ### 3) Run the server
@@ -38,12 +38,12 @@ python run_server.py
 
 #### Option 3: Run the server module directly
 ```bash
-python weknowrust_mcp_server.py
+python weknorust_mcp_server.py
 ```
 
 #### Option 4: Run as a Python module
 ```bash
-python -m weknowrust_mcp_server
+python -m weknorust_mcp_server
 ```
 
 ## Install as a Python package
@@ -55,9 +55,9 @@ pip install -e .
 
 After installation, you can use the CLI tools:
 ```bash
-weknowrust-mcp-server
+weknorust-mcp-server
 # Or
-weknowrust-server
+weknorust-server
 ```
 
 ### Production install
@@ -94,7 +94,7 @@ python main.py --check-only
 ```
 
 This will display:
-- WeKnowRust API base URL configuration
+- WeKnoRust API base URL configuration
 - API key setup status
 - Dependency installation status
 
@@ -107,14 +107,14 @@ If you encounter `ImportError`, ensure:
 - No filename conflicts
 
 ### 2) Connection errors
-If you cannot connect to the WeKnowRust API:
-- Check `WEKNOWRUST_BASE_URL` is correct
-- Ensure the WeKnowRust service is running
+If you cannot connect to the WeKnoRust API:
+- Check `WEKNORUST_BASE_URL` is correct
+- Ensure the WeKnoRust service is running
 - Verify network connectivity
 
 ### 3) Authentication errors
 If you encounter authentication issues:
-- Check `WEKNOWRUST_API_KEY` is set
+- Check `WEKNORUST_API_KEY` is set
 - Confirm the API key is valid
 - Verify permissions
 
@@ -122,11 +122,11 @@ If you encounter authentication issues:
 
 ### Project structure
 ```
-WeKnowRustMCP/
+WeKnoRustMCP/
 ├── __init__.py              # Package init
 ├── main.py                  # Main entry point
 ├── run_server.py            # Original startup script
-├── weknowrust_mcp_server.py # MCP server implementation
+├── weknorust_mcp_server.py # MCP server implementation
 ├── requirements.txt         # Dependencies
 ├── setup.py                 # Setup script
 ├── MANIFEST.in              # Package manifest
@@ -136,7 +136,7 @@ WeKnowRustMCP/
 ```
 
 ### Adding new features
-1. Add new API methods in `WeKnowRustClient`
+1. Add new API methods in `WeKnoRustClient`
 2. Register new tools in `handle_list_tools()`
 3. Implement tool logic in `handle_call_tool()`
 4. Update docs and tests
@@ -167,26 +167,26 @@ RUN pip install -r requirements.txt
 COPY . .
 RUN pip install -e .
 
-ENV WEKNOWRUST_BASE_URL=http://localhost:8080/api/v1
+ENV WEKNORUST_BASE_URL=http://localhost:8080/api/v1
 EXPOSE 8000
 
-CMD ["weknowrust-mcp-server"]
+CMD ["weknorust-mcp-server"]
 ```
 
 ### System service
-Create a systemd service file at `/etc/systemd/system/weknowrust-mcp.service`:
+Create a systemd service file at `/etc/systemd/system/weknorust-mcp.service`:
 ```ini
 [Unit]
-Description=WeKnowRust MCP Server
+Description=WeKnoRust MCP Server
 After=network.target
 
 [Service]
 Type=simple
-User=weknowrust
-WorkingDirectory=/opt/weknowrust-mcp
-Environment=WEKNOWRUST_BASE_URL=http://localhost:8080/api/v1
-Environment=WEKNOWRUST_API_KEY=your_api_key
-ExecStart=/usr/local/bin/weknowrust-mcp-server
+User=weknorust
+WorkingDirectory=/opt/weknorust-mcp
+Environment=WEKNORUST_BASE_URL=http://localhost:8080/api/v1
+Environment=WEKNORUST_API_KEY=your_api_key
+ExecStart=/usr/local/bin/weknorust-mcp-server
 Restart=always
 
 [Install]
@@ -195,8 +195,8 @@ WantedBy=multi-user.target
 
 Enable the service:
 ```bash
-sudo systemctl enable weknowrust-mcp
-sudo systemctl start weknowrust-mcp
+sudo systemctl enable weknorust-mcp
+sudo systemctl start weknorust-mcp
 ```
 
 ## Support

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-WeKnowRust MCP Server main entry point
+WeKnoRust MCP Server main entry point
 
-This file provides a unified entry to start the WeKnowRust MCP server.
+This file provides a unified entry to start the WeKnoRust MCP server.
 You can run it in multiple ways:
 1. python main.py
 2. python -m weknora_mcp_server
@@ -35,18 +35,18 @@ def check_dependencies():
 
 def check_environment_variables():
     """Check environment variable configuration"""
-    base_url = os.getenv("WEKNOWRUST_BASE_URL")
-    api_key = os.getenv("WEKNOWRUST_API_KEY")
+    base_url = os.getenv("WEKNORUST_BASE_URL")
+    api_key = os.getenv("WEKNORUST_API_KEY")
     
-    print("=== WeKnowRust MCP Server Environment Check ===")
+    print("=== WeKnoRust MCP Server Environment Check ===")
     print(f"Base URL: {base_url or 'http://localhost:8080/api/v1 (default)'}")
     print(f"API Key: {'SET' if api_key else 'NOT SET (warning)'}")
     
     if not base_url:
-        print("Tip: You can set WEKNOWRUST_BASE_URL environment variable")
+        print("Tip: You can set WEKNORUST_BASE_URL environment variable")
     
     if not api_key:
-        print("Warning: It is recommended to set WEKNOWRUST_API_KEY environment variable")
+        print("Warning: It is recommended to set WEKNORUST_API_KEY environment variable")
     
     print("=" * 40)
     return True
@@ -54,7 +54,7 @@ def check_environment_variables():
 def parse_arguments():
     """Parse command line arguments"""
     parser = argparse.ArgumentParser(
-        description="WeKnowRust MCP Server - Model Context Protocol server for WeKnowRust API",
+        description="WeKnoRust MCP Server - Model Context Protocol server for WeKnoRust API",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -63,8 +63,8 @@ Examples:
   python main.py --verbose          # Enable verbose logging
   
 Environment variables:
-  WEKNOWRUST_BASE_URL    WeKnowRust API base URL (default: http://localhost:8080/api/v1)
-  WEKNOWRUST_API_KEY     WeKnowRust API key
+  WEKNORUST_BASE_URL    WeKnoRust API base URL (default: http://localhost:8080/api/v1)
+  WEKNORUST_API_KEY     WeKnoRust API key
         """
     )
     
@@ -114,10 +114,10 @@ async def main():
         print("Verbose logging enabled")
     
     try:
-        print("Starting WeKnowRust MCP Server...")
+        print("Starting WeKnoRust MCP Server...")
         
         # Import and run server
-        from weknora_mcp_server import run
+        from weknorust_mcp_server import run
         await run()
         
     except ImportError as e:

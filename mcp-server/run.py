@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-WeKnowRust MCP Server quick start script
+WeKnoRust MCP Server quick start script
 
 This is a simplified startup script that provides the basics.
 For more options, please use main.py
@@ -18,10 +18,10 @@ def main():
         sys.path.insert(0, str(current_dir))
     
     # Check environment variables
-    base_url = os.getenv("WEKNOWRUST_BASE_URL", "http://localhost:8080/api/v1")
-    api_key = os.getenv("WEKNOWRUST_API_KEY", "")
+    base_url = os.getenv("WEKNORUST_BASE_URL", "http://localhost:8080/api/v1")
+    api_key = os.getenv("WEKNORUST_API_KEY", "")
     
-    print("WeKnowRust MCP Server")
+    print("WeKnoRust MCP Server")
     print(f"Base URL: {base_url}")
     print(f"API Key: {'SET' if api_key else 'NOT SET'}")
     print("-" * 40)

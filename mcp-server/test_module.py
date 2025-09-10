@@ -24,12 +24,12 @@ def test_imports():
         print("✓ requests module import OK")
         
         # Test main module
-        import weknora_mcp_server
-        print("✓ weknora_mcp_server module import OK")
+        import weknorust_mcp_server
+        print("✓ weknorust_mcp_server module import OK")
         
         # Test package imports
-        from weknora_mcp_server import WeKnoraClient, run
-        print("✓ WeKnoraClient and run import OK")
+        from weknorust_mcp_server import WeKnoRustClient, run
+        print("✓ WeKnoRustClient and run import OK")
         
         # Test main entry point
         import main
@@ -45,17 +45,17 @@ def test_environment():
     """Test environment configuration"""
     print("\n=== Test Environment Configuration ===")
     
-    base_url = os.getenv("WEKNOWRUST_BASE_URL")
-    api_key = os.getenv("WEKNOWRUST_API_KEY")
+    base_url = os.getenv("WEKNORUST_BASE_URL")
+    api_key = os.getenv("WEKNORUST_API_KEY")
     
-    print(f"WEKNOWRUST_BASE_URL: {base_url or 'NOT SET (will use default)'}")
-    print(f"WEKNOWRUST_API_KEY: {'SET' if api_key else 'NOT SET'}")
+    print(f"WEKNORUST_BASE_URL: {base_url or 'NOT SET (will use default)'}")
+    print(f"WEKNORUST_API_KEY: {'SET' if api_key else 'NOT SET'}")
     
     if not base_url:
-        print("Tip: You can set environment variable WEKNOWRUST_BASE_URL")
+        print("Tip: You can set environment variable WEKNORUST_BASE_URL")
     
     if not api_key:
-        print("Tip: Consider setting environment variable WEKNOWRUST_API_KEY")
+        print("Tip: Consider setting environment variable WEKNORUST_API_KEY")
     
     return True
 
@@ -64,13 +64,13 @@ def test_client_creation():
     print("\n=== Test Client Creation ===")
     
     try:
-        from weknora_mcp_server import WeKnoraClient
+        from weknorust_mcp_server import WeKnoRustClient
         
-        base_url = os.getenv("WEKNOWRUST_BASE_URL", "http://localhost:8080/api/v1")
-        api_key = os.getenv("WEKNOWRUST_API_KEY", "test_key")
+        base_url = os.getenv("WEKNORUST_BASE_URL", "http://localhost:8080/api/v1")
+        api_key = os.getenv("WEKNORUST_API_KEY", "test_key")
         
-        client = WeKnoraClient(base_url, api_key)
-        print("✓ WeKnoraClient created successfully")
+        client = WeKnoRustClient(base_url, api_key)
+        print("✓ WeKnoRustClient created successfully")
         
         # Verify client properties
         assert client.base_url == base_url

@@ -1,6 +1,6 @@
-# WeKnowRust MCP Server
+# WeKnoRust MCP Server
 
-This is a Model Context Protocol (MCP) server that provides access to the WeKnowRust knowledge management API.
+This is a Model Context Protocol (MCP) server that provides access to the WeKnoRust knowledge management API.
 
 ## Quick Start
 
@@ -12,16 +12,16 @@ pip install -r requirements.txt
 ### 2) Configure environment variables
 ```bash
 # Linux/macOS
-export WEKNOWRUST_BASE_URL="http://localhost:8080/api/v1"
-export WEKNOWRUST_API_KEY="your_api_key_here"
+export WEKNORUST_BASE_URL="http://localhost:8080/api/v1"
+export WEKNORUST_API_KEY="your_api_key_here"
 
 # Windows PowerShell
-$env:WEKNOWRUST_BASE_URL="http://localhost:8080/api/v1"
-$env:WEKNOWRUST_API_KEY="your_api_key_here"
+$env:WEKNORUST_BASE_URL="http://localhost:8080/api/v1"
+$env:WEKNORUST_API_KEY="your_api_key_here"
 
 # Windows CMD
-set WEKNOWRUST_BASE_URL=http://localhost:8080/api/v1
-set WEKNOWRUST_API_KEY=your_api_key_here
+set WEKNORUST_BASE_URL=http://localhost:8080/api/v1
+set WEKNORUST_API_KEY=your_api_key_here
 ```
 
 ### 3) Run the server
@@ -40,10 +40,10 @@ python run_server.py
 python run.py
 
 # Run the server module directly
-python weknowrust_mcp_server.py
+python weknorust_mcp_server.py
 
 # Run as a Python module
-python -m weknowrust_mcp_server
+python -m weknorust_mcp_server
 ```
 
 ### 4) CLI options
@@ -63,9 +63,9 @@ pip install -e .
 
 After installation you can use the CLI tools:
 ```bash
-weknowrust-mcp-server
+weknorust-mcp-server
 # Or
-weknowrust-server
+weknorust-server
 ```
 
 ### Production install

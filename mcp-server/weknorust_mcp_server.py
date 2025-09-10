@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-WeKnowRust MCP Server
+WeKnoRust MCP Server
 
-A Model Context Protocol server that provides access to the WeKnowRust knowledge management API.
+A Model Context Protocol server that provides access to the WeKnoRust knowledge management API.
 """
 
 import os
@@ -22,11 +22,11 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Configuration
-WEKNOWRUST_BASE_URL = os.getenv("WEKNOWRUST_BASE_URL", "http://localhost:8080/api/v1")
-WEKNOWRUST_API_KEY = os.getenv("WEKNOWRUST_API_KEY", "")
+WEKNORUST_BASE_URL = os.getenv("WEKNORUST_BASE_URL", "http://localhost:8080/api/v1")
+WEKNORUST_API_KEY = os.getenv("WEKNORUST_API_KEY", "")
 
-class WeKnowRustClient:
-    """Client for interacting with WeKnowRust API"""
+class WeKnoRustClient:
+    """Client for interacting with WeKnoRust API"""
     
     def __init__(self, base_url: str, api_key: str):
         self.base_url = base_url
@@ -38,7 +38,7 @@ class WeKnowRustClient:
         })
     
     def _request(self, method: str, endpoint: str, **kwargs) -> Dict[str, Any]:
-        """Make a request to the WeKnowRust API"""
+        """Make a request to the WeKnoRust API"""
         url = f"{self.base_url}{endpoint}"
         try:
             response = self.session.request(method, url, **kwargs)
@@ -201,18 +201,18 @@ class WeKnowRustClient:
         return self._request("DELETE", f"/chunks/{knowledge_id}/{chunk_id}")
 
 # Initialize MCP server
-app = Server("weknowrust-server")
-client = WeKnowRustClient(WEKNOWRUST_BASE_URL, WEKNOWRUST_API_KEY)
+app = Server("weknorust-server")
+client = WeKnoRustClient(os.getenv("WEKNORUST_BASE_URL", "http://localhost:8080/api/v1"), os.getenv("WEKNORUST_API_KEY", ""))
 
 # Tool definitions
 @app.list_tools()
 async def handle_list_tools() -> list[types.Tool]:
-    """List all available WeKnowRust tools"""
+    """List all available WeKnoRust tools"""
     return [
         # Tenant Management
         types.Tool(
             name="create_tenant",
-            description="Create a new tenant in WeKnowRust",
+            description="Create a new tenant in WeKnoRust",
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -635,7 +635,7 @@ async def run():
             read_stream,
             write_stream,
             InitializationOptions(
-                server_name="weknowrust-server",
+                server_name="weknorust-server",
                 server_version="1.0.0",
                 capabilities=app.get_capabilities(
                     notification_options=NotificationOptions(),
