@@ -90,7 +90,7 @@ func (p *PluginMerge) OnEvent(ctx context.Context,
 				lastChunk.EndAt = chunks[i].EndAt
 				lastChunk.SubChunkID = append(lastChunk.SubChunkID, chunks[i].ID)
 
-				// 合并 ImageInfo
+				// Merge ImageInfo
 				if err := mergeImageInfo(ctx, lastChunk, chunks[i]); err != nil {
 					logger.Warnf(ctx, "Failed to merge ImageInfo: %v", err)
 				}
@@ -117,9 +117,9 @@ func (p *PluginMerge) OnEvent(ctx context.Context,
 	return next()
 }
 
-// mergeImageInfo 合并两个chunk的ImageInfo
+// mergeImageInfo merges ImageInfo from source chunk into target chunk
 func mergeImageInfo(ctx context.Context, target *types.SearchResult, source *types.SearchResult) error {
-	// 如果source没有ImageInfo，不需要合并
+	// If source has no ImageInfo, skip
 	if source.ImageInfo == "" {
 		return nil
 	}
@@ -130,45 +130,45 @@ func mergeImageInfo(ctx context.Context, target *types.SearchResult, source *typ
 		return err
 	}
 
-	// 如果source的ImageInfo为空，不需要合并
+	// If source ImageInfo is empty, skip
 	if len(sourceImageInfos) == 0 {
 		return nil
 	}
 
-	// 处理target的ImageInfo
+	// Handle target ImageInfo
 	var targetImageInfos []types.ImageInfo
 	if target.ImageInfo != "" {
 		if err := json.Unmarshal([]byte(target.ImageInfo), &targetImageInfos); err != nil {
 			logger.Warnf(ctx, "Failed to unmarshal target ImageInfo: %v", err)
-			// 如果目标解析失败，直接使用源数据
+			// If target parse fails, fallback to source data
 			target.ImageInfo = source.ImageInfo
 			return nil
 		}
 	}
 
-	// 合并ImageInfo
+	// Merge ImageInfo
 	targetImageInfos = append(targetImageInfos, sourceImageInfos...)
 
-	// 去重
+	// Deduplicate
 	uniqueMap := make(map[string]bool)
 	uniqueImageInfos := make([]types.ImageInfo, 0, len(targetImageInfos))
 
 	for _, imgInfo := range targetImageInfos {
-		// 使用URL作为唯一标识
+		// Use URL as unique identifier
 		if imgInfo.URL != "" && !uniqueMap[imgInfo.URL] {
 			uniqueMap[imgInfo.URL] = true
 			uniqueImageInfos = append(uniqueImageInfos, imgInfo)
 		}
 	}
 
-	// 序列化合并后的ImageInfo
+	// Marshal merged ImageInfo
 	mergedImageInfoJSON, err := json.Marshal(uniqueImageInfos)
 	if err != nil {
 		logger.Warnf(ctx, "Failed to marshal merged ImageInfo: %v", err)
 		return err
 	}
 
-	// 更新目标chunk的ImageInfo
+	// Update target chunk ImageInfo
 	target.ImageInfo = string(mergedImageInfoJSON)
 	logger.Infof(ctx, "Successfully merged ImageInfo, total count: %d", len(uniqueImageInfos))
 	return nil

@@ -7,7 +7,7 @@
 import { ref, defineProps } from "vue";
 
 const props = defineProps({
-    // 必填项
+    // Required
     content: {
         type: String,
         required: false

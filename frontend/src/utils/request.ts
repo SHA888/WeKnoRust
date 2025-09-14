@@ -1,15 +1,15 @@
-// src/utils/request.js
+// src/utils/request
 import axios from "axios";
 import { generateRandomString } from "./index";
 
-// 从localStorage获取设置
+// Read settings from localStorage (prefer new key, fallback to old)
 function getSettings() {
-  const settingsStr = localStorage.getItem("WeKnora_settings");
+  const settingsStr = localStorage.getItem("WeKnoRust_settings") ?? localStorage.getItem("WeKnora_settings");
   if (settingsStr) {
     try {
       return JSON.parse(settingsStr);
     } catch (e) {
-      console.error("解析设置失败:", e);
+      console.error("Failed to parse settings:", e);
     }
   }
   return {
@@ -19,11 +19,11 @@ function getSettings() {
   };
 }
 
-// API基础URL，优先使用设置中的endpoint
+// API base URL — prefer endpoint from settings
 const settings = getSettings();
 const BASE_URL = settings.endpoint;
 
-// 测试数据
+// Test data (optional)
 let testData: {
   tenant: {
     id: number;
@@ -37,21 +37,21 @@ let testData: {
   }>;
 } | null = null;
 
-// 创建Axios实例
+// Create Axios instance
 const instance = axios.create({
-  baseURL: BASE_URL, // 使用配置的API基础URL
-  timeout: 30000, // 请求超时时间
+  baseURL: BASE_URL, // Use configured API base URL
+  timeout: 30000, // Request timeout
   headers: {
     "Content-Type": "application/json",
     "X-Request-ID": `${generateRandomString(12)}`,
   },
 });
 
-// 设置测试数据
+// Set test data
 export function setTestData(data: typeof testData) {
   testData = data;
   if (data) {
-    // 优先使用设置中的ApiKey，如果没有则使用测试数据中的
+    // Prefer ApiKey from settings; fallback to test data
     const apiKey = settings.apiKey || (data?.tenant?.api_key || "");
     if (apiKey) {
       instance.defaults.headers["X-API-Key"] = apiKey;
@@ -59,27 +59,27 @@ export function setTestData(data: typeof testData) {
   }
 }
 
-// 获取测试数据
+// Get test data
 export function getTestData() {
   return testData;
 }
 
 instance.interceptors.request.use(
   (config) => {
-    // 每次请求前检查是否有更新的设置
+    // Before each request: check for updated settings
     const currentSettings = getSettings();
     
-    // 更新BaseURL (如果有变化)
+    // Update baseURL if changed
     if (currentSettings.endpoint && config.baseURL !== currentSettings.endpoint) {
       config.baseURL = currentSettings.endpoint;
     }
     
-    // 更新API Key (如果有)
+    // Update API Key if provided
     if (currentSettings.apiKey) {
-      config.headers["X-API-Key"] = currentSettings.apiKey;
+      (config.headers ||= {})["X-API-Key"] = currentSettings.apiKey;
     }
     
-    config.headers["X-Request-ID"] = `${generateRandomString(12)}`;
+    (config.headers ||= {})["X-Request-ID"] = `${generateRandomString(12)}`;
     return config;
   },
   (error) => {}
@@ -87,7 +87,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
-    // 根据业务状态码处理逻辑
+    // Handle by HTTP status code
     const { status, data } = response;
     if (status === 200 || status === 201) {
       return data;
@@ -97,7 +97,7 @@ instance.interceptors.response.use(
   },
   (error: any) => {
     if (!error.response) {
-      return Promise.reject({ message: "网络错误，请检查您的网络连接" });
+      return Promise.reject({ message: "Network error, please check your connection" });
     }
     const { data } = error.response;
     return Promise.reject(data);

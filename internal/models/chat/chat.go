@@ -10,36 +10,36 @@ import (
 	"github.com/Tencent/WeKnowRust/internal/types"
 )
 
-// ChatOptions 聊天选项
+// ChatOptions defines options for chat generation
 type ChatOptions struct {
-	Temperature         float64 `json:"temperature"`           // 温度参数
-	TopP                float64 `json:"top_p"`                 // Top P 参数
-	Seed                int     `json:"seed"`                  // 随机种子
-	MaxTokens           int     `json:"max_tokens"`            // 最大 token 数
-	MaxCompletionTokens int     `json:"max_completion_tokens"` // 最大完成 token 数
-	FrequencyPenalty    float64 `json:"frequency_penalty"`     // 频率惩罚
-	PresencePenalty     float64 `json:"presence_penalty"`      // 存在惩罚
-	Thinking            *bool   `json:"thinking"`              // 是否启用思考
+	Temperature         float64 `json:"temperature"`           // Temperature
+	TopP                float64 `json:"top_p"`                 // Top P
+	Seed                int     `json:"seed"`                  // Random seed
+	MaxTokens           int     `json:"max_tokens"`            // Max tokens
+	MaxCompletionTokens int     `json:"max_completion_tokens"` // Max completion tokens
+	FrequencyPenalty    float64 `json:"frequency_penalty"`     // Frequency penalty
+	PresencePenalty     float64 `json:"presence_penalty"`      // Presence penalty
+	Thinking            *bool   `json:"thinking"`              // Whether to enable "thinking"
 }
 
-// Message 表示聊天消息
+// Message represents a chat message
 type Message struct {
-	Role    string `json:"role"`    // 角色：system, user, assistant
-	Content string `json:"content"` // 消息内容
+	Role    string `json:"role"`    // Role: system | user | assistant
+	Content string `json:"content"` // Message content
 }
 
-// Chat 定义了聊天接口
+// Chat defines the chat interface
 type Chat interface {
-	// Chat 进行非流式聊天
+	// Chat performs non-streaming chat
 	Chat(ctx context.Context, messages []Message, opts *ChatOptions) (*types.ChatResponse, error)
 
-	// ChatStream 进行流式聊天
+	// ChatStream performs streaming chat
 	ChatStream(ctx context.Context, messages []Message, opts *ChatOptions) (<-chan types.StreamResponse, error)
 
-	// GetModelName 获取模型名称
+	// GetModelName returns the model name
 	GetModelName() string
 
-	// GetModelID 获取模型ID
+	// GetModelID returns the model ID
 	GetModelID() string
 }
 
@@ -51,7 +51,7 @@ type ChatConfig struct {
 	ModelID   string
 }
 
-// NewChat 创建聊天实例
+// NewChat creates a chat client based on the model source
 func NewChat(config *ChatConfig) (Chat, error) {
 	var chat Chat
 	var err error

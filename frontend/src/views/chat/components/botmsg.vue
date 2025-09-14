@@ -5,14 +5,14 @@
             <deepThink :deepSession="session" v-if="session.showThink"></deepThink>
         </div>
         <div ref="parentMd">
-            <!-- 消息正在总结中则渲染加载gif  -->
+            <!-- Render loading gif while summarizing message -->
             <img v-if="session.thinking" class="botanswer_laoding_gif" src="@/assets/img/botanswer_loading.gif"
-                alt="正在总结答案……">
+                alt="Summarizing answer...">
             <div v-for="(item, index) in processedMarkdown" :key="index">
                 <img class="ai-markdown-img" @click="preview(item)" v-if="isLink(item)" :src="item" alt="">
                 <div v-else class="ai-markdown-template" v-html="processMarkdown(item)"></div>
             </div>
-            <div v-if="isImgLoading" class="img_loading"><t-loading size="small"></t-loading><span>加载中...</span></div>
+            <div v-if="isImgLoading" class="img_loading"><t-loading size="small"></t-loading><span>Loading...</span></div>
         </div>
         <picturePreview :reviewImg="reviewImg" :reviewUrl="reviewUrl" @closePreImg="closePreImg"></picturePreview>
     </div>
@@ -89,9 +89,9 @@ const checkImage = (url) => {
         img.src = url;
     });
 };
-// 处理 Markdown 中的图片
+// Process images in Markdown
 const processMarkdown = (markdownText) => {
-    // 自定义渲染器处理图片
+    // Custom renderer for images
     const renderer = {
         image(href, title, text) {
             return `<img src="${href}" alt="${text}" title="${title || ''}"  class="markdown-image" style="max-width: 708px;height: 230px;">`;
@@ -100,14 +100,14 @@ const processMarkdown = (markdownText) => {
 
     marked.use({ renderer });
 
-    // 第一次渲染
+    // First render
     let html = marked.parse(markdownText);
 
-    // 创建虚拟 DOM 来操作
+    // Create a virtual DOM to operate on
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
 
-    // 检查所有图片
+    // Check all images
     // const images = doc.querySelectorAll('img');
     // images.forEach(async item => {
     //     const isValid = await checkImage(item.src);
@@ -157,8 +157,8 @@ function splitMarkdownByImages(markdown) {
 }
 function isLink(str) {
     const trimmedStr = str.trim();
-    // 正则表达式匹配常见链接格式
-    const urlPattern = /^(https?:\/\/|ftp:\/\/|www\.)(?:(?:[\w-]+(?:\.[\w-]+)*)|(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(?:\[[a-fA-F0-9:]+\]))(?::\d{1,5})?(?:[\/\w.,@?^=%&:~+#-]*[\w@?^=%&\/~+#-])?/i;
+    // Regex to match common link patterns
+    const urlPattern = /^(https?:\/\/|ftp:\/\/|www\.) (?:(?:[\w-]+(?:\.[\w-]+)*)|(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(?:\[[a-fA-F0-9:]+\]))(?::\d{1,5})?(?:[\/\w.,@?^=%&:~+#-]*[\w@?^=%&\/~+#-])?/i;
     return urlPattern.test(trimmedStr);
 }
 

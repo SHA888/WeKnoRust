@@ -16,40 +16,40 @@ export interface TestDataResponse {
   }
 }
 
-// 是否已加载测试数据
+// Whether test data has been loaded
 let isTestDataLoaded = false;
 
 /**
- * 加载测试数据
- * 在API调用前调用此函数以确保测试数据已加载
- * @returns Promise<boolean> 是否成功加载
+ * Load test data
+ * Call this before API calls to ensure test data is loaded
+ * @returns Promise<boolean> whether loading succeeded
  */
 export async function loadTestData(): Promise<boolean> {
-  // 如果已经加载过，直接返回
+  // If already loaded, return early
   if (isTestDataLoaded) {
     return true;
   }
 
   try {
-    console.log('开始加载测试数据...');
+    console.log('Start loading test data...');
     const response = await get('/api/v1/test-data');
-    console.log('测试数据', response);
+    console.log('Test data response', response);
     
     if (response && response.data) {
-      // 设置测试数据
+      // Set test data
       setTestData({
         tenant: response.data.tenant,
         knowledge_bases: response.data.knowledge_bases
       });
       isTestDataLoaded = true;
-      console.log('测试数据加载成功');
+      console.log('Test data loaded successfully');
       return true;
     } else {
-      console.warn('测试数据响应为空');
+      console.warn('Test data response is empty');
       return false;
     }
   } catch (error) {
-    console.error('加载测试数据失败:', error);
+    console.error('Failed to load test data:', error);
     return false;
   }
 } 

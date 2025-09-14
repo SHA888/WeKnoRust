@@ -411,7 +411,7 @@ func (e *elasticsearchRepository) KeywordsRetrieve(ctx context.Context,
 	}, nil
 }
 
-// CopyIndices 复制索引数据
+// CopyIndices copies index data from source to target knowledge base
 func (e *elasticsearchRepository) CopyIndices(ctx context.Context,
 	sourceKnowledgeBaseID string,
 	sourceToTargetKBIDMap map[string]string,

@@ -13,7 +13,7 @@
                 </div>
                 <div v-if="loading"
                     style="height: 41px;display: flex;align-items: center;background: #fff;width: 58px;">
-                    <img class="botanswer_laoding_gif" src="@/assets/img/botanswer_loading.gif" alt="正在等待答案……">
+                    <img class="botanswer_laoding_gif" src="@/assets/img/botanswer_loading.gif" alt="Waiting for answer…">
                 </div>
             </div>
         </div>
@@ -122,7 +122,7 @@ const handleMsgList = async (data, isScrollType = false, newScrollHeight) => {
             }
         }
         if (item.is_completed && !item.content) {
-            item.content = "抱歉，我无法回答这个问题。";
+            item.content = "Sorry, I can’t answer that question.";
         }
         messagesList.unshift(item);
         if (isFirstEnter.value) {

@@ -36,7 +36,7 @@ func (p *PluginIntoChatMessage) OnEvent(ctx context.Context,
 	// Extract content from merge results
 	passages := make([]string, len(chatManage.MergeResult))
 	for i, result := range chatManage.MergeResult {
-		// 合并内容和图片信息
+		// Merge content and image information
 		passages[i] = getEnrichedPassageForChat(ctx, result)
 	}
 
@@ -46,8 +46,8 @@ func (p *PluginIntoChatMessage) OnEvent(ctx context.Context,
 		return ErrTemplateParse.WithError(err)
 	}
 
-	// Prepare weekday names for template
-	weekdayName := []string{"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"}
+	// Prepare weekday names for template (English)
+	weekdayName := []string{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}
 	var userContent bytes.Buffer
 
 	// Execute template with context data
@@ -55,7 +55,7 @@ func (p *PluginIntoChatMessage) OnEvent(ctx context.Context,
 		"Query":       chatManage.Query,                         // User's original query
 		"Contexts":    passages,                                 // Extracted passages from search results
 		"CurrentTime": time.Now().Format("2006-01-02 15:04:05"), // Formatted current time
-		"CurrentWeek": weekdayName[time.Now().Weekday()],        // Current weekday in Chinese
+		"CurrentWeek": weekdayName[time.Now().Weekday()],        // Current weekday name
 	})
 	if err != nil {
 		return ErrTemplateExecute.WithError(err)
@@ -66,28 +66,28 @@ func (p *PluginIntoChatMessage) OnEvent(ctx context.Context,
 	return next()
 }
 
-// getEnrichedPassageForChat 合并Content和ImageInfo的文本内容，为聊天消息准备
+// getEnrichedPassageForChat merges Content and ImageInfo text for chat messages
 func getEnrichedPassageForChat(ctx context.Context, result *types.SearchResult) string {
-	// 如果没有图片信息，直接返回内容
+	// If there is no image info and no content, return empty
 	if result.Content == "" && result.ImageInfo == "" {
 		return ""
 	}
 
-	// 如果只有内容，没有图片信息
+	// If only content is present, return it
 	if result.ImageInfo == "" {
 		return result.Content
 	}
 
-	// 处理图片信息并与内容合并
+	// Merge image information into content
 	return enrichContentWithImageInfo(ctx, result.Content, result.ImageInfo)
 }
 
-// 正则表达式用于匹配Markdown图片链接
+// Regular expression to match Markdown image links
 var markdownImageRegex = regexp.MustCompile(`!\[([^\]]*)\]\(([^)]+)\)`)
 
-// enrichContentWithImageInfo 将图片信息与文本内容合并
+// enrichContentWithImageInfo merges image information with content
 func enrichContentWithImageInfo(ctx context.Context, content string, imageInfoJSON string) string {
-	// 解析ImageInfo
+	// Parse ImageInfo
 	var imageInfos []types.ImageInfo
 	err := json.Unmarshal([]byte(imageInfoJSON), &imageInfos)
 	if err != nil {
@@ -99,68 +99,68 @@ func enrichContentWithImageInfo(ctx context.Context, content string, imageInfoJS
 		return content
 	}
 
-	// 创建图片URL到信息的映射
+	// Build map from image URL to info
 	imageInfoMap := make(map[string]*types.ImageInfo)
 	for i := range imageInfos {
 		if imageInfos[i].URL != "" {
 			imageInfoMap[imageInfos[i].URL] = &imageInfos[i]
 		}
-		// 同时检查原始URL
+		// Also map OriginalURL
 		if imageInfos[i].OriginalURL != "" {
 			imageInfoMap[imageInfos[i].OriginalURL] = &imageInfos[i]
 		}
 	}
 
-	// 查找内容中的所有Markdown图片链接
+	// Find all Markdown image links in content
 	matches := markdownImageRegex.FindAllStringSubmatch(content, -1)
 
-	// 用于存储已处理的图片URL
+	// Track processed image URLs
 	processedURLs := make(map[string]bool)
 
 	logger.Infof(ctx, "Found %d Markdown image links in content", len(matches))
 
-	// 替换每个图片链接，添加描述和OCR文本
+	// Replace each image link by appending caption/OCR text
 	for _, match := range matches {
 		if len(match) < 3 {
 			continue
 		}
 
-		// 提取图片URL，忽略alt文本
+		// Extract image URL (ignore alt text)
 		imgURL := match[2]
 
-		// 标记该URL已处理
+		// Mark URL processed
 		processedURLs[imgURL] = true
 
-		// 查找匹配的图片信息
+		// Lookup matching image info
 		imgInfo, found := imageInfoMap[imgURL]
 
-		// 如果找到匹配的图片信息，添加描述和OCR文本
+		// If found, append caption and OCR text
 		if found && imgInfo != nil {
 			replacement := match[0] + "\n"
 			if imgInfo.Caption != "" {
-				replacement += fmt.Sprintf("图片描述: %s\n", imgInfo.Caption)
+				replacement += fmt.Sprintf("Image caption: %s\n", imgInfo.Caption)
 			}
 			if imgInfo.OCRText != "" {
-				replacement += fmt.Sprintf("图片文本: %s\n", imgInfo.OCRText)
+				replacement += fmt.Sprintf("Image text: %s\n", imgInfo.OCRText)
 			}
 			content = strings.Replace(content, match[0], replacement, 1)
 		}
 	}
 
-	// 处理未在内容中找到但存在于ImageInfo中的图片
+	// Append info for images not present in content but in ImageInfo
 	var additionalImageTexts []string
 	for _, imgInfo := range imageInfos {
-		// 如果图片URL已经处理过，跳过
+		// Skip already processed URLs
 		if processedURLs[imgInfo.URL] || processedURLs[imgInfo.OriginalURL] {
 			continue
 		}
 
 		var imgTexts []string
 		if imgInfo.Caption != "" {
-			imgTexts = append(imgTexts, fmt.Sprintf("图片 %s 的描述信息: %s", imgInfo.URL, imgInfo.Caption))
+			imgTexts = append(imgTexts, fmt.Sprintf("Image %s caption: %s", imgInfo.URL, imgInfo.Caption))
 		}
 		if imgInfo.OCRText != "" {
-			imgTexts = append(imgTexts, fmt.Sprintf("图片 %s 的文本: %s", imgInfo.URL, imgInfo.OCRText))
+			imgTexts = append(imgTexts, fmt.Sprintf("Image %s text: %s", imgInfo.URL, imgInfo.OCRText))
 		}
 
 		if len(imgTexts) > 0 {
@@ -168,12 +168,12 @@ func enrichContentWithImageInfo(ctx context.Context, content string, imageInfoJS
 		}
 	}
 
-	// 如果有额外的图片信息，添加到内容末尾
+	// Append additional image information at the end
 	if len(additionalImageTexts) > 0 {
 		if content != "" {
 			content += "\n\n"
 		}
-		content += "附加图片信息:\n" + strings.Join(additionalImageTexts, "\n")
+		content += "Additional image information:\n" + strings.Join(additionalImageTexts, "\n")
 	}
 
 	logger.Debugf(ctx, "Enhanced content with image info: found %d Markdown images, added %d additional images",

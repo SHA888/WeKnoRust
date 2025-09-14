@@ -49,7 +49,7 @@ var (
 )
 
 // knowledgeService implements the knowledge service interface
-// service 实现知识服务接口
+// Service implements the knowledge service interface
 type knowledgeService struct {
 	config          *config.Config
 	repo            interfaces.KnowledgeRepository
@@ -105,31 +105,31 @@ func (s *knowledgeService) CreateKnowledgeFromFile(ctx context.Context,
 		return nil, err
 	}
 
-	// 检查多模态配置完整性 - 只在图片文件时校验
-	// 检查是否为图片文件
+	// Validate multimodal configuration only for image files
+	// Check if the file is an image
 	if !IsImageType(getFileType(file.Filename)) {
 		logger.Info(ctx, "Non-image file with multimodal enabled, skipping COS/VLM validation")
 	} else {
-		// 检查COS配置
+		// Check COS configuration
 		switch kb.StorageConfig.Provider {
 		case "cos":
 			if kb.StorageConfig.SecretID == "" || kb.StorageConfig.SecretKey == "" ||
 				kb.StorageConfig.Region == "" || kb.StorageConfig.BucketName == "" ||
 				kb.StorageConfig.AppID == "" {
 				logger.Error(ctx, "COS configuration incomplete for image multimodal processing")
-				return nil, werrors.NewBadRequestError("上传图片文件需要完整的对象存储配置信息, 请前往系统设置页面进行补全")
+				return nil, werrors.NewBadRequestError("Uploading image files requires complete object storage configuration. Please complete it in the system settings.")
 			}
 		case "minio":
 			if kb.StorageConfig.BucketName == "" {
 				logger.Error(ctx, "MinIO configuration incomplete for image multimodal processing")
-				return nil, werrors.NewBadRequestError("上传图片文件需要完整的对象存储配置信息, 请前往系统设置页面进行补全")
+				return nil, werrors.NewBadRequestError("Uploading image files requires complete object storage configuration. Please complete it in the system settings.")
 			}
 		}
 
-		// 检查VLM配置
+		// Check VLM configuration
 		if kb.VLMConfig.ModelName == "" || kb.VLMConfig.BaseURL == "" {
 			logger.Error(ctx, "VLM configuration incomplete for image multimodal processing")
-			return nil, werrors.NewBadRequestError("上传图片文件需要完整的VLM配置信息, 请前往系统设置页面进行补全")
+			return nil, werrors.NewBadRequestError("Uploading image files requires complete VLM configuration. Please complete it in the system settings.")
 		}
 
 		logger.Info(ctx, "Image multimodal configuration validation passed")
@@ -820,7 +820,7 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 		return
 	}
 
-	// Generate document summary - 只使用文本类型的 Chunk
+	// Generate document summary - only use text-type chunks
 	chatModel, err := s.modelService.GetChatModel(ctx, kb.SummaryModelID)
 	if err != nil {
 		logger.GetLogger(ctx).WithField("error", err).Errorf("processChunks get summary model failed")
@@ -833,11 +833,11 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 	// Create chunk objects from proto chunks
 	maxSeq := 0
 
-	// 统计图片相关的子Chunk数量，用于扩展insertChunks的容量
+	// Count image-related sub-chunks to expand insertChunks capacity
 	imageChunkCount := 0
 	for _, chunkData := range chunks {
 		if len(chunkData.Images) > 0 {
-			// 为每个图片的OCR和Caption分别创建一个Chunk
+			// Create one chunk for each image's OCR and one for its caption
 			imageChunkCount += len(chunkData.Images) * 2
 		}
 		if int(chunkData.Seq) > maxSeq {
@@ -845,7 +845,7 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 		}
 	}
 
-	// 重新分配容量，考虑图片相关的Chunk
+	// Reallocate capacity considering image-related chunks
 	insertChunks := make([]*types.Chunk, 0, len(chunks)+imageChunkCount)
 
 	for _, chunkData := range chunks {
@@ -853,7 +853,7 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 			continue
 		}
 
-		// 创建主文本Chunk
+		// Create main text chunk
 		textChunk := &types.Chunk{
 			ID:              uuid.New().String(),
 			TenantID:        knowledge.TenantID,
@@ -871,12 +871,12 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 		var chunkImages []types.ImageInfo
 		insertChunks = append(insertChunks, textChunk)
 
-		// 处理图片信息
+		// Handle image information
 		if len(chunkData.Images) > 0 {
 			logger.GetLogger(ctx).Infof("Processing %d images in chunk #%d", len(chunkData.Images), chunkData.Seq)
 
 			for i, img := range chunkData.Images {
-				// 保存图片信息到文本Chunk
+				// Save image info to the text chunk
 				imageInfo := types.ImageInfo{
 					URL:         img.Url,
 					OriginalURL: img.OriginalUrl,
@@ -887,14 +887,14 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 				}
 				chunkImages = append(chunkImages, imageInfo)
 
-				// 将ImageInfo序列化为JSON
+				// Marshal ImageInfo to JSON
 				imageInfoJSON, err := json.Marshal([]types.ImageInfo{imageInfo})
 				if err != nil {
 					logger.GetLogger(ctx).WithField("error", err).Errorf("Failed to marshal image info to JSON")
 					continue
 				}
 
-				// 如果有OCR文本，创建OCR Chunk
+				// Create OCR chunk when OCR text is present
 				if img.OcrText != "" {
 					ocrChunk := &types.Chunk{
 						ID:              uuid.New().String(),
@@ -902,7 +902,7 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 						KnowledgeID:     knowledge.ID,
 						KnowledgeBaseID: knowledge.KnowledgeBaseID,
 						Content:         img.OcrText,
-						ChunkIndex:      maxSeq + i*100 + 1, // 使用不冲突的索引方式
+						ChunkIndex:      maxSeq + i*100 + 1, // Use a non-conflicting index scheme
 						IsEnabled:       true,
 						CreatedAt:       time.Now(),
 						UpdatedAt:       time.Now(),
@@ -916,7 +916,7 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 					logger.GetLogger(ctx).Infof("Created OCR chunk for image %d in chunk #%d", i, chunkData.Seq)
 				}
 
-				// 如果有图片描述，创建Caption Chunk
+				// Create caption chunk when caption text is present
 				if img.Caption != "" {
 					captionChunk := &types.Chunk{
 						ID:              uuid.New().String(),
@@ -924,7 +924,7 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 						KnowledgeID:     knowledge.ID,
 						KnowledgeBaseID: knowledge.KnowledgeBaseID,
 						Content:         img.Caption,
-						ChunkIndex:      maxSeq + i*100 + 2, // 使用不冲突的索引方式
+						ChunkIndex:      maxSeq + i*100 + 2, // Use a non-conflicting index scheme
 						IsEnabled:       true,
 						CreatedAt:       time.Now(),
 						UpdatedAt:       time.Now(),
@@ -953,7 +953,7 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 		return insertChunks[i].ChunkIndex < insertChunks[j].ChunkIndex
 	})
 
-	// 仅为文本类型的Chunk设置前后关系
+	// Set previous/next relationships only for text chunks
 	textChunks := make([]*types.Chunk, 0, len(chunks))
 	for _, chunk := range insertChunks {
 		if chunk.ChunkType == types.ChunkTypeText {
@@ -961,7 +961,7 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 		}
 	}
 
-	// 设置文本Chunk之间的前后关系
+	// Link text chunks in sequence
 	for i, chunk := range textChunks {
 		if i > 0 {
 			textChunks[i-1].NextChunkID = chunk.ID
@@ -1033,15 +1033,15 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 	}
 	span.SetAttributes(attribute.String("summary", knowledge.Description))
 
-	// 批量索引
+	// Batch indexing
 	if strings.TrimSpace(knowledge.Description) != "" && len(textChunks) > 0 {
 		sChunk := &types.Chunk{
 			ID:              uuid.New().String(),
 			TenantID:        knowledge.TenantID,
 			KnowledgeID:     knowledge.ID,
 			KnowledgeBaseID: knowledge.KnowledgeBaseID,
-			Content:         fmt.Sprintf("# 文档名称\n%s\n\n# 摘要\n%s", knowledge.FileName, knowledge.Description),
-			ChunkIndex:      maxSeq + 3, // 使用不冲突的索引方式
+			Content:         fmt.Sprintf("# Document Name\n%s\n\n# Summary\n%s", knowledge.FileName, knowledge.Description),
+			ChunkIndex:      maxSeq + 3, // Use a non-conflicting index scheme
 			IsEnabled:       true,
 			CreatedAt:       time.Now(),
 			UpdatedAt:       time.Now(),
@@ -1096,7 +1096,7 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 		// Check if there's enough storage quota available
 		if tenantInfo.StorageUsed+totalStorageSize > tenantInfo.StorageQuota {
 			knowledge.ParseStatus = "failed"
-			knowledge.ErrorMessage = "存储空间不足"
+			knowledge.ErrorMessage = "Insufficient storage space"
 			knowledge.UpdatedAt = time.Now()
 			s.repo.UpdateKnowledge(ctx, knowledge)
 			span.RecordError(errors.New("storage quota exceeded"))
@@ -1123,12 +1123,12 @@ func (s *knowledgeService) processChunks(ctx context.Context,
 		knowledge.UpdatedAt = time.Now()
 		s.repo.UpdateKnowledge(ctx, knowledge)
 
-		// delete failed chunks
+		// Delete failed chunks
 		if err := s.chunkService.DeleteChunksByKnowledgeID(ctx, knowledge.ID); err != nil {
 			logger.Errorf(ctx, "Delete chunks failed: %v", err)
 		}
 
-		// delete index
+		// Delete index
 		if err := retrieveEngine.DeleteByKnowledgeIDList(
 			ctx, []string{knowledge.ID}, embeddingModel.GetDimensions(),
 		); err != nil {
@@ -1165,18 +1165,18 @@ func (s *knowledgeService) getSummary(ctx context.Context,
 		return "", fmt.Errorf("no chunks provided for summary generation")
 	}
 
-	// concat chunk contents
+	// Concat chunk contents
 	chunkContents := ""
 	allImageInfos := make([]*types.ImageInfo, 0)
 
-	// then, sort chunks by StartAt
+	// Then, sort chunks by StartAt
 	sortedChunks := make([]*types.Chunk, len(chunks))
 	copy(sortedChunks, chunks)
 	sort.Slice(sortedChunks, func(i, j int) bool {
 		return sortedChunks[i].StartAt < sortedChunks[j].StartAt
 	})
 
-	// concat chunk contents and collect image infos
+	// Concat chunk contents and collect image infos
 	for _, chunk := range sortedChunks {
 		if chunk.EndAt > 4096 {
 			break
@@ -1189,23 +1189,23 @@ func (s *knowledgeService) getSummary(ctx context.Context,
 			}
 		}
 	}
-	// remove markdown image syntax
+	// Remove markdown image syntax
 	re := regexp.MustCompile(`!\[[^\]]*\]\([^)]+\)`)
 	chunkContents = re.ReplaceAllString(chunkContents, "")
-	// collect all image infos
+	// Collect all image infos
 	if len(allImageInfos) > 0 {
-		// add image infos to chunk contents
+		// Add image infos to chunk contents
 		var imageAnnotations string
 		for _, img := range allImageInfos {
 			if img.Caption != "" {
-				imageAnnotations += fmt.Sprintf("\n[图片描述: %s]", img.Caption)
+				imageAnnotations += fmt.Sprintf("\n[Image Caption: %s]", img.Caption)
 			}
 			if img.OCRText != "" {
-				imageAnnotations += fmt.Sprintf("\n[图片文字: %s]", img.OCRText)
+				imageAnnotations += fmt.Sprintf("\n[Image OCR: %s]", img.OCRText)
 			}
 		}
 
-		// concat chunk contents and image annotations
+		// Concat chunk contents and image annotations
 		chunkContents = chunkContents + imageAnnotations
 	}
 
@@ -1218,15 +1218,15 @@ func (s *knowledgeService) getSummary(ctx context.Context,
 
 	// Add knowledge metadata if available
 	if knowledge != nil {
-		metadataIntro := fmt.Sprintf("文档类型: %s\n文件名称: %s\n", knowledge.FileType, knowledge.FileName)
+		metadataIntro := fmt.Sprintf("Document type: %s\nFile name: %s\n", knowledge.FileType, knowledge.FileName)
 
 		// Add additional metadata if available
 		if knowledge.Type != "" {
-			metadataIntro += fmt.Sprintf("知识类型: %s\n", knowledge.Type)
+			metadataIntro += fmt.Sprintf("Knowledge type: %s\n", knowledge.Type)
 		}
 
 		// Prepend metadata to content
-		contentWithMetadata = metadataIntro + "\n内容:\n" + contentWithMetadata
+		contentWithMetadata = metadataIntro + "\nContent:\n" + contentWithMetadata
 	}
 
 	// Generate summary using AI model
@@ -1310,12 +1310,11 @@ func getFileType(filename string) string {
 }
 
 // isValidURL verifies if a URL is valid
-// isValidURL 检查URL是否有效
 func isValidURL(url string) bool {
-	if strings.HasPrefix(url, "http://") || strings.HasPrefix(url, "https://") {
-		return true
-	}
-	return false
+    if strings.HasPrefix(url, "http://") || strings.HasPrefix(url, "https://") {
+        return true
+    }
+    return false
 }
 
 // GetKnowledgeBatch retrieves multiple knowledge entries by their IDs

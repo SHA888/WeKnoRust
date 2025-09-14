@@ -3,7 +3,7 @@
         <div class="refer_header" @click="referBoxSwitch" v-if="session.knowledge_references && session.knowledge_references.length">
             <div class="refer_title">
                 <img src="@/assets/img/ziliao.svg" alt="" />
-                <span>参考了{{ session.knowledge_references && session.knowledge_references.length }}个相关内容</span>
+                <span>Referenced {{ session.knowledge_references && session.knowledge_references.length }} related items</span>
             </div>
             <div class="refer_show_icon">
                 <t-icon :name="showReferBox ? 'chevron-up' : 'chevron-down'" />
@@ -20,7 +20,7 @@
                     </template>
                     <span class="doc">
                         {{ session.knowledge_references.length < 2 ? item.knowledge_title : `${index +
-                            1}.${item.knowledge_title}` }} </span>
+                            1}. ${item.knowledge_title}` }} </span>
                 </t-popup>
             </div>
         </div>
@@ -29,7 +29,7 @@
 <script setup>
 import { onMounted, defineProps, computed, ref, reactive } from "vue";
 const props = defineProps({
-    // 必填项
+    // Required
     content: {
         type: String,
         required: false

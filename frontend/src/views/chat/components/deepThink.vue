@@ -11,10 +11,10 @@
                 <template #header>
                     <div class="deep-title">
                         <div v-if="deepSession.thinking" class="thinking">
-                            <img class="img_gif" src="@/assets/img/think.gif" alt="">思考中···
+                            <img class="img_gif" src="@/assets/img/think.gif" alt="">Thinking…
                         </div>
                         <div v-else class="done">
-                            <img class="icon deep_icon" src="@/assets/img/Frame3718.svg" alt=""></img>已深度思考
+                            <img class="icon deep_icon" src="@/assets/img/Frame3718.svg" alt=""></img>Deep thinking completed
                         </div>
                     </div>
                 </template>
@@ -32,7 +32,7 @@ import { onMounted, watch, computed, ref, reactive, defineProps } from 'vue';
 
 const isFold = ref(true)
 const props = defineProps({
-    // 必填项
+    // Required
     deepSession: {
         type: Object,
         required: false

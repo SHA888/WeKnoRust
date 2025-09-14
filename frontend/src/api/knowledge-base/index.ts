@@ -1,10 +1,10 @@
 import { get, post, put, del, postUpload, getDown, getTestData } from "../../utils/request";
 import { loadTestData } from "../test-data";
 
-// 获取知识库ID（优先从设置中获取）
+// Get Knowledge Base ID (prefer from settings)
 async function getKnowledgeBaseID() {
-  // 从localStorage获取设置中的知识库ID
-  const settingsStr = localStorage.getItem("WeKnora_settings");
+  // Read Knowledge Base ID from localStorage settings
+  const settingsStr = localStorage.getItem("WeKnoRust_settings") ?? localStorage.getItem("WeKnora_settings");
   let knowledgeBaseId = "";
   
   if (settingsStr) {
@@ -14,17 +14,17 @@ async function getKnowledgeBaseID() {
         return settings.knowledgeBaseId;
       }
     } catch (e) {
-      console.error("解析设置失败:", e);
+      console.error("Failed to parse settings:", e);
     }
   }
   
-  // 如果设置中没有知识库ID，则使用测试数据
+  // If no Knowledge Base ID in settings, use test data
   await loadTestData();
   
   const testData = getTestData();
   if (!testData || testData.knowledge_bases.length === 0) {
-    console.error("测试数据未初始化或不包含知识库");
-    throw new Error("测试数据未初始化或不包含知识库");
+    console.error("Test data not initialized or contains no knowledge base");
+    throw new Error("Test data not initialized or contains no knowledge base");
   }
   return testData.knowledge_bases[0].id;
 }

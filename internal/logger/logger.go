@@ -12,10 +12,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// LogLevel 日志级别类型
+// LogLevel represents the log level type
 type LogLevel string
 
-// 日志级别常量
+// Log level constants
 const (
 	LevelDebug LogLevel = "debug"
 	LevelInfo  LogLevel = "info"
@@ -24,7 +24,7 @@ const (
 	LevelFatal LogLevel = "fatal"
 )
 
-// ANSI颜色代码
+// ANSI color codes
 const (
 	colorRed    = "\033[31m"
 	colorGreen  = "\033[32m"
@@ -36,14 +36,14 @@ const (
 )
 
 type CustomFormatter struct {
-	ForceColor bool // 是否强制使用颜色，即使在非终端环境下
+	ForceColor bool // Whether to force colors even in non-TTY environments
 }
 
 func (f *CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	timestamp := entry.Time.Format("2006-01-02 15:04:05.000")
 	level := strings.ToUpper(entry.Level.String())
 
-	// 根据日志级别设置颜色
+	// Set color based on log level
 	var levelColor, resetColor string
 	if f.ForceColor {
 		switch entry.Level {
@@ -63,21 +63,21 @@ func (f *CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		resetColor = colorReset
 	}
 
-	// 取出 caller 字段
+	// Extract caller field from entry data
 	caller := ""
 	if val, ok := entry.Data["caller"]; ok {
 		caller = fmt.Sprintf("%v", val)
 	}
 
-	// 拼接字段部分：request_id 优先，其他排序后输出
+	// Build fields string: request_id first, then others sorted
 	fields := ""
 
-	// request_id 优先输出
+	// request_id first
 	if v, ok := entry.Data["request_id"]; ok {
 		fields += fmt.Sprintf("request_id=%v ", v)
 	}
 
-	// 其余字段排序后输出
+	// Sort and append remaining fields
 	keys := make([]string, 0, len(entry.Data))
 	for k := range entry.Data {
 		if k != "caller" && k != "request_id" {
@@ -91,32 +91,32 @@ func (f *CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 
 	fields = strings.TrimSpace(fields)
 
-	// 拼接最终输出内容，添加颜色
+	// Compose final output with optional colors
 	return []byte(fmt.Sprintf("%s%-5s%s[%s] [%s] %-20s | %s\n",
 		levelColor, level, resetColor, timestamp, fields, caller, entry.Message)), nil
 }
 
-// 初始化全局日志设置
+// Initialize global logger settings
 func init() {
-	// 设置日志格式而不修改全局时区
+	// Set log formatter (without altering global timezone)
 	logrus.SetFormatter(&CustomFormatter{ForceColor: true})
 	logrus.SetReportCaller(false)
 }
 
-// GetLogger 获取日志实例
+// GetLogger returns a logger entry from context or a new one
 func GetLogger(c context.Context) *logrus.Entry {
 	if logger := c.Value(types.LoggerContextKey); logger != nil {
 		return logger.(*logrus.Entry)
 	}
 	newLogger := logrus.New()
 	newLogger.SetFormatter(&CustomFormatter{ForceColor: true})
-	// 设置默认日志级别
+	// Set default log level
 	newLogger.SetLevel(logrus.DebugLevel)
-	// 启用调用者信息
+	// Caller info controlled by formatter; entry returned here
 	return logrus.NewEntry(newLogger)
 }
 
-// SetLogLevel 设置日志级别
+// SetLogLevel sets the global log level
 func SetLogLevel(level LogLevel) {
 	var logLevel logrus.Level
 
@@ -138,7 +138,7 @@ func SetLogLevel(level LogLevel) {
 	logrus.SetLevel(logLevel)
 }
 
-// 添加调用者字段
+// addCaller adds caller information to the log entry
 func addCaller(entry *logrus.Entry, skip int) *logrus.Entry {
 	pc, file, line, ok := runtime.Caller(skip)
 	if !ok {
@@ -147,7 +147,7 @@ func addCaller(entry *logrus.Entry, skip int) *logrus.Entry {
 	shortFile := path.Base(file)
 	funcName := "unknown"
 	if fn := runtime.FuncForPC(pc); fn != nil {
-		// 只保留函数名，不带包路径（如 doSomething）
+		// Keep only the function name without package path (e.g., doSomething)
 		fullName := path.Base(fn.Name())
 		parts := strings.Split(fullName, ".")
 		funcName = parts[len(parts)-1]
@@ -155,64 +155,64 @@ func addCaller(entry *logrus.Entry, skip int) *logrus.Entry {
 	return entry.WithField("caller", fmt.Sprintf("%s:%d[%s]", shortFile, line, funcName))
 }
 
-// WithRequestID 在日志中添加请求ID
+// WithRequestID attaches the request ID to the logger in context
 func WithRequestID(c context.Context, requestID string) context.Context {
 	return WithField(c, "request_id", requestID)
 }
 
-// WithField 向日志中添加一个字段
+// WithField attaches a single field to the logger in context
 func WithField(c context.Context, key string, value interface{}) context.Context {
 	logger := GetLogger(c).WithField(key, value)
 	return context.WithValue(c, types.LoggerContextKey, logger)
 }
 
-// WithFields 向日志中添加多个字段
+// WithFields attaches multiple fields to the logger in context
 func WithFields(c context.Context, fields logrus.Fields) context.Context {
 	logger := GetLogger(c).WithFields(fields)
 	return context.WithValue(c, types.LoggerContextKey, logger)
 }
 
-// Debug 输出调试级别的日志
+// Debug logs at debug level
 func Debug(c context.Context, args ...interface{}) {
 	addCaller(GetLogger(c), 2).Debug(args...)
 }
 
-// Debugf 使用格式化字符串输出调试级别的日志
+// Debugf logs a formatted debug message
 func Debugf(c context.Context, format string, args ...interface{}) {
 	addCaller(GetLogger(c), 2).Debugf(format, args...)
 }
 
-// Info 输出信息级别的日志
+// Info logs at info level
 func Info(c context.Context, args ...interface{}) {
 	addCaller(GetLogger(c), 2).Info(args...)
 }
 
-// Infof 使用格式化字符串输出信息级别的日志
+// Infof logs a formatted info message
 func Infof(c context.Context, format string, args ...interface{}) {
 	addCaller(GetLogger(c), 2).Infof(format, args...)
 }
 
-// Warn 输出警告级别的日志
+// Warn logs at warn level
 func Warn(c context.Context, args ...interface{}) {
 	addCaller(GetLogger(c), 2).Warn(args...)
 }
 
-// Warnf 使用格式化字符串输出警告级别的日志
+// Warnf logs a formatted warn message
 func Warnf(c context.Context, format string, args ...interface{}) {
 	addCaller(GetLogger(c), 2).Warnf(format, args...)
 }
 
-// Error 输出错误级别的日志
+// Error logs at error level
 func Error(c context.Context, args ...interface{}) {
 	addCaller(GetLogger(c), 2).Error(args...)
 }
 
-// Errorf 使用格式化字符串输出错误级别的日志
+// Errorf logs a formatted error message
 func Errorf(c context.Context, format string, args ...interface{}) {
 	addCaller(GetLogger(c), 2).Errorf(format, args...)
 }
 
-// ErrorWithFields 输出带有额外字段的错误级别日志
+// ErrorWithFields logs an error with additional fields
 func ErrorWithFields(c context.Context, err error, fields logrus.Fields) {
 	if fields == nil {
 		fields = logrus.Fields{}
@@ -220,20 +220,20 @@ func ErrorWithFields(c context.Context, err error, fields logrus.Fields) {
 	if err != nil {
 		fields["error"] = err.Error()
 	}
-	addCaller(GetLogger(c), 2).WithFields(fields).Error("发生错误")
+	addCaller(GetLogger(c), 2).WithFields(fields).Error("An error occurred")
 }
 
-// Fatal 输出致命级别的日志并退出程序
+// Fatal logs at fatal level and exits
 func Fatal(c context.Context, args ...interface{}) {
 	addCaller(GetLogger(c), 2).Fatal(args...)
 }
 
-// Fatalf 使用格式化字符串输出致命级别的日志并退出程序
+// Fatalf logs a formatted fatal message and exits
 func Fatalf(c context.Context, format string, args ...interface{}) {
 	addCaller(GetLogger(c), 2).Fatalf(format, args...)
 }
 
-// CloneContext 复制上下文中的关键信息到新上下文
+// CloneContext copies key values from one context to a new background context
 func CloneContext(ctx context.Context) context.Context {
 	newCtx := context.Background()
 

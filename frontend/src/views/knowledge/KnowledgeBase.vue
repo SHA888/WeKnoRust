@@ -108,7 +108,7 @@ const sendMsg = (value: string) => {
 };
 
 const getTitle = (session_id: string, value: string) => {
-  let obj = { title: '新会话', path: `chat/${session_id}`, id: session_id, isMore: false, isNoTitle: true };
+  let obj = { title: 'New Session', path: `chat/${session_id}`, id: session_id, isMore: false, isNoTitle: true };
   usemenuStore.updataMenuChildren(obj);
   usemenuStore.changeIsFirstSession(true);
   usemenuStore.changeFirstQuery(value);
@@ -116,8 +116,8 @@ const getTitle = (session_id: string, value: string) => {
 };
 
 async function createNewSession(value: string): Promise<void> {
-  // 从localStorage获取设置中的知识库ID
-  const settingsStr = localStorage.getItem("WeKnora_settings");
+  // Read Knowledge Base ID from localStorage settings
+  const settingsStr = localStorage.getItem("WeKnoRust_settings") ?? localStorage.getItem("WeKnora_settings");
   let knowledgeBaseId = "";
   
   if (settingsStr) {
@@ -129,23 +129,23 @@ async function createNewSession(value: string): Promise<void> {
           if (res.data && res.data.id) {
             getTitle(res.data.id, value);
           } else {
-            // 错误处理
-            console.error("创建会话失败");
+            // Error handling
+            console.error("Failed to create session");
           }
         }).catch(error => {
-          console.error("创建会话出错:", error);
+          console.error("Error creating session:", error);
         });
         return;
       }
     } catch (e) {
-      console.error("解析设置失败:", e);
+      console.error("Failed to parse settings:", e);
     }
   }
   
-  // 如果设置中没有知识库ID，则使用测试数据
+  // If no Knowledge Base ID in settings, use test data
   const testData = getTestData();
   if (!testData || !testData.knowledge_bases || testData.knowledge_bases.length === 0) {
-    console.error("测试数据未初始化或不包含知识库");
+    console.error("Test data not initialized or contains no knowledge base");
     return;
   }
 
@@ -156,11 +156,11 @@ async function createNewSession(value: string): Promise<void> {
     if (res.data && res.data.id) {
       getTitle(res.data.id, value);
     } else {
-      // 错误处理
-      console.error("创建会话失败");
+      // Error handling
+      console.error("Failed to create session");
     }
   }).catch(error => {
-    console.error("创建会话出错:", error);
+    console.error("Error creating session:", error);
   });
 }
 </script>

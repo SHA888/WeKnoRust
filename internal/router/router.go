@@ -13,7 +13,7 @@ import (
 	"github.com/Tencent/WeKnowRust/internal/types/interfaces"
 )
 
-// RouterParams 路由参数
+// RouterParams defines DI parameters for building routes
 type RouterParams struct {
 	dig.In
 
@@ -31,11 +31,11 @@ type RouterParams struct {
 	InitializationHandler *handler.InitializationHandler
 }
 
-// NewRouter 创建新的路由
+// NewRouter creates and configures a new Gin engine with routes and middleware
 func NewRouter(params RouterParams) *gin.Engine {
 	r := gin.New()
 
-	// CORS 中间件应放在最前面
+	// CORS middleware should be added first
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
@@ -45,30 +45,30 @@ func NewRouter(params RouterParams) *gin.Engine {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	// 其他中间件
+	// Other middleware
 	r.Use(middleware.RequestID())
 	r.Use(middleware.Logger())
 	r.Use(middleware.Recovery())
 	r.Use(middleware.ErrorHandler())
 	r.Use(middleware.Auth(params.TenantService, params.Config))
 
-	// 添加OpenTelemetry追踪中间件
+	// Add OpenTelemetry tracing middleware
 	r.Use(middleware.TracingMiddleware())
 
-	// 健康检查
+	// Health check
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
 
-	// 测试数据接口（不需要认证）
+	// Test data APIs (no authentication)
 	r.GET("/api/v1/test-data", params.TestDataHandler.GetTestData)
 
-	// 初始化接口（不需要认证）
+	// Initialization APIs (no authentication)
 	r.GET("/api/v1/initialization/status", params.InitializationHandler.CheckStatus)
 	r.GET("/api/v1/initialization/config", params.InitializationHandler.GetCurrentConfig)
 	r.POST("/api/v1/initialization/initialize", params.InitializationHandler.Initialize)
 
-	// Ollama相关接口（不需要认证）
+	// Ollama-related APIs (no authentication)
 	r.GET("/api/v1/initialization/ollama/status", params.InitializationHandler.CheckOllamaStatus)
 	r.GET("/api/v1/initialization/ollama/models", params.InitializationHandler.ListOllamaModels)
 	r.POST("/api/v1/initialization/ollama/models/check", params.InitializationHandler.CheckOllamaModels)
@@ -76,13 +76,13 @@ func NewRouter(params RouterParams) *gin.Engine {
 	r.GET("/api/v1/initialization/ollama/download/progress/:taskId", params.InitializationHandler.GetDownloadProgress)
 	r.GET("/api/v1/initialization/ollama/download/tasks", params.InitializationHandler.ListDownloadTasks)
 
-	// 远程API相关接口（不需要认证）
+	// Remote API related endpoints (no authentication)
 	r.POST("/api/v1/initialization/remote/check", params.InitializationHandler.CheckRemoteModel)
 	r.POST("/api/v1/initialization/embedding/test", params.InitializationHandler.TestEmbeddingModel)
 	r.POST("/api/v1/initialization/rerank/check", params.InitializationHandler.CheckRerankModel)
 	r.POST("/api/v1/initialization/multimodal/test", params.InitializationHandler.TestMultimodalFunction)
 
-	// 需要认证的API路由
+	// Authenticated API routes
 	v1 := r.Group("/api/v1")
 	{
 		RegisterTenantRoutes(v1, params.TenantHandler)
@@ -99,88 +99,88 @@ func NewRouter(params RouterParams) *gin.Engine {
 	return r
 }
 
-// RegisterChunkRoutes 注册分块相关的路由
+// RegisterChunkRoutes registers chunk-related routes
 func RegisterChunkRoutes(r *gin.RouterGroup, handler *handler.ChunkHandler) {
-	// 分块路由组
+	// Chunks route group
 	chunks := r.Group("/chunks")
 	{
-		// 获取分块列表
+		// List chunks
 		chunks.GET("/:knowledge_id", handler.ListKnowledgeChunks)
-		// 删除分块
+		// Delete a chunk
 		chunks.DELETE("/:knowledge_id/:id", handler.DeleteChunk)
-		// 删除知识下的所有分块
+		// Delete all chunks under a knowledge item
 		chunks.DELETE("/:knowledge_id", handler.DeleteChunksByKnowledgeID)
-		// 更新分块信息
+		// Update chunk info
 		chunks.PUT("/:knowledge_id/:id", handler.UpdateChunk)
 	}
 }
 
-// RegisterKnowledgeRoutes 注册知识相关的路由
+// RegisterKnowledgeRoutes registers knowledge-related routes
 func RegisterKnowledgeRoutes(r *gin.RouterGroup, handler *handler.KnowledgeHandler) {
-	// 知识库下的知识路由组
+	// Knowledge under knowledge base route group
 	kb := r.Group("/knowledge-bases/:id/knowledge")
 	{
-		// 从文件创建知识
+		// Create knowledge from file
 		kb.POST("/file", handler.CreateKnowledgeFromFile)
-		// 从URL创建知识
+		// Create knowledge from URL
 		kb.POST("/url", handler.CreateKnowledgeFromURL)
-		// 获取知识库下的知识列表
+		// List knowledge under the knowledge base
 		kb.GET("", handler.ListKnowledge)
 	}
 
-	// 知识路由组
+	// Knowledge route group
 	k := r.Group("/knowledge")
 	{
-		// 批量获取知识
+		// Batch get knowledge
 		k.GET("/batch", handler.GetKnowledgeBatch)
-		// 获取知识详情
+		// Get knowledge detail
 		k.GET("/:id", handler.GetKnowledge)
-		// 删除知识
+		// Delete knowledge
 		k.DELETE("/:id", handler.DeleteKnowledge)
-		// 更新知识
+		// Update knowledge
 		k.PUT("/:id", handler.UpdateKnowledge)
-		// 获取知识文件
+		// Download knowledge file
 		k.GET("/:id/download", handler.DownloadKnowledgeFile)
-		// 更新图像分块信息
+		// Update image chunk info
 		k.PUT("/image/:id/:chunk_id", handler.UpdateImageInfo)
 	}
 }
 
-// RegisterKnowledgeBaseRoutes 注册知识库相关的路由
+// RegisterKnowledgeBaseRoutes registers knowledge base routes
 func RegisterKnowledgeBaseRoutes(r *gin.RouterGroup, handler *handler.KnowledgeBaseHandler) {
-	// 知识库路由组
+	// Knowledge base route group
 	kb := r.Group("/knowledge-bases")
 	{
-		// 创建知识库
+		// Create knowledge base
 		kb.POST("", handler.CreateKnowledgeBase)
-		// 获取知识库列表
+		// List knowledge bases
 		kb.GET("", handler.ListKnowledgeBases)
-		// 获取知识库详情
+		// Get knowledge base detail
 		kb.GET("/:id", handler.GetKnowledgeBase)
-		// 更新知识库
+		// Update knowledge base
 		kb.PUT("/:id", handler.UpdateKnowledgeBase)
-		// 删除知识库
+		// Delete knowledge base
 		kb.DELETE("/:id", handler.DeleteKnowledgeBase)
-		// 混合搜索
+		// Hybrid search
 		kb.GET("/:id/hybrid-search", handler.HybridSearch)
-		// 拷贝知识库
+		// Copy knowledge base
 		kb.POST("/copy", handler.CopyKnowledgeBase)
 	}
 }
 
-// RegisterMessageRoutes 注册消息相关的路由
+// RegisterMessageRoutes registers message-related routes
 func RegisterMessageRoutes(r *gin.RouterGroup, handler *handler.MessageHandler) {
-	// 消息路由组
+	// Messages route group
 	messages := r.Group("/messages")
 	{
-		// 加载更早的消息，用于向上滚动加载
+		// Load older messages for upward infinite scroll
 		messages.GET("/:session_id/load", handler.LoadMessages)
-		// 删除消息
+		// Delete a message
 		messages.DELETE("/:session_id/:id", handler.DeleteMessage)
 	}
 }
 
-// RegisterSessionRoutes 注册路由
+// RegisterSessionRoutes registers session routes
 func RegisterSessionRoutes(r *gin.RouterGroup, handler *handler.SessionHandler) {
 	sessions := r.Group("/sessions")
 	{
@@ -190,28 +190,28 @@ func RegisterSessionRoutes(r *gin.RouterGroup, handler *handler.SessionHandler) 
 		sessions.PUT("/:id", handler.UpdateSession)
 		sessions.DELETE("/:id", handler.DeleteSession)
 		sessions.POST("/:session_id/generate_title", handler.GenerateTitle)
-		// 继续接收活跃流
+		// Continue receiving active stream
 		sessions.GET("/continue-stream/:session_id", handler.ContinueStream)
 	}
 }
 
-// RegisterChatRoutes 注册路由
+// RegisterChatRoutes registers chat-related routes
 func RegisterChatRoutes(r *gin.RouterGroup, handler *handler.SessionHandler) {
 	knowledgeChat := r.Group("/knowledge-chat")
 	{
 		knowledgeChat.POST("/:session_id", handler.KnowledgeQA)
 	}
 
-	// 新增知识检索接口，不需要session_id
+	// Knowledge search endpoint without session_id
 	knowledgeSearch := r.Group("/knowledge-search")
 	{
 		knowledgeSearch.POST("", handler.SearchKnowledge)
 	}
 }
 
-// RegisterTenantRoutes 注册租户相关的路由
+// RegisterTenantRoutes registers tenant-related routes
 func RegisterTenantRoutes(r *gin.RouterGroup, handler *handler.TenantHandler) {
-	// 租户路由组
+	// Tenant route group
 	tenantRoutes := r.Group("/tenants")
 	{
 		tenantRoutes.POST("", handler.CreateTenant)
@@ -222,20 +222,20 @@ func RegisterTenantRoutes(r *gin.RouterGroup, handler *handler.TenantHandler) {
 	}
 }
 
-// RegisterModelRoutes 注册模型相关的路由
+// RegisterModelRoutes registers model-related routes
 func RegisterModelRoutes(r *gin.RouterGroup, handler *handler.ModelHandler) {
-	// 模型路由组
+	// Models route group
 	models := r.Group("/models")
 	{
-		// 创建模型
+		// Create model
 		models.POST("", handler.CreateModel)
-		// 获取模型列表
+		// List models
 		models.GET("", handler.ListModels)
-		// 获取单个模型
+		// Get model by ID
 		models.GET("/:id", handler.GetModel)
-		// 更新模型
+		// Update model
 		models.PUT("/:id", handler.UpdateModel)
-		// 删除模型
+		// Delete model
 		models.DELETE("/:id", handler.DeleteModel)
 	}
 }

@@ -1,9 +1,9 @@
 import { get, post, put, del, postChat } from "../../utils/request";
 import { loadTestData } from "../test-data";
 
-// 从localStorage获取设置
+// Read settings from localStorage
 function getSettings() {
-  const settingsStr = localStorage.getItem("WeKnora_settings");
+  const settingsStr = localStorage.getItem("WeKnoRust_settings") ?? localStorage.getItem("WeKnora_settings");
   if (settingsStr) {
     try {
       const settings = JSON.parse(settingsStr);
@@ -11,16 +11,16 @@ function getSettings() {
         return settings;
       }
     } catch (e) {
-      console.error("解析设置失败:", e);
+      console.error("Failed to parse settings:", e);
     }
   }
   return null;
 }
 
-// 根据是否有设置决定是否需要加载测试数据
+// Load test data only when no local settings
 async function ensureConfigured() {
   const settings = getSettings();
-  // 如果没有设置APIKey和Endpoint，则加载测试数据
+  // If no API key and endpoint configured, load test data
   if (!settings) {
     await loadTestData();
   }

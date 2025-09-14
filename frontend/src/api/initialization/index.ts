@@ -1,6 +1,6 @@
 import { get, post } from '../../utils/request';
 
-// 初始化配置数据类型
+// Initialization configuration data type
 export interface InitializationConfig {
     llm: {
         source: string;
@@ -13,7 +13,7 @@ export interface InitializationConfig {
         modelName: string;
         baseUrl?: string;
         apiKey?: string;
-        dimension?: number; // 添加embedding维度字段
+        dimension?: number; // Add embedding dimension field
     };
     rerank: {
         modelName: string;
@@ -51,7 +51,7 @@ export interface InitializationConfig {
     storageType?: 'cos' | 'minio';
 }
 
-// 下载任务状态类型
+// Download task status type
 export interface DownloadTask {
     id: string;
     modelName: string;
@@ -62,7 +62,7 @@ export interface DownloadTask {
     endTime?: string;
 }
 
-// 系统初始化状态检查
+// Check system initialization status
 export function checkInitializationStatus(): Promise<{ initialized: boolean }> {
     return new Promise((resolve, reject) => {
         get('/api/v1/initialization/status')
@@ -70,31 +70,31 @@ export function checkInitializationStatus(): Promise<{ initialized: boolean }> {
                 resolve(response.data || { initialized: false });
             })
             .catch((error: any) => {
-                console.warn('检查初始化状态失败，假设需要初始化:', error);
+                console.warn('Failed to check initialization status; assuming initialization is required:', error);
                 resolve({ initialized: false });
             });
     });
 }
 
-// 执行系统初始化
+// Perform system initialization
 export function initializeSystem(config: InitializationConfig): Promise<any> {
     return new Promise((resolve, reject) => {
-        console.log('开始系统初始化...', config);
+        console.log('Starting system initialization...', config);
         post('/api/v1/initialization/initialize', config)
             .then((response: any) => {
-                console.log('系统初始化完成', response);
-                // 设置本地初始化状态标记
+                console.log('System initialization completed', response);
+                // Set local initialization status flag
                 localStorage.setItem('system_initialized', 'true');
                 resolve(response);
             })
             .catch((error: any) => {
-                console.error('系统初始化失败:', error);
+                console.error('System initialization failed:', error);
                 reject(error);
             });
     });
 }
 
-// 检查Ollama服务状态
+// Check Ollama service status
 export function checkOllamaStatus(): Promise<{ available: boolean; version?: string; error?: string; baseUrl?: string }> {
     return new Promise((resolve, reject) => {
         get('/api/v1/initialization/ollama/status')
@@ -102,13 +102,13 @@ export function checkOllamaStatus(): Promise<{ available: boolean; version?: str
                 resolve(response.data || { available: false });
             })
             .catch((error: any) => {
-                console.error('检查Ollama状态失败:', error);
-                resolve({ available: false, error: error.message || '检查失败' });
+                console.error('Failed to check Ollama status:', error);
+                resolve({ available: false, error: error.message || 'Check failed' });
             });
     });
 }
 
-// 列出已安装的 Ollama 模型
+// List installed Ollama models
 export function listOllamaModels(): Promise<string[]> {
     return new Promise((resolve, reject) => {
         get('/api/v1/initialization/ollama/models')
@@ -116,13 +116,13 @@ export function listOllamaModels(): Promise<string[]> {
                 resolve((response.data && response.data.models) || []);
             })
             .catch((error: any) => {
-                console.error('获取 Ollama 模型列表失败:', error);
+                console.error('Failed to list Ollama models:', error);
                 resolve([]);
             });
     });
 }
 
-// 检查Ollama模型状态
+// Check Ollama model statuses
 export function checkOllamaModels(models: string[]): Promise<{ models: Record<string, boolean> }> {
     return new Promise((resolve, reject) => {
         post('/api/v1/initialization/ollama/models/check', { models })
@@ -130,13 +130,13 @@ export function checkOllamaModels(models: string[]): Promise<{ models: Record<st
                 resolve(response.data || { models: {} });
             })
             .catch((error: any) => {
-                console.error('检查Ollama模型状态失败:', error);
+                console.error('Failed to check Ollama model statuses:', error);
                 reject(error);
             });
     });
 }
 
-// 启动Ollama模型下载（异步）
+// Start Ollama model download (async)
 export function downloadOllamaModel(modelName: string): Promise<{ taskId: string; modelName: string; status: string; progress: number }> {
     return new Promise((resolve, reject) => {
         post('/api/v1/initialization/ollama/models/download', { modelName })
@@ -144,13 +144,13 @@ export function downloadOllamaModel(modelName: string): Promise<{ taskId: string
                 resolve(response.data || { taskId: '', modelName, status: 'failed', progress: 0 });
             })
             .catch((error: any) => {
-                console.error('启动Ollama模型下载失败:', error);
+                console.error('Failed to start Ollama model download:', error);
                 reject(error);
             });
     });
 }
 
-// 查询下载进度
+// Query download progress
 export function getDownloadProgress(taskId: string): Promise<DownloadTask> {
     return new Promise((resolve, reject) => {
         get(`/api/v1/initialization/ollama/download/progress/${taskId}`)
@@ -158,13 +158,13 @@ export function getDownloadProgress(taskId: string): Promise<DownloadTask> {
                 resolve(response.data);
             })
             .catch((error: any) => {
-                console.error('查询下载进度失败:', error);
+                console.error('Failed to query download progress:', error);
                 reject(error);
             });
     });
 }
 
-// 获取所有下载任务
+// List all download tasks
 export function listDownloadTasks(): Promise<DownloadTask[]> {
     return new Promise((resolve, reject) => {
         get('/api/v1/initialization/ollama/download/tasks')
@@ -172,13 +172,13 @@ export function listDownloadTasks(): Promise<DownloadTask[]> {
                 resolve(response.data || []);
             })
             .catch((error: any) => {
-                console.error('获取下载任务列表失败:', error);
-                reject(error);
+                console.error('Failed to list download tasks:', error);
+                resolve([]);
             });
     });
 }
 
-// 获取当前系统配置
+// Get current system configuration
 export function getCurrentConfig(): Promise<InitializationConfig & { hasFiles: boolean }> {
     return new Promise((resolve, reject) => {
         get('/api/v1/initialization/config')

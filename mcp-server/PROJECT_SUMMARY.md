@@ -264,6 +264,6 @@ python test_module.py             # Run tests
 ---
 
 **Status**: ✅ Complete and ready to use
-**Repository**: https://github.com/SHA888/WeKnoRust
+**Repository**: https://github.com/SHA888/WeKnoRustMCP
 **Last updated**: Jan 2024
 **Version**: 1.0.0

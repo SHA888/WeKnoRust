@@ -8,37 +8,37 @@ import (
 	"gorm.io/gorm"
 )
 
-// ChunkType 定义了不同类型的 Chunk
+// ChunkType defines different types of chunks
 type ChunkType string
 
 const (
-	// ChunkTypeText 表示普通的文本 Chunk
+	// ChunkTypeText represents a standard text chunk
 	ChunkTypeText ChunkType = "text"
-	// ChunkTypeImageOCR 表示图片 OCR 文本的 Chunk
+	// ChunkTypeImageOCR represents a chunk containing OCR text extracted from an image
 	ChunkTypeImageOCR ChunkType = "image_ocr"
-	// ChunkTypeImageCaption 表示图片描述的 Chunk
+	// ChunkTypeImageCaption represents a chunk containing an image caption/description
 	ChunkTypeImageCaption ChunkType = "image_caption"
-	// ChunkTypeSummary 表示摘要类型的 Chunk
+	// ChunkTypeSummary represents a summary chunk
 	ChunkTypeSummary = "summary"
-	// ChunkTypeEntity 表示实体类型的 Chunk
+	// ChunkTypeEntity represents an entity chunk
 	ChunkTypeEntity ChunkType = "entity"
-	// ChunkTypeRelationship 表示关系类型的 Chunk
+	// ChunkTypeRelationship represents a relationship chunk
 	ChunkTypeRelationship ChunkType = "relationship"
 )
 
-// ImageInfo 表示与 Chunk 关联的图片信息
+// ImageInfo represents image information associated with a chunk
 type ImageInfo struct {
-	// 图片URL（COS）
+	// Image URL (e.g., COS)
 	URL string `json:"url" gorm:"type:text"`
-	// 原始图片URL
+	// Original image URL
 	OriginalURL string `json:"original_url" gorm:"type:text"`
-	// 图片在文本中的开始位置
+	// Start position of the image within the text
 	StartPos int `json:"start_pos"`
-	// 图片在文本中的结束位置
+	// End position of the image within the text
 	EndPos int `json:"end_pos"`
-	// 图片描述
+	// Image caption/description
 	Caption string `json:"caption"`
-	// 图片OCR文本
+	// Image OCR text
 	OCRText string `json:"ocr_text"`
 }
 
@@ -71,15 +71,15 @@ type Chunk struct {
 	PreChunkID string `json:"pre_chunk_id"`
 	// Next chunk ID
 	NextChunkID string `json:"next_chunk_id"`
-	// Chunk 类型，用于区分不同类型的 Chunk
+	// Chunk type, used to distinguish different chunk categories
 	ChunkType ChunkType `json:"chunk_type" gorm:"type:varchar(20);default:'text'"`
-	// 父 Chunk ID，用于关联图片 Chunk 和原始文本 Chunk
+	// Parent chunk ID, used to associate image chunks with the original text chunk
 	ParentChunkID string `json:"parent_chunk_id" gorm:"type:varchar(36);index"`
-	// 关系 Chunk ID，用于关联关系 Chunk 和原始文本 Chunk
+	// Relationship chunk IDs, used to associate relation chunks with the original text chunk
 	RelationChunks JSON `json:"relation_chunks" gorm:"type:json"`
-	// 间接关系 Chunk ID，用于关联间接关系 Chunk 和原始文本 Chunk
+	// Indirect relationship chunk IDs, used to associate indirect relation chunks with the original text chunk
 	IndirectRelationChunks JSON `json:"indirect_relation_chunks" gorm:"type:json"`
-	// 图片信息，存储为 JSON
+	// Image information, stored as JSON
 	ImageInfo string `json:"image_info" gorm:"type:text"`
 	// Chunk creation time
 	CreatedAt time.Time `json:"created_at"`

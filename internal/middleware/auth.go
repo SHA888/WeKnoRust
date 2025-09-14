@@ -14,17 +14,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 无需认证的API列表
+// API endpoints that do not require authentication
 var noAuthAPI = map[string][]string{
 	"/api/v1/test-data":        {"GET"},
 	"/api/v1/tenants":          {"POST"},
 	"/api/v1/initialization/*": {"GET", "POST"},
 }
 
-// 检查请求是否在无需认证的API列表中
+// isNoAuthAPI checks whether a path/method pair is in the no-auth list
 func isNoAuthAPI(path string, method string) bool {
 	for api, methods := range noAuthAPI {
-		// 如果以*结尾，按照前缀匹配，否则按照全路径匹配
+		// If api ends with '*', match by prefix; otherwise match full path
 		if strings.HasSuffix(api, "*") {
 			if strings.HasPrefix(path, strings.TrimSuffix(api, "*")) && slices.Contains(methods, method) {
 				return true
@@ -36,7 +36,7 @@ func isNoAuthAPI(path string, method string) bool {
 	return false
 }
 
-// Auth 认证中间件
+// Auth is the authentication middleware
 func Auth(tenantService interfaces.TenantService, cfg *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// ignore OPTIONS request
@@ -45,7 +45,7 @@ func Auth(tenantService interfaces.TenantService, cfg *config.Config) gin.Handle
 			return
 		}
 
-		// 检查请求是否在无需认证的API列表中
+		// Bypass if this request matches a no-auth endpoint
 		if isNoAuthAPI(c.Request.URL.Path, c.Request.Method) {
 			c.Next()
 			return

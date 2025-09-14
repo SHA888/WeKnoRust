@@ -3,9 +3,9 @@
 <template>
     <div class="mask">
         <img class="upload-mask-img" src="@/assets/img/upload-mask.svg" alt="">
-        <span class="drag-txt">将文件拖放到此处</span>
-        <span class="drag-type-txt">pdf、doc 格式文件，不超过30M</span>
-        <span class="drag-type-txt">text、markdown格式文件，不超过30M</span>
+        <span class="drag-txt">Drag and drop files here</span>
+        <span class="drag-type-txt">PDF, DOC files up to 30MB</span>
+        <span class="drag-type-txt">Text, Markdown files up to 30MB</span>
     </div>
 </template>
 <style scoped lang="less">

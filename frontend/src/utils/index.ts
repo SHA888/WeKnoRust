@@ -26,18 +26,18 @@ export function kbFileTypeVerification(file) {
   let validTypes = ["pdf", "txt", "md", "docx", "doc", "jpg", "jpeg", "png"];
   let type = file.name.substring(file.name.lastIndexOf(".") + 1);
   if (!validTypes.includes(type)) {
-    MessagePlugin.error("文件类型错误！");
+    MessagePlugin.error("Invalid file type.");
     return true;
   }
   if (
     (type == "pdf" || type == "docx" || type == "doc") &&
     file.size > 31457280
   ) {
-    MessagePlugin.error("pdf/doc文件不能超过30M！");
+    MessagePlugin.error("pdf/doc files must not exceed 30MB.");
     return true;
   }
   if ((type == "txt" || type == "md") && file.size > 31457280) {
-    MessagePlugin.error("txt/md文件不能超过30M！");
+    MessagePlugin.error("txt/md files must not exceed 30MB.");
     return true;
   }
   return false

@@ -58,7 +58,7 @@ func (p *PluginRerank) OnEvent(ctx context.Context,
 	logger.Infof(ctx, "Preparing passages for reranking, search result count: %d", len(chatManage.SearchResult))
 	var passages []string
 	for _, result := range chatManage.SearchResult {
-		// 合并Content和ImageInfo的文本内容
+		// Merge textual content from Content and ImageInfo
 		passage := getEnrichedPassage(ctx, result)
 		passages = append(passages, passage)
 	}
@@ -124,13 +124,13 @@ func (p *PluginRerank) rerank(ctx context.Context,
 	return rankFilter
 }
 
-// getEnrichedPassage 合并Content和ImageInfo的文本内容
+// getEnrichedPassage merges textual content from Content and ImageInfo
 func getEnrichedPassage(ctx context.Context, result *types.SearchResult) string {
 	if result.ImageInfo == "" {
 		return result.Content
 	}
 
-	// 解析ImageInfo
+	// Parse ImageInfo
 	var imageInfos []types.ImageInfo
 	err := json.Unmarshal([]byte(result.ImageInfo), &imageInfos)
 	if err != nil {
@@ -142,14 +142,14 @@ func getEnrichedPassage(ctx context.Context, result *types.SearchResult) string 
 		return result.Content
 	}
 
-	// 提取所有图片的描述和OCR文本
+	// Extract captions and OCR texts from all images
 	var imageTexts []string
 	for _, img := range imageInfos {
 		if img.Caption != "" {
-			imageTexts = append(imageTexts, fmt.Sprintf("图片描述: %s", img.Caption))
+			imageTexts = append(imageTexts, fmt.Sprintf("Image caption: %s", img.Caption))
 		}
 		if img.OCRText != "" {
-			imageTexts = append(imageTexts, fmt.Sprintf("图片文本: %s", img.OCRText))
+			imageTexts = append(imageTexts, fmt.Sprintf("Image text: %s", img.OCRText))
 		}
 	}
 
@@ -157,7 +157,7 @@ func getEnrichedPassage(ctx context.Context, result *types.SearchResult) string 
 		return result.Content
 	}
 
-	// 组合内容和图片信息
+	// Combine content and image information
 	combinedText := result.Content
 	if combinedText != "" {
 		combinedText += "\n\n"

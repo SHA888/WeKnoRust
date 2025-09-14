@@ -9,7 +9,7 @@ import (
 	"github.com/Tencent/WeKnowRust/internal/types/interfaces"
 )
 
-// 内存流信息
+// memoryStreamInfo holds in-memory stream information
 type memoryStreamInfo struct {
 	sessionID           string
 	requestID           string
@@ -20,21 +20,21 @@ type memoryStreamInfo struct {
 	isCompleted         bool
 }
 
-// MemoryStreamManager 基于内存的流管理器实现
+// MemoryStreamManager is an in-memory stream manager implementation
 type MemoryStreamManager struct {
-	// 会话ID -> 请求ID -> 流数据
+	// sessionID -> requestID -> stream data
 	activeStreams map[string]map[string]*memoryStreamInfo
 	mu            sync.RWMutex
 }
 
-// NewMemoryStreamManager 创建一个新的内存流管理器
+// NewMemoryStreamManager creates a new in-memory stream manager
 func NewMemoryStreamManager() *MemoryStreamManager {
 	return &MemoryStreamManager{
 		activeStreams: make(map[string]map[string]*memoryStreamInfo),
 	}
 }
 
-// RegisterStream 注册一个新的流
+// RegisterStream registers a new stream
 func (m *MemoryStreamManager) RegisterStream(ctx context.Context, sessionID, requestID, query string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -54,7 +54,7 @@ func (m *MemoryStreamManager) RegisterStream(ctx context.Context, sessionID, req
 	return nil
 }
 
-// UpdateStream 更新流内容
+// UpdateStream updates stream content
 func (m *MemoryStreamManager) UpdateStream(ctx context.Context,
 	sessionID, requestID string, content string, references types.References,
 ) error {
@@ -73,7 +73,7 @@ func (m *MemoryStreamManager) UpdateStream(ctx context.Context,
 	return nil
 }
 
-// CompleteStream 完成流
+// CompleteStream marks a stream as completed
 func (m *MemoryStreamManager) CompleteStream(ctx context.Context, sessionID, requestID string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -81,7 +81,7 @@ func (m *MemoryStreamManager) CompleteStream(ctx context.Context, sessionID, req
 	if sessionMap, exists := m.activeStreams[sessionID]; exists {
 		if stream, found := sessionMap[requestID]; found {
 			stream.isCompleted = true
-			// 30s 后删除流
+			// Delete the stream after 30 seconds
 			go func() {
 				time.Sleep(30 * time.Second)
 				m.mu.Lock()
@@ -96,7 +96,7 @@ func (m *MemoryStreamManager) CompleteStream(ctx context.Context, sessionID, req
 	return nil
 }
 
-// GetStream 获取特定流
+// GetStream retrieves a specific stream
 func (m *MemoryStreamManager) GetStream(ctx context.Context,
 	sessionID, requestID string,
 ) (*interfaces.StreamInfo, error) {
@@ -119,5 +119,5 @@ func (m *MemoryStreamManager) GetStream(ctx context.Context,
 	return nil, nil
 }
 
-// 确保实现了接口
+// Ensure interface implementation
 var _ interfaces.StreamManager = (*MemoryStreamManager)(nil)

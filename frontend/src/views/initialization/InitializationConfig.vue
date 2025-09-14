@@ -1,17 +1,17 @@
 <template>
     <div class="initialization-container">
-        <!-- 页面标题区域 -->
+        <!-- Page title area -->
         <div class="initialization-header">
-            <h1>WeKnora 系统初始化配置</h1>
-            <p>首次使用需要配置模型和服务信息，完成后即可开始使用系统</p>
+            <h1>WeKnoRust System Initialization</h1>
+            <p>Before first use, configure model and service settings. After completion, you can start using the system.</p>
         </div>
         
-        <!-- 页面主体两栏布局：左侧导航 + 右侧内容 -->
+        <!-- Two-column layout: left navigation + right content -->
         <div class="init-layout">
-            <!-- 左侧导航 -->
+            <!-- Left sidebar navigation -->
             <aside class="sidebar">
                 <div class="sidebar-card">
-                    <div class="nav-title">配置导航</div>
+                    <div class="nav-title">Configuration Navigation</div>
                     <ul class="nav-list">
                         <li v-for="s in sections" :key="s.id" :class="['nav-item', { active: activeSectionId === s.id }]" @click="goToSection(s.id)">
                             <span class="dot" />{{ s.label }}
@@ -20,29 +20,29 @@
                 </div>
             </aside>
             <div class="init-main">
-        <!-- 顶部公共区域：Ollama 服务状态与已安装模型 -->
+        <!-- Top summary: Ollama service status and installed models -->
         <div class="ollama-summary-card" id="section-ollama">
             <div class="summary-header">
-                <span class="title"><t-icon name="server" />Ollama 服务状态</span>
+                <span class="title"><t-icon name="server" />Ollama Service Status</span>
                 <t-tag :theme="ollamaStatus.available ? 'success' : 'danger'" size="small" class="state">
-                    {{ ollamaStatus.available ? `正常 (${ollamaStatus.version||'v?'} )` : (ollamaStatus.error || '未运行') }}
+                    {{ ollamaStatus.available ? `OK (${ollamaStatus.version||'v?'} )` : (ollamaStatus.error || 'Not running') }}
                 </t-tag>
-                <t-tooltip content="刷新状态">
+                <t-tooltip content="Refresh status">
                     <t-icon name="refresh" class="refresh-icon" :class="{ spinning: summaryRefreshing }" @click="refreshOllamaSummary" />
                 </t-tooltip>
             </div>
             <div class="summary-body">
                 <div class="models">
-                    <span class="label">Ollama 服务地址</span>
+                    <span class="label">Ollama Service Address</span>
                     <div class="model-list">
-                        <t-tag size="small" theme="default" class="model-pill">{{ ollamaStatus.baseUrl || '未配置' }}</t-tag>
+                        <t-tag size="small" theme="default" class="model-pill">{{ ollamaStatus.baseUrl || 'Not configured' }}</t-tag>
                     </div>
                 </div>
                 <div class="models">
-                    <span class="label">已安装模型</span>
+                    <span class="label">Installed Models</span>
                     <div class="model-list">
                         <t-tag v-for="m in installedModels" :key="m" size="small" theme="default" class="model-pill">{{ m }}</t-tag>
-                        <span v-if="installedModels.length===0" class="empty">暂无</span>
+                        <span v-if="installedModels.length===0" class="empty">None</span>
                     </div>
                 </div>
             </div>
@@ -50,22 +50,22 @@
 
         <!-- 主配置表单 -->
         <t-form ref="form" :data="formData" :rules="rules" @submit.prevent layout="vertical">
-            <!-- LLM 大语言模型配置区域 -->
+            <!-- LLM configuration -->
             <div class="config-section" id="section-llm">
-                <h3><t-icon name="chat" class="section-icon" />LLM 大语言模型配置</h3>
+                <h3><t-icon name="chat" class="section-icon" />LLM Configuration</h3>
                 <div class="form-row">
-                    <t-form-item label="模型来源" name="llm.source">
+                    <t-form-item label="Model Source" name="llm.source">
                         <t-radio-group v-model="formData.llm.source" @change="onModelSourceChange('llm')">
-                            <t-radio value="local">Ollama (本地)</t-radio>
-                            <t-radio value="remote">Remote API (远程)</t-radio>
+                            <t-radio value="local">Ollama (Local)</t-radio>
+                            <t-radio value="remote">Remote API</t-radio>
                         </t-radio-group>
                     </t-form-item>
                 </div>
                 
                 <div class="form-row">
-                    <t-form-item label="模型名称" name="llm.modelName">
+                    <t-form-item label="Model Name" name="llm.modelName">
                         <div class="model-input-with-status">
-                            <t-input v-model="formData.llm.modelName" placeholder="例如: qwen3:0.6b" 
+                            <t-input v-model="formData.llm.modelName" placeholder="e.g. qwen3:0.6b" 
                                      @blur="onModelNameChange('llm')" 
                                      @input="onModelNameInput('llm')"
                                      @keyup.enter="onModelNameChange('llm')" />
@@ -74,24 +74,24 @@
                                     v-if="formData.llm.source === 'local' && formData.llm.modelName && modelStatus.llm.checked" 
                                     :name="modelStatus.llm.available ? 'check-circle-filled' : 'close-circle-filled'" 
                                     :class="['status-icon', modelStatus.llm.available ? 'installed' : 'not-installed']" 
-                                    :title="modelStatus.llm.available ? '已安装' : '未安装'"
+                                    :title="modelStatus.llm.available ? 'Installed' : 'Not installed'"
                                 />
                                 <t-icon 
                                     v-else-if="formData.llm.source === 'local' && formData.llm.modelName && !modelStatus.llm.checked" 
                                     name="help-circle" 
                                     class="status-icon unknown" 
-                                    title="未检查"
+                                    title="Not checked"
                                 />
                                 <t-icon 
                                     v-else-if="formData.llm.source === 'local' && formData.llm.modelName && modelStatus.llm.downloading" 
                                     name="loading" 
                                     class="status-icon downloading spinning" 
-                                    title="下载中"
+                                    title="Downloading"
                                 />
                             </div>
-                            <!-- 下载按钮：未安装时显示 -->
+                            <!-- Download button: visible when not installed -->
                             <div v-if="formData.llm.source === 'local' && formData.llm.modelName && modelStatus.llm.checked && !modelStatus.llm.available && !modelStatus.llm.downloading" class="download-action">
-                                <t-tooltip content="下载模型">
+                                <t-tooltip content="Download model">
                                     <t-button 
                                         size="small" 
                                         theme="primary" 
@@ -107,27 +107,27 @@
                         </div>
                     </t-form-item>
                     
-                    <!-- 下载进度：下载中时显示 -->
+                    <!-- Download progress -->
                     <div v-if="formData.llm.source === 'local' && formData.llm.modelName && modelStatus.llm.downloading" class="download-progress">
                         <div class="progress-info">
                             <t-icon name="loading" class="loading-icon spinning" />
-                            <span class="progress-text">下载中</span>
+                            <span class="progress-text">Downloading</span>
                         </div>
                         <t-progress :percentage="Number(modelStatus.llm.progress.toFixed(1))" :show-info="false" size="small" class="progress-bar" />
                         <div class="progress-message">{{ modelStatus.llm.message }}</div>
                     </div>
                 </div>
                 
-                <!-- 远程 API 配置区域 -->
+                <!-- Remote API configuration -->
                 <div v-if="formData.llm.source === 'remote'" class="remote-config">
                     <div class="form-row">
                         <t-form-item label="Base URL" name="llm.baseUrl">
                             <div class="url-input-with-check">
-                                <t-input v-model="formData.llm.baseUrl" placeholder="例如: https://api.openai.com/v1, 去除末尾/chat/completions路径后的URL的前面部分" 
+                                <t-input v-model="formData.llm.baseUrl" placeholder="e.g. https://api.openai.com/v1 (without the trailing /chat/completions)" 
                                          @blur="onRemoteConfigChange('llm')"
                                          @input="onRemoteConfigInput('llm')" />
                                 <div v-if="formData.llm.modelName && formData.llm.baseUrl" class="check-action">
-                                    <t-tooltip v-if="!modelStatus.llm.available && modelStatus.llm.checked" content="重新检查连接">
+                                    <t-tooltip v-if="!modelStatus.llm.available && modelStatus.llm.checked" content="Recheck connection">
                                         <t-icon 
                                             name="refresh" 
                                             class="refresh-icon" 
@@ -139,27 +139,27 @@
                                         v-else-if="modelStatus.llm.checked" 
                                         :name="modelStatus.llm.available ? 'check-circle-filled' : 'close-circle-filled'" 
                                         :class="['status-icon', modelStatus.llm.available ? 'installed' : 'not-installed']" 
-                                        :title="modelStatus.llm.available ? '连接正常' : '连接失败'"
+                                        :title="modelStatus.llm.available ? 'Connection OK' : 'Connection failed'"
                                     />
                                     <t-icon 
                                         v-else 
                                         name="loading" 
                                         class="status-icon checking spinning" 
-                                        title="检查连接中"
+                                        title="Checking connection"
                                     />
                                 </div>
                             </div>
                         </t-form-item>
                     </div>
                     <div class="form-row">
-                        <t-form-item label="API Key (可选)" name="llm.apiKey">
-                            <t-input v-model="formData.llm.apiKey" type="password" placeholder="请输入API Key (可选)" 
+                        <t-form-item label="API Key (optional)" name="llm.apiKey">
+                            <t-input v-model="formData.llm.apiKey" type="password" placeholder="Enter API Key (optional)" 
                                      @blur="onRemoteConfigChange('llm')"
                                      @input="onRemoteConfigInput('llm')" />
                         </t-form-item>
                     </div>
                     
-                    <!-- 错误信息显示 -->
+                    <!-- Error message -->
                     <div v-if="modelStatus.llm.checked && !modelStatus.llm.available && modelStatus.llm.message" class="error-message">
                         <t-icon name="error-circle" />
                         <span>{{ modelStatus.llm.message }}</span>
@@ -169,28 +169,28 @@
                 </div>
             </div>
 
-            <!-- Embedding 嵌入模型配置区域 -->
+            <!-- Embedding configuration -->
             <div class="config-section" id="section-embedding">
-                <h3><t-icon name="layers" class="section-icon" />Embedding 嵌入模型配置</h3>
+                <h3><t-icon name="layers" class="section-icon" />Embedding Configuration</h3>
                 
-                <!-- 已有文件时的禁用提示 -->
+                <!-- Warning when files already exist -->
                 <div v-if="hasFiles" class="embedding-warning">
-                    <t-alert theme="warning" message="知识库中已有文件，无法修改Embedding模型配置" />
+                    <t-alert theme="warning" message="Files already exist in the knowledge base. Embedding configuration cannot be modified." />
                 </div>
                 
                 <div class="form-row">
-                    <t-form-item label="模型来源" name="embedding.source">
+                    <t-form-item label="Model Source" name="embedding.source">
                         <t-radio-group v-model="formData.embedding.source" @change="onModelSourceChange('embedding')" :disabled="hasFiles">
-                            <t-radio value="local">Ollama (本地)</t-radio>
-                            <t-radio value="remote">Remote API (远程)</t-radio>
+                            <t-radio value="local">Ollama (Local)</t-radio>
+                            <t-radio value="remote">Remote API</t-radio>
                         </t-radio-group>
                     </t-form-item>
                 </div>
                 
                 <div class="form-row">
-                    <t-form-item label="模型名称" name="embedding.modelName">
+                    <t-form-item label="Model Name" name="embedding.modelName">
                         <div class="model-input-with-status">
-                            <t-input v-model="formData.embedding.modelName" placeholder="例如: nomic-embed-text:latest" 
+                            <t-input v-model="formData.embedding.modelName" placeholder="e.g. nomic-embed-text:latest" 
                                      @blur="onModelNameChange('embedding')" 
                                      @input="onModelNameInput('embedding')"
                                      @keyup.enter="onModelNameChange('embedding')"
@@ -200,24 +200,24 @@
                                     v-if="formData.embedding.source === 'local' && formData.embedding.modelName && modelStatus.embedding.checked" 
                                     :name="modelStatus.embedding.available ? 'check-circle-filled' : 'close-circle-filled'" 
                                     :class="['status-icon', modelStatus.embedding.available ? 'installed' : 'not-installed']" 
-                                    :title="modelStatus.embedding.available ? '已安装' : '未安装'"
+                                    :title="modelStatus.embedding.available ? 'Installed' : 'Not installed'"
                                 />
                                 <t-icon 
                                     v-else-if="formData.embedding.source === 'local' && formData.embedding.modelName && !modelStatus.embedding.checked" 
                                     name="help-circle" 
                                     class="status-icon unknown" 
-                                    title="未检查"
+                                    title="Not checked"
                                 />
                                 <t-icon 
                                     v-else-if="formData.embedding.source === 'local' && formData.embedding.modelName && modelStatus.embedding.downloading" 
                                     name="loading" 
                                     class="status-icon downloading spinning" 
-                                    title="下载中"
+                                    title="Downloading"
                                 />
                             </div>
-                            <!-- 下载按钮：未安装时显示 -->
+                            <!-- Download button: visible when not installed -->
                             <div v-if="formData.embedding.source === 'local' && formData.embedding.modelName && modelStatus.embedding.checked && !modelStatus.embedding.available && !modelStatus.embedding.downloading" class="download-action">
-                                <t-tooltip content="下载模型">
+                                <t-tooltip content="Download model">
                                     <t-button 
                                         size="small" 
                                         theme="primary" 
@@ -235,13 +235,13 @@
                     
                 </div>
                 
-                <!-- 向量维度设置 -->
+                <!-- Embedding dimension -->
                 <div class="form-row">
-                    <t-form-item label="维度" name="embedding.dimension">
+                    <t-form-item label="Dimension" name="embedding.dimension">
                         <div class="dimension-input-with-action">
                             <t-input v-model="formData.embedding.dimension" 
                                      :disabled="hasFiles" 
-                                     placeholder="请输入向量维度" 
+                                     placeholder="Enter embedding dimension" 
                                      style="width: 100px;"
                                      @input="onDimensionInput" />
                             <t-button 
@@ -252,32 +252,32 @@
                                 :disabled="hasFiles"
                                 @click="detectEmbeddingDimension"
                             >
-                                检测维度
+                                Detect
                             </t-button>
                         </div>
                     </t-form-item>
 
-                    <!-- 下载进度：下载中时显示 -->
+                    <!-- Download progress -->
                     <div v-if="formData.embedding.source === 'local' && formData.embedding.modelName && modelStatus.embedding.downloading" class="download-progress">
                         <div class="progress-info">
                             <t-icon name="loading" class="loading-icon spinning" />
-                            <span class="progress-text">下载中 {{ modelStatus.embedding.progress.toFixed(1) }}%</span>
+                            <span class="progress-text">Downloading {{ modelStatus.embedding.progress.toFixed(1) }}%</span>
                         </div>
                         <t-progress :percentage="Number(modelStatus.embedding.progress.toFixed(1))" :show-info="false" size="small" class="progress-bar" />
                         <div class="progress-message">{{ modelStatus.embedding.message }}</div>
                     </div>
                 </div>
                 
-                <!-- 远程 Embedding API 配置 -->
+                <!-- Remote Embedding API configuration -->
                 <div v-if="formData.embedding.source === 'remote'" class="remote-config">
                     <div class="form-row">
                         <t-form-item label="Base URL" name="embedding.baseUrl">
                             <div class="url-input-with-check">
-                                <t-input v-model="formData.embedding.baseUrl" placeholder="例如: https://api.openai.com/v1, 去除末尾/embeddings路径后的URL的前面部分" 
+                                <t-input v-model="formData.embedding.baseUrl" placeholder="e.g. https://api.openai.com/v1 (without the trailing /embeddings)" 
                                          :disabled="hasFiles" @blur="onRemoteConfigChange('embedding')"
                                          @input="onRemoteConfigInput('embedding')" />
                                 <div v-if="formData.embedding.modelName && formData.embedding.baseUrl && !hasFiles" class="check-action">
-                                    <t-tooltip v-if="!modelStatus.embedding.available && modelStatus.embedding.checked" content="重新检查连接">
+                                    <t-tooltip v-if="!modelStatus.embedding.available && modelStatus.embedding.checked" content="Recheck connection">
                                         <t-icon 
                                             name="refresh" 
                                             class="refresh-icon" 
@@ -289,27 +289,27 @@
                                         v-else-if="modelStatus.embedding.checked" 
                                         :name="modelStatus.embedding.available ? 'check-circle-filled' : 'close-circle-filled'" 
                                         :class="['status-icon', modelStatus.embedding.available ? 'installed' : 'not-installed']" 
-                                        :title="modelStatus.embedding.available ? '连接正常' : '连接失败'"
+                                        :title="modelStatus.embedding.available ? 'Connection OK' : 'Connection failed'"
                                     />
                                     <t-icon 
                                         v-else 
                                         name="loading" 
                                         class="input-icon checking spinning" 
-                                        title="检查连接中"
+                                        title="Checking connection"
                                     />
                                 </div>
                             </div>
                         </t-form-item>
                     </div>
                     <div class="form-row">
-                        <t-form-item label="API Key (可选)" name="embedding.apiKey">
-                            <t-input v-model="formData.embedding.apiKey" type="password" placeholder="请输入API Key (可选)" 
+                        <t-form-item label="API Key (optional)" name="embedding.apiKey">
+                            <t-input v-model="formData.embedding.apiKey" type="password" placeholder="Enter API Key (optional)" 
                                      :disabled="hasFiles" @blur="onRemoteConfigChange('embedding')"
                                      @input="onRemoteConfigInput('embedding')" />
                         </t-form-item>
                     </div>
                     
-                    <!-- 错误信息显示 -->
+                    <!-- Error message -->
                     <div v-if="modelStatus.embedding.checked && !modelStatus.embedding.available && modelStatus.embedding.message" class="error-message">
                         <t-icon name="error-circle" />
                         <span>{{ modelStatus.embedding.message }}</span>
@@ -319,25 +319,25 @@
                 </div>
             </div>
 
-            <!-- Rerank 重排模型配置区域 -->
+            <!-- Rerank configuration -->
             <div class="config-section" id="section-rerank">
-                <h3><t-icon name="swap" class="section-icon" />Rerank 重排模型配置</h3>
+                <h3><t-icon name="swap" class="section-icon" />Rerank Configuration</h3>
                 
                 <div class="form-row">
                     <t-form-item name="rerank.enabled">
                         <div class="switch-container">
                             <t-switch v-model="formData.rerank.enabled" @change="onRerankChange" />
-                            <span class="switch-label">启用Rerank重排模型</span>
+                            <span class="switch-label">Enable Rerank model</span>
                         </div>
                     </t-form-item>
                 </div>
                 
-                <!-- Rerank 详细配置 -->
+                <!-- Rerank details -->
                 <div v-if="formData.rerank.enabled" class="rerank-config">
                     <div class="form-row">
-                        <t-form-item label="模型名称" name="rerank.modelName">
+                        <t-form-item label="Model Name" name="rerank.modelName">
                             <div class="model-input-with-status">
-                                <t-input v-model="formData.rerank.modelName" placeholder="例如: bge-reranker-v2-m3" 
+                                <t-input v-model="formData.rerank.modelName" placeholder="e.g. bge-reranker-v2-m3" 
                                          @blur="onRerankConfigChange"
                                          @input="onRerankConfigInput" />
                                 <div class="model-status-icon">
@@ -345,13 +345,13 @@
                                         v-if="formData.rerank.modelName && modelStatus.rerank.checked" 
                                         :name="modelStatus.rerank.available ? 'check-circle-filled' : 'close-circle-filled'" 
                                         :class="['status-icon', modelStatus.rerank.available ? 'installed' : 'not-installed']" 
-                                        :title="modelStatus.rerank.available ? '连接正常' : '连接失败'"
+                                        :title="modelStatus.rerank.available ? 'Connection OK' : 'Connection failed'"
                                     />
                                     <t-icon 
                                         v-else-if="formData.rerank.modelName && !modelStatus.rerank.checked" 
                                         name="help-circle" 
                                         class="status-icon unknown" 
-                                        title="未检查"
+                                        title="Not checked"
                                     />
                                 </div>
                             </div>
@@ -361,11 +361,11 @@
                     <div class="form-row">
                         <t-form-item label="Base URL" name="rerank.baseUrl">
                             <div class="url-input-with-check">
-                                <t-input v-model="formData.rerank.baseUrl" placeholder="例如: http://localhost:11434, 去除末尾/rerank路径后的URL的前面部分" 
+                                <t-input v-model="formData.rerank.baseUrl" placeholder="e.g. http://localhost:11434 (without the trailing /rerank)" 
                                          @blur="onRerankConfigChange"
                                          @input="onRerankConfigInput" />
                                 <div v-if="formData.rerank.modelName && formData.rerank.baseUrl" class="check-action">
-                                    <t-tooltip v-if="!modelStatus.rerank.available && modelStatus.rerank.checked" content="重新检查连接">
+                                    <t-tooltip v-if="!modelStatus.rerank.available && modelStatus.rerank.checked" content="Recheck connection">
                                         <t-icon 
                                             name="refresh" 
                                             class="refresh-icon" 
@@ -377,13 +377,13 @@
                                         v-else-if="modelStatus.rerank.checked" 
                                         :name="modelStatus.rerank.available ? 'check-circle-filled' : 'close-circle-filled'" 
                                         :class="['status-icon', modelStatus.rerank.available ? 'installed' : 'not-installed']" 
-                                        :title="modelStatus.rerank.available ? '连接正常' : '连接失败'"
+                                        :title="modelStatus.rerank.available ? 'Connection OK' : 'Connection failed'"
                                     />
                                     <t-icon 
                                         v-else 
                                         name="loading" 
                                         class="input-icon checking spinning" 
-                                        title="检查连接中"
+                                        title="Checking connection"
                                     />
                                 </div>
                             </div>
@@ -392,13 +392,13 @@
                     
                     <div class="form-row">
                         <t-form-item label="API Key" name="rerank.apiKey">
-                            <t-input v-model="formData.rerank.apiKey" type="password" placeholder="请输入API Key (可选)" 
+                            <t-input v-model="formData.rerank.apiKey" type="password" placeholder="Enter API Key (optional)" 
                                      @blur="onRerankConfigChange"
                                      @input="onRerankConfigInput" />
                         </t-form-item>
                     </div>
                     
-                    <!-- 错误信息显示 -->
+                    <!-- Error message -->
                     <div v-if="modelStatus.rerank.checked && !modelStatus.rerank.available && modelStatus.rerank.message" class="error-message">
                         <t-icon name="error-circle" />
                         <span>{{ modelStatus.rerank.message }}</span>
@@ -408,26 +408,26 @@
                 </div>
             </div>
 
-            <!-- 多模态配置区域 -->
+            <!-- Multimodal configuration -->
             <div class="config-section" id="section-multimodal">
-                <h3><t-icon name="image" class="section-icon" />多模态配置</h3>
+                <h3><t-icon name="image" class="section-icon" />Multimodal Configuration</h3>
                 <div class="form-row">
                     <t-form-item name="multimodal.enabled">
                         <div class="switch-container">
                             <t-switch v-model="formData.multimodal.enabled" @change="onMultimodalChange" />
-                            <span class="switch-label">启用多模态图片信息提取</span>
+                            <span class="switch-label">Enable multimodal image extraction</span>
                         </div>
                     </t-form-item>
                 </div>
                 
-                <!-- 多模态详细配置 -->
+                <!-- Multimodal details -->
                 <div v-if="formData.multimodal.enabled" class="multimodal-config">
-                    <!-- VLM 视觉语言模型配置 -->
-                    <h4>视觉语言模型配置</h4>
+                    <!-- VLM configuration -->
+                    <h4>Vision-Language Model Configuration</h4>
                                     <div class="form-row">
-                    <t-form-item label="模型名称" name="multimodal.vlm.modelName">
+                    <t-form-item label="Model Name" name="multimodal.vlm.modelName">
                         <div class="model-input-with-status">
-                            <t-input v-model="formData.multimodal.vlm.modelName" placeholder="例如: qwen2.5vl:3b" 
+                            <t-input v-model="formData.multimodal.vlm.modelName" placeholder="e.g. qwen2.5vl:3b" 
                                      @blur="onModelNameChange('vlm')" 
                                      @input="onModelNameInput('vlm')"
                                      @keyup.enter="onModelNameChange('vlm')" />
@@ -436,24 +436,24 @@
                                     v-if="formData.multimodal.vlm.interfaceType === 'ollama' && formData.multimodal.vlm.modelName && modelStatus.vlm.checked" 
                                     :name="modelStatus.vlm.available ? 'check-circle-filled' : 'close-circle-filled'" 
                                     :class="['status-icon', modelStatus.vlm.available ? 'installed' : 'not-installed']" 
-                                    :title="modelStatus.vlm.available ? '已安装' : '未安装'"
+                                    :title="modelStatus.vlm.available ? 'Installed' : 'Not installed'"
                                 />
                                 <t-icon 
                                     v-else-if="formData.multimodal.vlm.interfaceType === 'ollama' && formData.multimodal.vlm.modelName && !modelStatus.vlm.checked" 
                                     name="help-circle" 
                                     class="status-icon unknown" 
-                                    title="未检查"
+                                    title="Not checked"
                                 />
                                 <t-icon 
                                     v-else-if="formData.multimodal.vlm.interfaceType === 'ollama' && formData.multimodal.vlm.modelName && modelStatus.vlm.downloading" 
                                     name="loading" 
                                     class="status-icon downloading spinning" 
-                                    title="下载中"
+                                    title="Downloading"
                                 />
                             </div>
-                            <!-- 下载按钮：未安装时显示 -->
+                            <!-- Download button: visible when not installed -->
                             <div v-if="formData.multimodal.vlm.interfaceType === 'ollama' && formData.multimodal.vlm.modelName && modelStatus.vlm.checked && !modelStatus.vlm.available && !modelStatus.vlm.downloading" class="download-action">
-                                <t-tooltip content="下载模型">
+                                <t-tooltip content="Download model">
                                     <t-button 
                                         size="small" 
                                         theme="primary" 
@@ -469,44 +469,44 @@
                         </div>
                     </t-form-item>
                     
-                    <!-- 下载进度：下载中时显示 -->
+                    <!-- Download progress -->
                     <div v-if="formData.multimodal.vlm.interfaceType === 'ollama' && formData.multimodal.vlm.modelName && modelStatus.vlm.downloading" class="download-progress">
                         <div class="progress-info">
                             <t-icon name="loading" class="loading-icon spinning" />
-                            <span class="progress-text">下载中 {{ modelStatus.vlm.progress.toFixed(1) }}%</span>
+                            <span class="progress-text">Downloading {{ modelStatus.vlm.progress.toFixed(1) }}%</span>
                         </div>
                         <t-progress :percentage="Number(modelStatus.vlm.progress.toFixed(1))" :show-info="false" size="small" class="progress-bar" />
                         <div class="progress-message">{{ modelStatus.vlm.message }}</div>
                     </div>
                 </div>
                     <div class="form-row">
-                        <t-form-item label="接口类型" name="multimodal.vlm.interfaceType">
+                        <t-form-item label="Interface Type" name="multimodal.vlm.interfaceType">
                             <t-radio-group v-model="formData.multimodal.vlm.interfaceType" @change="onVlmInterfaceTypeChange">
-                                <t-radio value="ollama">Ollama (本地)</t-radio>
-                                <t-radio value="openai">OpenAI 兼容接口</t-radio>
+                                <t-radio value="ollama">Ollama (Local)</t-radio>
+                                <t-radio value="openai">OpenAI-compatible API</t-radio>
                             </t-radio-group>
                         </t-form-item>
                     </div>
                     <div class="form-row" v-if="formData.multimodal.vlm.interfaceType === 'openai'">
                         <t-form-item label="Base URL" name="multimodal.vlm.baseUrl">
-                            <t-input v-model="formData.multimodal.vlm.baseUrl" placeholder="例如: http://localhost:11434/v1，去除末尾/chat/completions路径后的URL的前面部分"
+                            <t-input v-model="formData.multimodal.vlm.baseUrl" placeholder="e.g. http://localhost:11434/v1 (without the trailing /chat/completions)"
                                      @blur="onVlmBaseUrlChange"
                                      @input="onVlmBaseUrlInput" />
                         </t-form-item>
                     </div>
                     <div class="form-row" v-if="formData.multimodal.vlm.interfaceType === 'openai'">
                         <t-form-item label="API Key" name="multimodal.vlm.apiKey">
-                            <t-input v-model="formData.multimodal.vlm.apiKey" type="password" placeholder="请输入API Key (可选)"
+                            <t-input v-model="formData.multimodal.vlm.apiKey" type="password" placeholder="Enter API Key (optional)"
                                      @blur="onVlmApiKeyChange" />
                         </t-form-item>
                     </div>
                     
 
                     
-                    <!-- 对象存储服务配置 -->
-                    <h4>对象存储服务配置</h4>
+                    <!-- Object storage configuration -->
+                    <h4>Object Storage Configuration</h4>
                     <div class="form-row">
-                        <t-form-item label="存储类型">
+                        <t-form-item label="Storage Type">
                             <t-radio-group v-model="formData.storageType" @change="onStorageTypeChange">
                                 <t-radio value="cos">COS</t-radio>
                                 <t-radio value="minio">MinIO</t-radio>
@@ -514,66 +514,66 @@
                         </t-form-item>
                     </div>
                     
-                    <!-- MinIO 配置区域 -->
+                    <!-- MinIO configuration -->
                     <div v-if="formData.storageType === 'minio'">
                         <div class="form-row">
                             <t-form-item label="Bucket Name" name="multimodal.minio.bucketName">
-                                <t-input v-model="formData.multimodal.minio.bucketName" placeholder="请输入Bucket名称" />
+                                <t-input v-model="formData.multimodal.minio.bucketName" placeholder="Enter bucket name" />
                             </t-form-item>
                         </div>
 
                         <div class="form-row">
                             <t-form-item label="Path Prefix" name="multimodal.minio.pathPrefix">
-                                <t-input v-model="formData.multimodal.minio.pathPrefix" placeholder="例如: images" />
+                                <t-input v-model="formData.multimodal.minio.pathPrefix" placeholder="e.g. images" />
                             </t-form-item>
                         </div>
                     </div>
                     
-                    <!-- COS 配置区域 -->
+                    <!-- COS configuration -->
                     <div class="form-row">
                         <t-form-item v-if="formData.storageType === 'cos'" label="Secret ID" name="multimodal.cos.secretId">
-                            <t-input v-model="formData.multimodal.cos.secretId" placeholder="请输入COS Secret ID"
+                            <t-input v-model="formData.multimodal.cos.secretId" placeholder="Enter COS Secret ID"
                                      @blur="onCosConfigChange" />
                         </t-form-item>
                     </div>
                     <div class="form-row">
                         <t-form-item v-if="formData.storageType === 'cos'" label="Secret Key" name="multimodal.cos.secretKey">
-                            <t-input v-model="formData.multimodal.cos.secretKey" type="password" placeholder="请输入COS Secret Key"
+                            <t-input v-model="formData.multimodal.cos.secretKey" type="password" placeholder="Enter COS Secret Key"
                                      @blur="onCosConfigChange" />
                         </t-form-item>
                     </div>
                     <div class="form-row">
                         <t-form-item v-if="formData.storageType === 'cos'" label="Region" name="multimodal.cos.region">
-                            <t-input v-model="formData.multimodal.cos.region" placeholder="例如: ap-beijing"
+                            <t-input v-model="formData.multimodal.cos.region" placeholder="e.g. ap-beijing"
                                      @blur="onCosConfigChange" />
                         </t-form-item>
                     </div>
                     <div class="form-row">
                         <t-form-item v-if="formData.storageType === 'cos'" label="Bucket Name" name="multimodal.cos.bucketName">
-                            <t-input v-model="formData.multimodal.cos.bucketName" placeholder="请输入Bucket名称"
+                            <t-input v-model="formData.multimodal.cos.bucketName" placeholder="Enter bucket name"
                                      @blur="onCosConfigChange" />
                         </t-form-item>
                     </div>
                     <div class="form-row">
                         <t-form-item v-if="formData.storageType === 'cos'" label="App ID" name="multimodal.cos.appId">
-                            <t-input v-model="formData.multimodal.cos.appId" placeholder="请输入App ID"
+                            <t-input v-model="formData.multimodal.cos.appId" placeholder="Enter App ID"
                                      @blur="onCosConfigChange" />
                         </t-form-item>
                     </div>
                     <div class="form-row">
                         <t-form-item v-if="formData.storageType === 'cos'" label="Path Prefix" name="multimodal.cos.pathPrefix">
-                            <t-input v-model="formData.multimodal.cos.pathPrefix" placeholder="例如: images"
+                            <t-input v-model="formData.multimodal.cos.pathPrefix" placeholder="e.g. images"
                                      @blur="onCosConfigChange" />
                         </t-form-item>
                     </div>
                     
-                    <!-- 多模态功能测试区域 -->
+                    <!-- Multimodal feature test section -->
                     <div v-if="canTestMultimodal" class="multimodal-test">
-                        <h5>功能测试</h5>
-                        <p class="test-desc">上传图片测试VLM模型的图片描述和文字识别功能</p>
+                        <h5>Feature Test</h5>
+                        <p class="test-desc">Upload an image to test VLM captioning and OCR</p>
                         
                         <div class="test-area">
-                            <!-- 上传区域 -->
+                            <!-- Upload area -->
                             <div class="upload-section">
                                 <div class="upload-buttons">
                                     <t-upload
@@ -587,15 +587,15 @@
                                     >
                                         <t-button theme="default" variant="outline" size="small">
                                             <t-icon name="upload" />
-                                            选择图片
+                                            Select Image
                                         </t-button>
                                     </t-upload>
                                 </div>
                             </div>
                             
-                            <!-- 图片预览 -->
+                            <!-- Image preview -->
                             <div v-if="multimodalTest.selectedFile" class="image-preview">
-                                <img :src="multimodalTest.previewUrl" alt="测试图片" />
+                                <img :src="multimodalTest.previewUrl" alt="Test Image" />
                                 <div class="image-meta">
                                     <span class="file-name">{{ multimodalTest.selectedFile.name }}</span>
                                     <span class="file-size">{{ formatFileSize(multimodalTest.selectedFile.size) }}</span>
@@ -610,34 +610,34 @@
                                     :loading="multimodalTest.testing"
                                     @click="startMultimodalTest"
                                 >
-                                    开始测试
+                                    Start Test
                                 </t-button>
                             </div>
-                            <!-- 测试结果 -->
+                            <!-- Test results -->
                             <div v-if="multimodalTest.result" class="test-result">
                                 <div v-if="multimodalTest.result.success" class="result-success">
-                                    <h6>测试结果</h6>
+                                    <h6>Test Results</h6>
                                     
                                     <div v-if="multimodalTest.result.caption" class="result-item">
-                                        <label>图片描述:</label>
+                                        <label>Caption:</label>
                                         <div class="result-text">{{ multimodalTest.result.caption }}</div>
                                     </div>
                                     
                                     <div v-if="multimodalTest.result.ocr" class="result-item">
-                                        <label>文字识别:</label>
+                                        <label>OCR:</label>
                                         <div class="result-text">{{ multimodalTest.result.ocr }}</div>
                                     </div>
                                     
                                     <div v-if="multimodalTest.result.processing_time" class="result-time">
-                                        处理时间: {{ multimodalTest.result.processing_time }}ms
+                                        Processing time: {{ multimodalTest.result.processing_time }}ms
                                     </div>
                                 </div>
                                 
                                 <div v-else class="result-error">
-                                    <h6>测试失败</h6>
+                                    <h6>Test Failed</h6>
                                     <div class="error-msg">
                                         <t-icon name="error-circle" />
-                                        {{ multimodalTest.result.message || '多模态处理失败' }}
+                                        {{ multimodalTest.result.message || 'Multimodal processing failed' }}
                                     </div>
                                 </div>
                             </div>
@@ -646,46 +646,46 @@
                 </div>
             </div>
 
-            <!-- 文档分割配置区域 -->
+            <!-- Document splitting configuration -->
             <div class="config-section" id="section-docsplit">
-                <h3><t-icon name="cut" class="section-icon" />文档分割配置</h3>
+                <h3><t-icon name="cut" class="section-icon" />Document Splitting Configuration</h3>
                 
-                <!-- 预设配置选择 -->
+                <!-- Preset selection -->
                 <div class="form-row preset-row">
-                    <t-form-item label="分割策略">
+                    <t-form-item label="Splitting Strategy">
                         <t-radio-group v-model="selectedPreset" @change="onPresetChange" class="preset-radio-group">
                             <t-radio value="balanced" class="preset-radio">
                                 <div class="preset-content">
-                                    <div class="preset-title">均衡模式</div>
-                                    <div class="preset-desc">块大小: 1000 / 重叠: 200</div>
+                                    <div class="preset-title">Balanced</div>
+                                    <div class="preset-desc">Chunk size: 1000 / Overlap: 200</div>
                                 </div>
                             </t-radio>
                             <t-radio value="precision" class="preset-radio">
                                 <div class="preset-content">
-                                    <div class="preset-title">精准模式</div>
-                                    <div class="preset-desc">块大小: 512 / 重叠: 100</div>
+                                    <div class="preset-title">Precision</div>
+                                    <div class="preset-desc">Chunk size: 512 / Overlap: 100</div>
                                 </div>
                             </t-radio>
                             <t-radio value="context" class="preset-radio">
                                 <div class="preset-content">
-                                    <div class="preset-title">上下文模式</div>
-                                    <div class="preset-desc">块大小: 2048 / 重叠: 400</div>
+                                    <div class="preset-title">Context</div>
+                                    <div class="preset-desc">Chunk size: 2048 / Overlap: 400</div>
                                 </div>
                             </t-radio>
                             <t-radio value="custom" class="preset-radio">
                                 <div class="preset-content">
-                                    <div class="preset-title">自定义</div>
-                                    <div class="preset-desc">手动配置参数</div>
+                                    <div class="preset-title">Custom</div>
+                                    <div class="preset-desc">Configure manually</div>
                                 </div>
                             </t-radio>
                         </t-radio-group>
                     </t-form-item>
                 </div>
                 
-                <!-- 参数配置网格 -->
+                <!-- Parameters grid -->
                 <div class="parameters-grid" :class="{ 'disabled-grid': selectedPreset !== 'custom' }">
                     <div class="parameter-group">
-                        <div class="parameter-label">分块大小</div>
+                        <div class="parameter-label">Chunk size</div>
                         <div class="parameter-control">
                             <t-slider 
                                 v-model="formData.documentSplitting.chunkSize" 
@@ -938,13 +938,13 @@ const embeddingDimDetecting = ref(false);
 // 左侧导航区段
 type Section = { id: string; label: string };
 const sections: Section[] = [
-    { id: 'ollama', label: 'Ollama 服务' },
-    { id: 'llm', label: 'LLM 模型' },
-    { id: 'embedding', label: 'Embedding 模型' },
-    { id: 'rerank', label: 'Rerank 配置' },
-    { id: 'multimodal', label: '多模态配置' },
-    { id: 'docsplit', label: '文档分割' },
-    { id: 'submit', label: '完成配置' },
+    { id: 'ollama', label: 'Ollama Service' },
+    { id: 'llm', label: 'LLM Model' },
+    { id: 'embedding', label: 'Embedding Model' },
+    { id: 'rerank', label: 'Rerank Configuration' },
+    { id: 'multimodal', label: 'Multimodal' },
+    { id: 'docsplit', label: 'Document Splitting' },
+    { id: 'submit', label: 'Finish Setup' },
 ];
 
 const activeSectionId = ref<string>('ollama');
@@ -970,19 +970,19 @@ const onScroll = () => {
     }
 };
 
-// 配置回填
+// Load and populate existing configuration
 const loadCurrentConfig = async () => {
     try {
         const config = await getCurrentConfig();
         
-        // 设置hasFiles状态
+        // Set hasFiles state
         hasFiles.value = config.hasFiles || false;
         
-        // 检查是否已有配置（判断是否为更新模式）
+        // Check if there is an existing config (update mode)
         const hasExistingConfig = config.llm?.modelName || config.embedding?.modelName || config.rerank?.modelName;
         isUpdateMode.value = !!hasExistingConfig;
         
-        // 回填表单数据
+        // Populate form data
         if (config.llm) {
             Object.assign(formData.llm, config.llm);
         }
@@ -1024,12 +1024,12 @@ const loadCurrentConfig = async () => {
             }
         }
         
-        // 在配置加载完成后，检查模型状态
+        // After loading configuration, check model statuses
         await checkModelsAfterLoading(config);
         
     } catch (error) {
         console.warn('Failed to load current configuration:', error);
-        // 如果加载失败，使用默认配置
+        // If loading fails, use defaults
         isUpdateMode.value = false;
     }
 };
@@ -1180,7 +1180,7 @@ const refreshOllamaSummary = async () => {
     }
 };
 
-// 检查所有Ollama模型状态
+// Check status of all Ollama models
 const checkAllOllamaModels = async () => {
     const modelsToCheck = [];
     
@@ -1217,7 +1217,7 @@ const checkAllOllamaModels = async () => {
             modelStatus.vlm.available = result.models[formData.multimodal.vlm.modelName] || false;
         }
     } catch (error) {
-        console.error('检查模型状态失败:', error);
+        console.error('Failed to check model status:', error);
     }
 };
 
@@ -1263,58 +1263,54 @@ const downloadModel = async (type: 'llm' | 'embedding' | 'vlm', modelName: strin
     }
 };
 
-// 开始轮询下载进度
+// Start polling download progress
 const startProgressPolling = (type: 'llm' | 'embedding' | 'vlm', taskId: string, modelName: string) => {
-    // 清除之前的定时器
+    // Clear previous timer
     if (progressTimers[taskId]) {
         clearInterval(progressTimers[taskId]);
     }
     
-    // 每2秒查询一次进度
+    // Query progress every 2 seconds
     progressTimers[taskId] = setInterval(async () => {
         try {
             const task = await getDownloadProgress(taskId);
             
-            // 更新模型状态
             modelStatus[type].progress = task.progress;
             modelStatus[type].message = task.message;
             
-            // 检查是否完成
+            // Check completion
             if (task.status === 'completed') {
-                modelStatus[type].available = true;
                 modelStatus[type].downloading = false;
-                modelStatus[type].progress = 100;
-                modelStatus[type].message = '下载完成';
+                modelStatus[type].checked = true;
+                modelStatus[type].available = true;
                 
-                // 清除定时器
                 clearInterval(progressTimers[taskId]);
                 delete progressTimers[taskId];
                 
-                MessagePlugin.success(`模型 ${modelName} 下载成功`);
-                
+                MessagePlugin.success(`Model ${modelName} downloaded successfully`);
             } else if (task.status === 'failed') {
                 modelStatus[type].downloading = false;
-                modelStatus[type].message = task.message || '下载失败';
+                modelStatus[type].checked = true;
+                modelStatus[type].available = false;
                 
-                // 清除定时器
                 clearInterval(progressTimers[taskId]);
                 delete progressTimers[taskId];
                 
-                MessagePlugin.error(`模型 ${modelName} 下载失败: ${task.message}`);
+                MessagePlugin.error(`Model ${modelName} download failed: ${task.message}`);
             }
             
         } catch (error) {
-            console.error('查询下载进度失败:', error);
-            // 如果查询失败，停止轮询
+            console.error('Failed to query download progress:', error);
+            // Stop polling if query fails
             clearInterval(progressTimers[taskId]);
             delete progressTimers[taskId];
             modelStatus[type].downloading = false;
-            modelStatus[type].message = '查询进度失败';
+            modelStatus[type].message = 'Failed to query progress';
         }
     }, 2000);
 };
 
-// 停止所有进度轮询
+// Stop all progress polling
 const stopAllProgressPolling = () => {
     Object.keys(progressTimers).forEach(taskId => {
         clearInterval(progressTimers[taskId]);
@@ -1343,14 +1339,14 @@ onUnmounted(() => {
     window.removeEventListener('scroll', onScroll);
 });
 
-// 事件处理
+// Event handlers
 const onModelSourceChange = async (type: 'llm' | 'embedding') => {
-    // 重置模型状态
+    // Reset model status
     modelStatus[type].checked = false;
     modelStatus[type].available = false;
     modelStatus[type].downloading = false;
     
-    // 如果切换到本地，检查Ollama状态
+    // If switched to local, check Ollama status
     if (formData[type].source === 'local' && !ollamaStatus.checked) {
         await checkOllama();
     }
@@ -1505,7 +1501,7 @@ const onRemoteConfigInput = async (type: 'llm' | 'embedding') => {
     }, 500); // 500ms防抖延迟
 };
 
-// 检查远程模型
+// Check remote model
 const checkRemoteModelStatus = async (type: 'llm') => {
     if (!formData[type].modelName || !formData[type].baseUrl) {
         return;
@@ -1533,11 +1529,11 @@ const checkRemoteModelStatus = async (type: 'llm') => {
         }, 100);
         
     } catch (error) {
-        console.error(`检查远程${type}模型失败:`, error);
+        console.error(`Failed to check remote ${type} model:`, error);
         modelStatus[type].checked = true;
         modelStatus[type].available = false;
         const err = error as any;
-        modelStatus[type].message = (err && err.message) || '网络连接失败';
+        modelStatus[type].message = (err && err.message) || 'Network connection failed';
     } finally {
         modelStatus[type].checking = false;
     }
@@ -1547,15 +1543,15 @@ const onPresetChange = () => {
     if (selectedPreset.value === 'balanced') {
         formData.documentSplitting.chunkSize = 1000;
         formData.documentSplitting.chunkOverlap = 200;
-        formData.documentSplitting.separators = ['\n\n', '\n', '。', '！', '？', ';', '；'];
+        formData.documentSplitting.separators = ['\n\n', '\n', '.', '!', '?', ';'];
     } else if (selectedPreset.value === 'precision') {
         formData.documentSplitting.chunkSize = 512;
         formData.documentSplitting.chunkOverlap = 100;
-        formData.documentSplitting.separators = ['\n\n', '\n', '。', '！', '？', ';', '；'];
+        formData.documentSplitting.separators = ['\n\n', '\n', '.', '!', '?', ';'];
     } else if (selectedPreset.value === 'context') {
         formData.documentSplitting.chunkSize = 2048;
         formData.documentSplitting.chunkOverlap = 400;
-        formData.documentSplitting.separators = ['\n\n', '\n', '。', '！', '？', ';', '；'];
+        formData.documentSplitting.separators = ['\n\n', '\n', '.', '!', '?', ';'];
     }
 };
 
@@ -1564,9 +1560,9 @@ const onSeparatorsChange = (value: string) => {
     formData.documentSplitting.separators = value.split(',').map(s => s.trim()).filter(s => s);
 };
 
-// 最终模型检查
+// Final model check
 const performFinalModelCheck = async () => {
-    // 收集需要检查的本地模型
+    // Collect local models to check
     type ModelItem = { name: string; type: string };
     const modelsToCheck: ModelItem[] = [];
     
@@ -1656,41 +1652,41 @@ const performFinalModelCheck = async () => {
         });
         
         if (unavailableModels.length > 0) {
-            const modelList = unavailableModels.map(m => `${m.type}模型 "${m.name}"`).join('、');
+            const modelList = unavailableModels.map(m => `${m.type} model "${m.name}"`).join(', ');
             return { 
                 success: false, 
-                message: `以下模型未安装：${modelList}。请先下载这些模型或选择其他已安装的模型。` 
+                message: `The following models are not installed: ${modelList}. Please download these models first or choose other installed models.` 
             };
         }
         
         return { success: true };
         
     } catch (error) {
-        console.error('最终模型检查失败:', error);
+        console.error('Final model check failed:', error);
         return { 
             success: false, 
-            message: '无法验证模型状态，请检查网络连接后重试。' 
+            message: 'Unable to verify model status. Please check your network connection and try again.' 
         };
     }
 };
 
-// 处理按钮提交
+// Handle submit button
 const handleSubmit = async () => {
-    // 防止重复提交和防抖
+    // Debounce and prevent duplicate submission
     if (submitting.value || isSubmitDebounced.value) {
         return;
     }
     
-    // 设置防抖状态
+    // Set debounce state
     isSubmitDebounced.value = true;
     if (submitDebounceTimer.value) {
         clearTimeout(submitDebounceTimer.value);
     }
     submitDebounceTimer.value = setTimeout(() => {
         isSubmitDebounced.value = false;
-    }, 500); // 500ms防抖
+    }, 500); // 500ms debounce
     
-    // 先进行表单验证
+    // Validate the form first
     const validateResult = await form.value?.validate();
     
     if (validateResult === true) {
@@ -1736,16 +1732,16 @@ const handleSubmit = async () => {
             // 记录初始化状态，强制刷新路由状态
             localStorage.setItem('system_initialized', 'true');
             
-            // 立即跳转到知识库页面，减少延迟感
+            // Redirect to knowledge base page immediately
             router.replace('/platform/knowledgeBase');
             
         } catch (error) {
-            console.error('初始化失败:', error);
-            const errorMessage = isUpdateMode.value ? '配置更新失败，请检查配置并重试' : '初始化失败，请检查配置并重试';
+            console.error('Initialization failed:', error);
+            const errorMessage = isUpdateMode.value ? 'Configuration update failed. Please check settings and retry.' : 'Initialization failed. Please check settings and retry.';
             const err = error as any;
             MessagePlugin.error((err && err.message) || errorMessage);
         } finally {
-            // 确保在所有情况下都重置提交状态
+            // Always reset submitting state
             submitting.value = false;
         }
     }
@@ -1776,12 +1772,12 @@ const onRerankChange = () => {
 };
 
 const onRerankConfigChange = async () => {
-    // 重置模型状态
+    // Reset model status
     modelStatus.rerank.checked = false;
     modelStatus.rerank.available = false;
     modelStatus.rerank.message = '';
     
-    // 如果配置完整，检查模型
+    // If configuration is complete, check model
     if (formData.rerank.modelName && formData.rerank.baseUrl) {
         await checkRerankModelStatus();
     }
@@ -1910,7 +1906,7 @@ const onImageChange = (files: any) => {
 
 const startMultimodalTest = async () => {
     if (!multimodalTest.selectedFile) {
-        MessagePlugin.warning('请先选择一张图片');
+        MessagePlugin.warning('Please select an image first');
         return;
     }
     
@@ -1980,17 +1976,17 @@ const startMultimodalTest = async () => {
         multimodalTest.result = result;
         
         if (result.success) {
-            MessagePlugin.success('多模态测试成功');
+            MessagePlugin.success('Multimodal test succeeded');
         } else {
-            MessagePlugin.error(`多模态测试失败: ${result.message}`);
+            MessagePlugin.error(`Multimodal test failed: ${result.message}`);
         }
     } catch (error) {
-        console.error('多模态测试失败:', error);
+        console.error('Multimodal test failed:', error);
         multimodalTest.result = {
             success: false,
-            message: (error as any)?.message || '测试过程中发生错误'
+            message: (error as any)?.message || 'An error occurred during testing'
         };
-        MessagePlugin.error('多模态测试失败');
+        MessagePlugin.error('Multimodal test failed');
     } finally {
         multimodalTest.testing = false;
     }
@@ -2033,22 +2029,22 @@ const canTestMultimodal = computed(() => {
 });
 
 const onVlmInterfaceTypeChange = () => {
-    // 当接口类型改变时，重置相关状态
+    // When interface type changes, reset related state
     if (formData.multimodal.vlm.interfaceType === 'ollama') {
-        // 如果是Ollama，设置默认的Base URL
-        formData.multimodal.vlm.apiKey = ''; // 清空API Key
+        // For Ollama, clear API key
+        formData.multimodal.vlm.apiKey = '';
         
-        // 重置模型状态检查
+        // Reset model status check
         modelStatus.vlm.checked = false;
         modelStatus.vlm.available = false;
         
-        // 如果有模型名称，检查模型状态
+        // If there is a model name, check status
         if (formData.multimodal.vlm.modelName && ollamaStatus.available) {
             checkVlmModelStatus();
         }
     } else {
         formData.multimodal.vlm.baseUrl = '';
-        // 重置模型状态检查
+        // Reset model status check
         modelStatus.vlm.checked = false;
         modelStatus.vlm.available = false;
     }

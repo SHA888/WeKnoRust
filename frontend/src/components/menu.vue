@@ -13,7 +13,7 @@
                     </div>
                     <span class="menu_title">{{ item.title }}</span>
                 </div>
-                <t-popup overlayInnerClassName="upload-popup" class="placement top center" content="上传知识"
+                <t-popup overlayInnerClassName="upload-popup" class="placement top center" content="Upload knowledge"
                     placement="top" show-arrow destroy-on-close>
                     <div class="upload-file-wrap" @click="uploadFile" variant="outline"
                         v-if="item.path == 'knowledgeBase'">
@@ -40,7 +40,7 @@
                                 <t-icon name="ellipsis" class="menu-more" />
                             </div>
                             <template #content>
-                                <span class="del_submenu">删除记录</span>
+                                <span class="del_submenu">Delete record</span>
                             </template>
                         </t-popup>
                     </div>
@@ -131,7 +131,7 @@ const getMessageList = () => {
     getSessionsList(currentPage.value, page_size.value).then(res => {
         if (res.data && res.data.length) {
             res.data.forEach(item => {
-                let obj = { title: item.title ? item.title : "新会话", path: `chat/${item.id}`, id: item.id, isMore: false, isNoTitle: item.title ? false : true }
+                let obj = { title: item.title ? item.title : "New Session", path: `chat/${item.id}`, id: item.id, isMore: false, isNoTitle: item.title ? false : true }
                 usemenuStore.updatemenuArr(obj)
             });
             loading.value = false;

@@ -12,7 +12,7 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-// RemoteAPIChat 实现了基于的聊天
+// RemoteAPIChat implements chat over a remote (OpenAI-compatible) API
 type RemoteAPIChat struct {
 	modelName string
 	client    *openai.Client
@@ -21,13 +21,13 @@ type RemoteAPIChat struct {
 	apiKey    string
 }
 
-// QwenChatCompletionRequest 用于 qwen 模型的自定义请求结构体
+// QwenChatCompletionRequest is a custom request struct used for qwen models
 type QwenChatCompletionRequest struct {
 	openai.ChatCompletionRequest
-	EnableThinking *bool `json:"enable_thinking,omitempty"` // qwen 模型专用字段
+	EnableThinking *bool `json:"enable_thinking,omitempty"` // qwen-specific field
 }
 
-// NewRemoteAPIChat 调用远程API 聊天实例
+// NewRemoteAPIChat creates a chat instance for remote API
 func NewRemoteAPIChat(chatConfig *ChatConfig) (*RemoteAPIChat, error) {
 	apiKey := chatConfig.APIKey
 	config := openai.DefaultConfig(apiKey)
@@ -43,7 +43,7 @@ func NewRemoteAPIChat(chatConfig *ChatConfig) (*RemoteAPIChat, error) {
 	}, nil
 }
 
-// convertMessages 转换消息格式为OpenAI格式
+// convertMessages converts messages to OpenAI format
 func (c *RemoteAPIChat) convertMessages(messages []Message) []openai.ChatCompletionMessage {
 	openaiMessages := make([]openai.ChatCompletionMessage, len(messages))
 	for i, msg := range messages {
@@ -55,12 +55,12 @@ func (c *RemoteAPIChat) convertMessages(messages []Message) []openai.ChatComplet
 	return openaiMessages
 }
 
-// isQwenModel 检查是否为 qwen 模型
+// isAliyunQwen3Model checks whether the model is qwen3 on Aliyun compatible endpoint
 func (c *RemoteAPIChat) isAliyunQwen3Model() bool {
 	return strings.HasPrefix(c.modelName, "qwen3-") && c.baseURL == "https://dashscope.aliyuncs.com/compatible-mode/v1"
 }
 
-// buildQwenChatCompletionRequest 构建 qwen 模型的聊天请求参数
+// buildQwenChatCompletionRequest builds a chat request for qwen models
 func (c *RemoteAPIChat) buildQwenChatCompletionRequest(messages []Message,
 	opts *ChatOptions, isStream bool,
 ) QwenChatCompletionRequest {
@@ -68,7 +68,7 @@ func (c *RemoteAPIChat) buildQwenChatCompletionRequest(messages []Message,
 		ChatCompletionRequest: c.buildChatCompletionRequest(messages, opts, isStream),
 	}
 
-	// 对于 qwen 模型，在非流式调用中强制设置 enable_thinking: false
+	// For qwen models, force enable_thinking=false on non-stream calls
 	if !isStream {
 		enableThinking := false
 		req.EnableThinking = &enableThinking
@@ -76,7 +76,7 @@ func (c *RemoteAPIChat) buildQwenChatCompletionRequest(messages []Message,
 	return req
 }
 
-// buildChatCompletionRequest 构建聊天请求参数
+// buildChatCompletionRequest builds a standard chat completion request
 func (c *RemoteAPIChat) buildChatCompletionRequest(messages []Message,
 	opts *ChatOptions, isStream bool,
 ) openai.ChatCompletionRequest {
@@ -86,7 +86,7 @@ func (c *RemoteAPIChat) buildChatCompletionRequest(messages []Message,
 		Stream:   isStream,
 	}
 
-	// 添加可选参数
+	// Add optional parameters
 	if opts != nil {
 		if opts.Temperature > 0 {
 			req.Temperature = float32(opts.Temperature)
@@ -111,17 +111,17 @@ func (c *RemoteAPIChat) buildChatCompletionRequest(messages []Message,
 	return req
 }
 
-// Chat 进行非流式聊天
+// Chat performs a non-streaming chat request
 func (c *RemoteAPIChat) Chat(ctx context.Context, messages []Message, opts *ChatOptions) (*types.ChatResponse, error) {
-	// 如果是 qwen 模型，使用自定义请求
+	// Use custom path for qwen models
 	if c.isAliyunQwen3Model() {
 		return c.chatWithQwen(ctx, messages, opts)
 	}
 
-	// 构建请求参数
+	// Build request
 	req := c.buildChatCompletionRequest(messages, opts, false)
 
-	// 发送请求
+	// Send request
 	resp, err := c.client.CreateChatCompletion(ctx, req)
 	if err != nil {
 		return nil, fmt.Errorf("create chat completion: %w", err)
@@ -131,7 +131,7 @@ func (c *RemoteAPIChat) Chat(ctx context.Context, messages []Message, opts *Chat
 		return nil, fmt.Errorf("no response from OpenAI")
 	}
 
-	// 转换响应格式
+	// Convert response
 	return &types.ChatResponse{
 		Content: resp.Choices[0].Message.Content,
 		Usage: struct {
@@ -146,31 +146,31 @@ func (c *RemoteAPIChat) Chat(ctx context.Context, messages []Message, opts *Chat
 	}, nil
 }
 
-// chatWithQwen 使用自定义请求处理 qwen 模型
+// chatWithQwen handles qwen models with a custom request
 func (c *RemoteAPIChat) chatWithQwen(ctx context.Context, messages []Message, opts *ChatOptions) (*types.ChatResponse, error) {
-	// 构建 qwen 请求参数
+	// Build qwen request
 	req := c.buildQwenChatCompletionRequest(messages, opts, false)
 
-	// 序列化请求
+	// Marshal request
 	jsonData, err := json.Marshal(req)
 	if err != nil {
 		return nil, fmt.Errorf("marshal request: %w", err)
 	}
 
-	// 构建 URL
+	// Build endpoint URL
 	endpoint := c.baseURL + "/chat/completions"
 
-	// 创建 HTTP 请求
+	// Create HTTP request
 	httpReq, err := http.NewRequestWithContext(ctx, "POST", endpoint, bytes.NewBuffer(jsonData))
 	if err != nil {
 		return nil, fmt.Errorf("create request: %w", err)
 	}
 
-	// 设置请求头
+	// Set headers
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Authorization", "Bearer "+c.apiKey)
 
-	// 发送请求
+	// Send request
 	client := &http.Client{}
 	resp, err := client.Do(httpReq)
 	if err != nil {
@@ -178,12 +178,12 @@ func (c *RemoteAPIChat) chatWithQwen(ctx context.Context, messages []Message, op
 	}
 	defer resp.Body.Close()
 
-	// 检查响应状态
+	// Check response status
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("API request failed with status: %d", resp.StatusCode)
 	}
 
-	// 解析响应
+	// Decode response
 	var chatResp openai.ChatCompletionResponse
 	if err := json.NewDecoder(resp.Body).Decode(&chatResp); err != nil {
 		return nil, fmt.Errorf("decode response: %w", err)
@@ -193,7 +193,7 @@ func (c *RemoteAPIChat) chatWithQwen(ctx context.Context, messages []Message, op
 		return nil, fmt.Errorf("no response from API")
 	}
 
-	// 转换响应格式
+	// Convert response
 	return &types.ChatResponse{
 		Content: chatResp.Choices[0].Message.Content,
 		Usage: struct {
@@ -208,24 +208,24 @@ func (c *RemoteAPIChat) chatWithQwen(ctx context.Context, messages []Message, op
 	}, nil
 }
 
-// ChatStream 进行流式聊天
+// ChatStream performs streaming chat
 func (c *RemoteAPIChat) ChatStream(ctx context.Context,
 	messages []Message, opts *ChatOptions,
 ) (<-chan types.StreamResponse, error) {
-	// 构建请求参数
+	// Build request
 	req := c.buildChatCompletionRequest(messages, opts, true)
 
-	// 创建流式响应通道
+	// Create stream response channel
 	streamChan := make(chan types.StreamResponse)
 
-	// 启动流式请求
+	// Start stream request
 	stream, err := c.client.CreateChatCompletionStream(ctx, req)
 	if err != nil {
 		close(streamChan)
 		return nil, fmt.Errorf("create chat completion stream: %w", err)
 	}
 
-	// 在后台处理流式响应
+	// Consume stream in background
 	go func() {
 		defer close(streamChan)
 		defer stream.Close()
@@ -252,12 +252,12 @@ func (c *RemoteAPIChat) ChatStream(ctx context.Context,
 	return streamChan, nil
 }
 
-// GetModelName 获取模型名称
+// GetModelName returns the model name
 func (c *RemoteAPIChat) GetModelName() string {
 	return c.modelName
 }
 
-// GetModelID 获取模型ID
+// GetModelID returns the model ID
 func (c *RemoteAPIChat) GetModelID() string {
 	return c.modelID
 }

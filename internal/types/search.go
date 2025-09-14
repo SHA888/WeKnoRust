@@ -27,16 +27,16 @@ type SearchResult struct {
 	Score float64 `json:"score"`
 	// Match type
 	MatchType MatchType `json:"match_type"`
-	// SubChunkIndex
+	// Sub chunk ID
 	SubChunkID []string `json:"sub_chunk_id"`
 	// Metadata
 	Metadata map[string]string `json:"metadata"`
 
-	// Chunk 类型
+	// Chunk type
 	ChunkType string `json:"chunk_type"`
-	// 父 Chunk ID
+	// Parent chunk ID
 	ParentChunkID string `json:"parent_chunk_id"`
-	// 图片信息 (JSON 格式)
+	// Image information (JSON format)
 	ImageInfo string `json:"image_info"`
 
 	// Knowledge file name

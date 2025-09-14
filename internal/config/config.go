@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Config 应用程序总配置
+// Config holds the application's configuration
 type Config struct {
 	Conversation   *ConversationConfig   `yaml:"conversation" json:"conversation"`
 	Server         *ServerConfig         `yaml:"server" json:"server"`
@@ -32,7 +32,7 @@ type VectorDatabaseConfig struct {
 	Driver string `yaml:"driver" json:"driver"`
 }
 
-// ConversationConfig 对话服务配置
+// ConversationConfig configures the conversation service
 type ConversationConfig struct {
 	MaxRounds                  int            `yaml:"max_rounds" json:"max_rounds"`
 	KeywordThreshold           float64        `yaml:"keyword_threshold" json:"keyword_threshold"`
@@ -56,7 +56,7 @@ type ConversationConfig struct {
 	ExtractRelationshipsPrompt string         `yaml:"extract_relationships_prompt" json:"extract_relationships_prompt"`
 }
 
-// SummaryConfig 摘要配置
+// SummaryConfig configures summarization behavior
 type SummaryConfig struct {
 	MaxTokens           int     `yaml:"max_tokens" json:"max_tokens"`
 	RepeatPenalty       float64 `yaml:"repeat_penalty" json:"repeat_penalty"`
@@ -72,7 +72,7 @@ type SummaryConfig struct {
 	NoMatchPrefix       string  `yaml:"no_match_prefix" json:"no_match_prefix"`
 }
 
-// ServerConfig 服务器配置
+// ServerConfig configures the HTTP server
 type ServerConfig struct {
 	Port            int           `yaml:"port" json:"port"`
 	Host            string        `yaml:"host" json:"host"`
@@ -80,7 +80,7 @@ type ServerConfig struct {
 	ShutdownTimeout time.Duration `yaml:"shutdown_timeout" json:"shutdown_timeout" default:"30s"`
 }
 
-// KnowledgeBaseConfig 知识库配置
+// KnowledgeBaseConfig configures the knowledge base
 type KnowledgeBaseConfig struct {
 	ChunkSize       int                    `yaml:"chunk_size" json:"chunk_size"`
 	ChunkOverlap    int                    `yaml:"chunk_overlap" json:"chunk_overlap"`
@@ -89,19 +89,19 @@ type KnowledgeBaseConfig struct {
 	ImageProcessing *ImageProcessingConfig `yaml:"image_processing" json:"image_processing"`
 }
 
-// ImageProcessingConfig 图像处理配置
+// ImageProcessingConfig configures image processing
 type ImageProcessingConfig struct {
 	EnableMultimodal bool `yaml:"enable_multimodal" json:"enable_multimodal"`
 }
 
-// TenantConfig 租户配置
+// TenantConfig configures tenant defaults
 type TenantConfig struct {
 	DefaultSessionName        string `yaml:"default_session_name" json:"default_session_name"`
 	DefaultSessionTitle       string `yaml:"default_session_title" json:"default_session_title"`
 	DefaultSessionDescription string `yaml:"default_session_description" json:"default_session_description"`
 }
 
-// ModelConfig 模型配置
+// ModelConfig configures models available to the system
 type ModelConfig struct {
 	Type       string                 `yaml:"type" json:"type"`
 	Source     string                 `yaml:"source" json:"source"`
@@ -118,63 +118,63 @@ type AsynqConfig struct {
 	Concurrency  int           `yaml:"concurrency" json:"concurrency"`
 }
 
-// StreamManagerConfig 流管理器配置
+// StreamManagerConfig configures the stream manager
 type StreamManagerConfig struct {
-	Type           string        `yaml:"type" json:"type"`                       // 类型: "memory" 或 "redis"
-	Redis          RedisConfig   `yaml:"redis" json:"redis"`                     // Redis配置
-	CleanupTimeout time.Duration `yaml:"cleanup_timeout" json:"cleanup_timeout"` // 清理超时，单位秒
+	Type           string        `yaml:"type" json:"type"`                       // Type: "memory" or "redis"
+	Redis          RedisConfig   `yaml:"redis" json:"redis"`                     // Redis configuration
+	CleanupTimeout time.Duration `yaml:"cleanup_timeout" json:"cleanup_timeout"` // Cleanup timeout
 }
 
-// RedisConfig Redis配置
+// RedisConfig holds Redis connection settings
 type RedisConfig struct {
-	Address  string        `yaml:"address" json:"address"`   // Redis地址
-	Password string        `yaml:"password" json:"password"` // Redis密码
-	DB       int           `yaml:"db" json:"db"`             // Redis数据库
-	Prefix   string        `yaml:"prefix" json:"prefix"`     // 键前缀
-	TTL      time.Duration `yaml:"ttl" json:"ttl"`           // 过期时间(小时)
+	Address  string        `yaml:"address" json:"address"`   // Redis address
+	Password string        `yaml:"password" json:"password"` // Redis password
+	DB       int           `yaml:"db" json:"db"`             // Redis database index
+	Prefix   string        `yaml:"prefix" json:"prefix"`     // Key prefix
+	TTL      time.Duration `yaml:"ttl" json:"ttl"`           // Expiration duration
 }
 
-// LoadConfig 从配置文件加载配置
+// LoadConfig loads configuration from files and environment
 func LoadConfig() (*Config, error) {
-	// 设置配置文件名和路径
-	viper.SetConfigName("config")         // 配置文件名称(不带扩展名)
-	viper.SetConfigType("yaml")           // 配置文件类型
-	viper.AddConfigPath(".")              // 当前目录
-	viper.AddConfigPath("./config")       // config子目录
-	viper.AddConfigPath("$HOME/.appname") // 用户目录
-	viper.AddConfigPath("/etc/appname/")  // etc目录
+	// Set config file name and search paths
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+	viper.AddConfigPath("./config")
+	viper.AddConfigPath("$HOME/.appname")
+	viper.AddConfigPath("/etc/appname/")
 
-	// 启用环境变量替换
+	// Enable environment variables
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
-	// 读取配置文件
+	// Read configuration file
 	if err := viper.ReadInConfig(); err != nil {
 		return nil, fmt.Errorf("error reading config file: %w", err)
 	}
 
-	// 替换配置中的环境变量引用
+	// Replace environment variable placeholders
 	configFileContent, err := os.ReadFile(viper.ConfigFileUsed())
 	if err != nil {
 		return nil, fmt.Errorf("error reading config file content: %w", err)
 	}
 
-	// 替换${ENV_VAR}格式的环境变量引用
+	// Replace ${ENV_VAR} placeholders with env values
 	re := regexp.MustCompile(`\${([^}]+)}`)
 	result := re.ReplaceAllStringFunc(string(configFileContent), func(match string) string {
-		// 提取环境变量名称（去掉${}部分）
+		// Extract env var name (strip ${})
 		envVar := match[2 : len(match)-1]
-		// 获取环境变量值，如果不存在则保持原样
+		// Replace with env value if present
 		if value := os.Getenv(envVar); value != "" {
 			return value
 		}
 		return match
 	})
 
-	// 使用处理后的配置内容
+	// Use the processed configuration content
 	viper.ReadConfig(strings.NewReader(result))
 
-	// 解析配置到结构体
+	// Unmarshal into struct
 	var cfg Config
 	if err := viper.Unmarshal(&cfg, func(dc *mapstructure.DecoderConfig) {
 		dc.TagName = "yaml"

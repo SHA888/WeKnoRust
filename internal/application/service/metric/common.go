@@ -37,42 +37,42 @@ func max(a, b int) int {
 }
 
 func splitSentences(text string) []string {
-	// 编译正则表达式（匹配中文句号或英文句号）
-	re := regexp.MustCompile(`([。.])`)
+    // Compile regex to match Chinese period or English period
+    re := regexp.MustCompile(`([。.])`)
 
-	// 分割文本并保留分隔符用于定位
-	split := re.Split(text, -1)
+    // Split text while keeping delimiters for positioning
+    split := re.Split(text, -1)
 
 	var sentences []string
 	current := strings.Builder{}
 
-	for i, s := range split {
-		// 交替获取文本段和分隔符（奇数为分隔符）
-		if i%2 == 0 {
-			current.WriteString(s)
-		} else {
-			// 当遇到分隔符时，完成当前句子
-			if current.Len() > 0 {
-				sentence := strings.TrimSpace(current.String())
-				if sentence != "" {
-					sentences = append(sentences, sentence)
-				}
-				current.Reset()
-			}
-		}
-	}
+    // Alternate between text segments and delimiters (odd indices are delimiters)
+    for i, s := range split {
+        if i%2 == 0 {
+            current.WriteString(s)
+        } else {
+            // When encountering a delimiter, finalize the current sentence
+            if current.Len() > 0 {
+                sentence := strings.TrimSpace(current.String())
+                if sentence != "" {
+                    sentences = append(sentences, sentence)
+                }
+                current.Reset()
+            }
+        }
+    }
 
-	// 处理最后一个无分隔符的文本段
-	if remaining := strings.TrimSpace(current.String()); remaining != "" {
-		sentences = append(sentences, remaining)
-	}
+    // Handle the last segment without a trailing delimiter
+    if remaining := strings.TrimSpace(current.String()); remaining != "" {
+        sentences = append(sentences, remaining)
+    }
 
 	return sentences
 }
 
 func splitIntoWords(sentences []string) []string {
-	// 正则匹配中英文段落（中文块、英文块、其他字符）
-	re := regexp.MustCompile(`([\p{Han}]+)|([a-zA-Z0-9_.,!?]+)|(\p{P})`)
+    // Regex to match Chinese blocks, English blocks, and punctuation
+    re := regexp.MustCompile(`([\p{Han}]+)|([a-zA-Z0-9_.,!?]+)|(\p{P})`)
 
 	var tokens []string
 	for _, text := range sentences {
@@ -83,19 +83,19 @@ func splitIntoWords(sentences []string) []string {
 			englishBlock := groups[2]
 			punctuation := groups[3]
 
-			switch {
-			case chineseBlock != "": // 处理中文部分
-				words := types.Jieba.Cut(chineseBlock, true)
-				tokens = append(tokens, words...)
-			case englishBlock != "": // 处理英文部分
-				engTokens := strings.Fields(englishBlock)
-				tokens = append(tokens, engTokens...)
-			case punctuation != "": // 保留标点符号
-				tokens = append(tokens, punctuation)
-			}
-		}
-	}
-	return tokens
+			            switch {
+            case chineseBlock != "": // Handle Chinese segment
+                words := types.Jieba.Cut(chineseBlock, true)
+                tokens = append(tokens, words...)
+            case englishBlock != "": // Handle English segment
+                engTokens := strings.Fields(englishBlock)
+                tokens = append(tokens, engTokens...)
+            case punctuation != "": // Keep punctuation
+                tokens = append(tokens, punctuation)
+            }
+        }
+    }
+    return tokens
 }
 
 func ToSet[T comparable](li []T) map[T]struct{} {

@@ -32,14 +32,15 @@ type RetrieveEngineRepository interface {
 
 	// DeleteByChunkIDList deletes the index info by chunk id list
 	DeleteByChunkIDList(ctx context.Context, indexIDList []string, dimension int) error
-	// 复制索引数据
-	// sourceKnowledgeBaseID: 源知识库ID
-	// sourceToTargetChunkIDMap: 源分块ID到目标分块ID的映射关系
-	// targetKnowledgeBaseID: 目标知识库ID
-	// params: 额外参数，如向量表示等
-	CopyIndices(
-		ctx context.Context,
-		sourceKnowledgeBaseID string,
+    // Copy indices
+    // sourceKnowledgeBaseID: source knowledge base ID
+    // sourceToTargetKBIDMap: mapping from source knowledge base ID to target knowledge base ID
+    // sourceToTargetChunkIDMap: mapping from source chunk ID to target chunk ID
+    // targetKnowledgeBaseID: target knowledge base ID
+    // params: additional parameters, e.g., embedding vectors
+    CopyIndices(
+        ctx context.Context,
+        sourceKnowledgeBaseID string,
 		sourceToTargetKBIDMap map[string]string,
 		sourceToTargetChunkIDMap map[string]string,
 		targetKnowledgeBaseID string,
@@ -85,18 +86,20 @@ type RetrieveEngineService interface {
 		indexInfoList []*types.IndexInfo,
 		retrieverTypes []types.RetrieverType,
 	) int64
-	// CopyIndices 从源知识库复制索引到目标知识库，免去重新计算嵌入向量的开销
-	// sourceKnowledgeBaseID: 源知识库ID
-	// sourceToTargetChunkIDMap: 源分块ID到目标分块ID的映射关系，key为源分块ID，value为目标分块ID
-	// targetKnowledgeBaseID: 目标知识库ID
-	CopyIndices(
-		ctx context.Context,
-		sourceKnowledgeBaseID string,
-		sourceToTargetKBIDMap map[string]string,
-		sourceToTargetChunkIDMap map[string]string,
-		targetKnowledgeBaseID string,
-		dimension int,
-	) error
+    // CopyIndices copies indices from the source knowledge base to the target knowledge base,
+    // avoiding recomputation of embeddings
+    // sourceKnowledgeBaseID: source knowledge base ID
+    // sourceToTargetKBIDMap: mapping from source knowledge base ID to target knowledge base ID
+    // sourceToTargetChunkIDMap: mapping from source chunk ID to target chunk ID (key: source ID, value: target ID)
+    // targetKnowledgeBaseID: target knowledge base ID
+    CopyIndices(
+        ctx context.Context,
+        sourceKnowledgeBaseID string,
+        sourceToTargetKBIDMap map[string]string,
+        sourceToTargetChunkIDMap map[string]string,
+        targetKnowledgeBaseID string,
+        dimension int,
+    ) error
 
 	// DeleteByChunkIDList deletes the index info by chunk id list
 	DeleteByChunkIDList(ctx context.Context, indexIDList []string, dimension int) error

@@ -75,23 +75,23 @@ func ParseLLMJsonResponse(content string, target interface{}) error {
 	return err
 }
 
-// CleanInvalidUTF8 移除字符串中的非法 UTF-8 字符和 \x00
+// CleanInvalidUTF8 removes invalid UTF-8 bytes and \x00 from a string
 func CleanInvalidUTF8(s string) string {
 	var b strings.Builder
 	b.Grow(len(s))
 
 	for i := 0; i < len(s); {
 		r, size := utf8.DecodeRuneInString(s[i:])
-		if r == utf8.RuneError && size == 1 {
-			// 非法 UTF-8 字节，跳过
-			i++
-			continue
-		}
-		if r == 0 {
-			// NULL 字符 \x00，跳过
-			i += size
-			continue
-		}
+		        if r == utf8.RuneError && size == 1 {
+            // Invalid UTF-8 byte; skip it
+            i++
+            continue
+        }
+        if r == 0 {
+            // NULL character \x00; skip it
+            i += size
+            continue
+        }
 		b.WriteRune(r)
 		i += size
 	}

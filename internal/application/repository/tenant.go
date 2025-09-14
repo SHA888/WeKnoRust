@@ -65,13 +65,13 @@ func (r *tenantRepository) DeleteTenant(ctx context.Context, id uint) error {
 func (r *tenantRepository) AdjustStorageUsed(ctx context.Context, tenantID uint, delta int64) error {
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		var tenant types.Tenant
-		// 使用悲观锁确保并发安全
+		// Use pessimistic lock to ensure concurrency safety
 		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&tenant, tenantID).Error; err != nil {
 			return err
 		}
 
 		tenant.StorageUsed += delta
-		// 保存更新并验证业务规则
+		// Save update and validate business rules
 		if tenant.StorageUsed < 0 {
 			logger.Error(ctx, "tenant storage used is negative %s: %d", tenant.ID, tenant.StorageUsed)
 			tenant.StorageUsed = 0

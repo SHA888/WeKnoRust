@@ -4,66 +4,66 @@ import { generateRandomString } from '@/utils/index';
 import { getTestData } from '@/utils/request';
 import { loadTestData } from '@/api/test-data';
 
-// 从localStorage获取设置
+// Read settings from localStorage
 function getSettings() {
-  const settingsStr = localStorage.getItem("WeKnora_settings");
+  const settingsStr = localStorage.getItem("WeKnoRust_settings") ?? localStorage.getItem("WeKnora_settings");
   if (settingsStr) {
     try {
       const settings = JSON.parse(settingsStr);
       return settings;
     } catch (e) {
-      console.error("解析设置失败:", e);
+      console.error("Failed to parse settings:", e);
     }
   }
   return null;
 }
 
 interface StreamOptions {
-  // 请求方法 (默认POST)
+  // HTTP method (default POST)
   method?: 'GET' | 'POST'
-  // 请求头
+  // Request headers
   headers?: Record<string, string>
-  // 请求体自动序列化
+  // Request body to be auto-serialized
   body?: Record<string, any>
-  // 流式渲染间隔 (ms)
+  // Streaming render interval (ms)
   chunkInterval?: number
 }
 
 export function useStream() {
-  // 响应式状态
-  const output = ref('')              // 显示内容
-  const isStreaming = ref(false)      // 流状态
-  const isLoading = ref(false)        // 初始加载
-  const error = ref<string | null>(null)// 错误信息
+  // Reactive state
+  const output = ref('')              // Display content
+  const isStreaming = ref(false)      // Streaming state
+  const isLoading = ref(false)        // Initial loading flag
+  const error = ref<string | null>(null)// Error message
   let controller = new AbortController()
 
-  // 流式渲染缓冲
+  // Streaming render buffer
   let buffer: string[] = []
   let renderTimer: number | null = null
 
-  // 启动流式请求
+  // Start streaming request
   const startStream = async (params: { session_id: any; query: any; method: string; url: string }) => {
-    // 重置状态
+    // Reset state
     output.value = '';
     error.value = null;
     isStreaming.value = true;
     isLoading.value = true;
 
-    // 获取设置信息
+    // Get settings
     const settings = getSettings();
     let apiUrl = '';
     let apiKey = '';
 
-    // 如果有设置信息，优先使用设置信息
+    // Prefer settings if available
     if (settings && settings.endpoint && settings.apiKey) {
       apiUrl = settings.endpoint;
       apiKey = settings.apiKey;
     } else {
-      // 否则加载测试数据
+      // Otherwise load test data
       await loadTestData();
       const testData = getTestData();
       if (!testData) {
-        error.value = "测试数据未初始化，无法进行聊天";
+        error.value = "Test data not initialized; cannot start chat";
         stopStream();
         return;
       }
@@ -96,15 +96,15 @@ export function useStream() {
         },
 
         onmessage: (ev) => {
-          buffer.push(JSON.parse(ev.data)); // 数据存入缓冲
-          // 执行自定义处理
+          buffer.push(JSON.parse(ev.data)); // push to buffer
+          // Execute custom handler if provided
           if (chunkHandler) {
             chunkHandler(JSON.parse(ev.data));
           }
         },
 
         onerror: (err) => {
-          throw new Error(`流式连接失败: ${err}`);
+          throw new Error(`Streaming connection failed: ${err}`);
         },
 
         onclose: () => {
@@ -118,30 +118,30 @@ export function useStream() {
   }
 
   let chunkHandler: ((data: any) => void) | null = null
-  // 注册块处理器
+  // Register chunk handler
   const onChunk = (handler: () => void) => {
     chunkHandler = handler
   }
 
 
-  // 停止流
+  // Stop stream
   const stopStream = () => {
     controller.abort();
-    controller = new AbortController(); // 重置控制器（如需重新发起）
+    controller = new AbortController(); // reset controller for next request
     isStreaming.value = false;
     isLoading.value = false;
   }
 
-  // 组件卸载时自动清理
+  // Auto cleanup on unmount
   onUnmounted(stopStream)
 
   return {
-    output,          // 显示内容
-    isStreaming,     // 是否在流式传输中
-    isLoading,       // 初始连接状态
+    output,          // Display content
+    isStreaming,     // Whether streaming
+    isLoading,       // Initial connection status
     error,
     onChunk,
-    startStream,     // 启动流
-    stopStream       // 手动停止
+    startStream,     // Start streaming
+    stopStream       // Stop manually
   }
 }

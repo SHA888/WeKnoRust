@@ -21,7 +21,7 @@ func Recovery() gin.HandlerFunc {
 				// Log error
 				log.Printf("[PANIC] %s | %v | %s", requestID, err, stacktrace)
 
-				// 返回500错误
+				// Return 500 error response
 				c.AbortWithStatusJSON(500, gin.H{
 					"error":   "Internal Server Error",
 					"message": fmt.Sprintf("%v", err),

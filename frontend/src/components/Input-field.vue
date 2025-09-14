@@ -17,15 +17,15 @@ onMounted(() => {
 const emit = defineEmits(['send-msg']);
 const createSession = (val: string) => {
   if (!val.trim()) {
-    MessagePlugin.info("请先输入内容!");
+    MessagePlugin.info("Please enter a message first!");
     return
   }
   if (!query.value && cardList.value.length == 0) {
-    MessagePlugin.info("请先上传知识库!");
+    MessagePlugin.info("Please upload knowledge first!");
     return;
   }
   if (props.isReplying) {
-    return MessagePlugin.error("正在回复中，请稍后再试!");
+    return MessagePlugin.error("Responding... please try again later!");
   }
   emit('send-msg', val);
   clearvalue();
@@ -50,9 +50,9 @@ onBeforeRouteUpdate((to, from, next) => {
 </script>
 <template>
   <div class="answers-input">
-    <t-textarea v-model="query" placeholder="基于知识库提问" name="description" :autosize="true" @keydown="onKeydown" />
+    <t-textarea v-model="query" placeholder="Ask based on knowledge base" name="description" :autosize="true" @keydown="onKeydown" />
     <div class="answers-input-source">
-      <span>{{ total }}个来源</span>
+      <span>{{ total }} sources</span>
     </div>
     <div @click="createSession(query)" class="answers-input-send"
       :class="[query.length && total ? '' : 'grey-out']">

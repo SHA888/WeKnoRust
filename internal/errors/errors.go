@@ -100,7 +100,7 @@ func NewConflictError(message string) *AppError {
 // NewInternalServerError creates an internal server error
 func NewInternalServerError(message string) *AppError {
 	if message == "" {
-		message = "服务器内部错误"
+		message = "Internal server error"
 	}
 	return &AppError{
 		Code:     ErrInternalServer,
@@ -122,7 +122,7 @@ func NewValidationError(message string) *AppError {
 func NewTenantNotFoundError() *AppError {
 	return &AppError{
 		Code:     ErrTenantNotFound,
-		Message:  "租户不存在",
+		Message:  "Tenant not found",
 		HTTPCode: http.StatusNotFound,
 	}
 }
@@ -131,7 +131,7 @@ func NewTenantNotFoundError() *AppError {
 func NewTenantAlreadyExistsError() *AppError {
 	return &AppError{
 		Code:     ErrTenantAlreadyExists,
-		Message:  "租户已存在",
+		Message:  "Tenant already exists",
 		HTTPCode: http.StatusConflict,
 	}
 }
@@ -140,7 +140,7 @@ func NewTenantAlreadyExistsError() *AppError {
 func NewTenantInactiveError() *AppError {
 	return &AppError{
 		Code:     ErrTenantInactive,
-		Message:  "租户已停用",
+		Message:  "Tenant is inactive",
 		HTTPCode: http.StatusForbidden,
 	}
 }

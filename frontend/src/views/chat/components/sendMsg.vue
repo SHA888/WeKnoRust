@@ -1,6 +1,6 @@
 <template>
     <div>
-        <t-textarea resize="none" :autosize="false" v-model="value" placeholder="请输入描述文案" name="description" @change="onChange" />
+        <t-textarea resize="none" :autosize="false" v-model="value" placeholder="Enter your message" name="description" @change="onChange" />
     </div>
 </template>
 <script setup>

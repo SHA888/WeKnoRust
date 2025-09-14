@@ -17,8 +17,8 @@ const (
 	MatchTypeKeywords
 	MatchTypeNearByChunk
 	MatchTypeHistory
-	MatchTypeParentChunk   // 父Chunk匹配类型
-	MatchTypeRelationChunk // 关系Chunk匹配类型
+	MatchTypeParentChunk   // Parent chunk match type
+	MatchTypeRelationChunk // Relationship chunk match type
 )
 
 // IndexInfo contains information about indexed content

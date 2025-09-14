@@ -248,7 +248,11 @@ WeKnowRust supports transforming documents into knowledge graphs, displaying the
 
 ## 📘 API Reference
 
-Troubleshooting FAQ: [Troubleshooting FAQ](./docs/QA.md)
+Troubleshooting FAQ (CN): [Troubleshooting FAQ](./docs/QA.md)
+
+Troubleshooting FAQ (EN): [FAQ_EN](./docs/QA_EN.md)
+
+Using another vector database (EN): [Using_Another_Vector_DB_EN](./docs/Using_Another_Vector_DB_EN.md)
 
 Detailed API documentation is available at: [API Docs](./docs/API.md)
 

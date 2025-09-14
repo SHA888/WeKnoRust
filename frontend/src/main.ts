@@ -5,6 +5,7 @@ import router from "./router";
 import "./assets/fonts.css";
 import TDesign from "tdesign-vue-next";
 // 引入组件库的少量全局样式变量
+// Import a small set of global style variables from the UI library
 import "tdesign-vue-next/es/style/index.css";
 import "@/assets/theme/theme.css";
 const app = createApp(App);
