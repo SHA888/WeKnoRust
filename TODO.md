@@ -76,7 +76,7 @@ rust/
 
 ### Phase 0: Preparation
 - [x] Create Rust workspace and base crates.
-- [ ] Set up CI for Rust (fmt, clippy, tests, sqlx schema checks).
+- [x] Set up CI for Rust (fmt, clippy, tests, sqlx schema checks).
 - [ ] Add shared `.env` and config files mirroring Go’s `config/config.yaml`.
 
 ### Phase 1: Foundations
