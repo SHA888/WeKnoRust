@@ -1,0 +1,55 @@
+name: Rust CI
+
+on:
+  push:
+    paths:
+      - 'rust/**'
+      - '.github/workflows/rust-ci.yml'
+  pull_request:
+    paths:
+      - 'rust/**'
+      - '.github/workflows/rust-ci.yml'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rust
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Rustfmt check
+        run: |
+          cargo fmt --all -- --check
+
+      - name: Clippy (warnings as errors)
+        run: |
+          cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Build
+        run: |
+          cargo build --all --all-targets --locked
+
+      - name: Test
+        run: |
+          cargo test --all --locked -- --nocapture
+
+      # - name: SQLx schema check (placeholder)
+      #   run: |
+      #     echo "Add sqlx offline schema checks once database layer is added"
