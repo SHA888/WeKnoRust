@@ -77,11 +77,11 @@ rust/
 ### Phase 0: Preparation
 - [x] Create Rust workspace and base crates.
 - [x] Set up CI for Rust (fmt, clippy, tests, sqlx schema checks).
-- [ ] Add shared `.env` and config files mirroring Go’s `config/config.yaml`.
+- [x] Add shared `.env` and config files mirroring Go’s `config/config.yaml`.
 
 ### Phase 1: Foundations
-- [ ] Implement `config` crate mapping current Go config structs.
-- [ ] Implement `logger` crate with `tracing` JSON formatter compatible with logrus fields.
+- [x] Implement `config` crate mapping current Go config structs.
+- [x] Implement `logger` crate with `tracing` JSON formatter compatible with logrus fields.
 - [ ] Implement `types` crate covering core serde models (`Tenant`, `Knowledge*`, `Chunk`, etc.).
 
 ### Phase 2: Infrastructure
