@@ -10,3 +10,6 @@ tracing = "0.1"
 wk_logger = { path = "../../crates/logger" }
 wk_config = { path = "../../crates/config" }
 wk_web = { path = "../../crates/web" }
+wk_repos = { path = "../../crates/repos" }
+wk_stream = { path = "../../crates/stream" }
+anyhow = "1"
