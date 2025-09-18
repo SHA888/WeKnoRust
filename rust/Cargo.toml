@@ -4,6 +4,7 @@ members = [
   "crates/logger",
   "crates/types",
   "crates/repos",
+  "crates/stream",
   "crates/web",
   "apps/api",
 ]

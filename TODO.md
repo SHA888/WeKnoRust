@@ -85,8 +85,8 @@ rust/
 - [x] Implement `types` crate covering core serde models (`Tenant`, `Knowledge*`, `Chunk`, etc.).
 
 ### Phase 2: Infrastructure
-- [ ] Implement DB connection pool(s) and `repos` with `sqlx`.
-- [ ] Port `tenant` repository: CRUD, `AdjustStorageUsed` with pessimistic lock.
+- [x] Implement DB connection pool(s) and `repos` with `sqlx`.
+- [x] Port `tenant` repository: CRUD, `AdjustStorageUsed` with pessimistic lock.
 - [ ] Port `stream` manager (memory + redis) with TTL semantics.
 
 ### Phase 3: Web Layer
