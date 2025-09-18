@@ -12,3 +12,5 @@ tracing = "0.1"
 wk_logger = { path = "../logger" }
 wk_config = { path = "../config" }
 wk_types = { path = "../types" }
+wk_repos = { path = "../repos" }
+wk_stream = { path = "../stream" }
