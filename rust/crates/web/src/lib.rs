@@ -1,10 +1,10 @@
 use std::sync::Arc;
 use axum::{
-    routing::get,
+    routing::{get, post, put, delete},
     Router,
     response::IntoResponse,
     Json,
-    extract::{State, Request},
+    extract::{State, Request, Path},
     middleware::{self, Next},
 };
 use serde::Serialize;
@@ -103,10 +103,120 @@ async fn request_id_mw(mut req: Request, next: Next) -> impl IntoResponse {
 }
 
 pub fn build_router_with_state(state: Arc<AppState>) -> Router {
+    // Stub handlers
+    async fn ok(endpoint: &'static str) -> impl IntoResponse { Json(serde_json::json!({"ok": true, "endpoint": endpoint})) }
+    async fn ok_with_params(endpoint: &'static str, params: serde_json::Value) -> impl IntoResponse { Json(serde_json::json!({"ok": true, "endpoint": endpoint, "params": params})) }
+
+    // Tenants
+    let tenants = Router::new()
+        .route("/", post(|| async { ok("POST /api/v1/tenants").await }))
+        .route("/", get(|| async { ok("GET /api/v1/tenants").await }))
+        .route("/:id", get(|Path(id): Path<String>| async move { ok_with_params("GET /api/v1/tenants/:id", serde_json::json!({"id": id})).await }))
+        .route("/:id", put(|Path(id): Path<String>| async move { ok_with_params("PUT /api/v1/tenants/:id", serde_json::json!({"id": id})).await }))
+        .route("/:id", delete(|Path(id): Path<String>| async move { ok_with_params("DELETE /api/v1/tenants/:id", serde_json::json!({"id": id})).await }));
+
+    // Knowledge Bases
+    let knowledge_bases = Router::new()
+        .route("/", post(|| async { ok("POST /api/v1/knowledge-bases").await }))
+        .route("/", get(|| async { ok("GET /api/v1/knowledge-bases").await }))
+        .route("/:id", get(|Path(id): Path<String>| async move { ok_with_params("GET /api/v1/knowledge-bases/:id", serde_json::json!({"id": id})).await }))
+        .route("/:id", put(|Path(id): Path<String>| async move { ok_with_params("PUT /api/v1/knowledge-bases/:id", serde_json::json!({"id": id})).await }))
+        .route("/:id", delete(|Path(id): Path<String>| async move { ok_with_params("DELETE /api/v1/knowledge-bases/:id", serde_json::json!({"id": id})).await }))
+        .route("/:id/hybrid-search", get(|Path(id): Path<String>| async move { ok_with_params("GET /api/v1/knowledge-bases/:id/hybrid-search", serde_json::json!({"id": id})).await }))
+        .route("/copy", post(|| async { ok("POST /api/v1/knowledge-bases/copy").await }));
+
+    // Knowledge routes
+    let knowledge = Router::new()
+        .route("/batch", get(|| async { ok("GET /api/v1/knowledge/batch").await }))
+        .route("/:id", get(|Path(id): Path<String>| async move { ok_with_params("GET /api/v1/knowledge/:id", serde_json::json!({"id": id})).await }))
+        .route("/:id", delete(|Path(id): Path<String>| async move { ok_with_params("DELETE /api/v1/knowledge/:id", serde_json::json!({"id": id})).await }))
+        .route("/:id", put(|Path(id): Path<String>| async move { ok_with_params("PUT /api/v1/knowledge/:id", serde_json::json!({"id": id})).await }))
+        .route("/:id/download", get(|Path(id): Path<String>| async move { ok_with_params("GET /api/v1/knowledge/:id/download", serde_json::json!({"id": id})).await }))
+        .route("/image/:id/:chunk_id", put(|Path((id, chunk_id)): Path<(String, String)>| async move { ok_with_params("PUT /api/v1/knowledge/image/:id/:chunk_id", serde_json::json!({"id": id, "chunk_id": chunk_id})).await }));
+
+    // Knowledge under knowledge base
+    let kb_knowledge = Router::new()
+        .route("/file", post(|Path(id): Path<String>| async move { ok_with_params("POST /api/v1/knowledge-bases/:id/knowledge/file", serde_json::json!({"id": id})).await }))
+        .route("/url", post(|Path(id): Path<String>| async move { ok_with_params("POST /api/v1/knowledge-bases/:id/knowledge/url", serde_json::json!({"id": id})).await }))
+        .route("/", get(|Path(id): Path<String>| async move { ok_with_params("GET /api/v1/knowledge-bases/:id/knowledge", serde_json::json!({"id": id})).await }));
+
+    // Chunks
+    let chunks = Router::new()
+        .route("/:knowledge_id", get(|Path(knowledge_id): Path<String>| async move { ok_with_params("GET /api/v1/chunks/:knowledge_id", serde_json::json!({"knowledge_id": knowledge_id})).await }))
+        .route("/:knowledge_id/:id", delete(|Path((knowledge_id, id)): Path<(String, String)>| async move { ok_with_params("DELETE /api/v1/chunks/:knowledge_id/:id", serde_json::json!({"knowledge_id": knowledge_id, "id": id})).await }))
+        .route("/:knowledge_id", delete(|Path(knowledge_id): Path<String>| async move { ok_with_params("DELETE /api/v1/chunks/:knowledge_id", serde_json::json!({"knowledge_id": knowledge_id})).await }))
+        .route("/:knowledge_id/:id", put(|Path((knowledge_id, id)): Path<(String, String)>| async move { ok_with_params("PUT /api/v1/chunks/:knowledge_id/:id", serde_json::json!({"knowledge_id": knowledge_id, "id": id})).await }));
+
+    // Sessions
+    let sessions = Router::new()
+        .route("/", post(|| async { ok("POST /api/v1/sessions").await }))
+        .route("/:id", get(|Path(id): Path<String>| async move { ok_with_params("GET /api/v1/sessions/:id", serde_json::json!({"id": id})).await }))
+        .route("/", get(|| async { ok("GET /api/v1/sessions").await }))
+        .route("/:id", put(|Path(id): Path<String>| async move { ok_with_params("PUT /api/v1/sessions/:id", serde_json::json!({"id": id})).await }))
+        .route("/:id", delete(|Path(id): Path<String>| async move { ok_with_params("DELETE /api/v1/sessions/:id", serde_json::json!({"id": id})).await }))
+        .route("/:session_id/generate_title", post(|Path(session_id): Path<String>| async move { ok_with_params("POST /api/v1/sessions/:session_id/generate_title", serde_json::json!({"session_id": session_id})).await }))
+        .route("/continue-stream/:session_id", get(|Path(session_id): Path<String>| async move { ok_with_params("GET /api/v1/sessions/continue-stream/:session_id", serde_json::json!({"session_id": session_id})).await }));
+
+    // Messages
+    let messages = Router::new()
+        .route("/:session_id/load", get(|Path(session_id): Path<String>| async move { ok_with_params("GET /api/v1/messages/:session_id/load", serde_json::json!({"session_id": session_id})).await }))
+        .route("/:session_id/:id", delete(|Path((session_id, id)): Path<(String, String)>| async move { ok_with_params("DELETE /api/v1/messages/:session_id/:id", serde_json::json!({"session_id": session_id, "id": id})).await }));
+
+    // Chat
+    let knowledge_chat = Router::new()
+        .route("/:session_id", post(|Path(session_id): Path<String>| async move { ok_with_params("POST /api/v1/knowledge-chat/:session_id", serde_json::json!({"session_id": session_id})).await }));
+    let knowledge_search = Router::new()
+        .route("/", post(|| async { ok("POST /api/v1/knowledge-search").await }));
+
+    // Models
+    let models = Router::new()
+        .route("/", post(|| async { ok("POST /api/v1/models").await }))
+        .route("/", get(|| async { ok("GET /api/v1/models").await }))
+        .route("/:id", get(|Path(id): Path<String>| async move { ok_with_params("GET /api/v1/models/:id", serde_json::json!({"id": id})).await }))
+        .route("/:id", put(|Path(id): Path<String>| async move { ok_with_params("PUT /api/v1/models/:id", serde_json::json!({"id": id})).await }))
+        .route("/:id", delete(|Path(id): Path<String>| async move { ok_with_params("DELETE /api/v1/models/:id", serde_json::json!({"id": id})).await }));
+
+    // Evaluation
+    let evaluation = Router::new()
+        .route("/", post(|| async { ok("POST /api/v1/evaluation/").await }))
+        .route("/", get(|| async { ok("GET /api/v1/evaluation/").await }));
+
+    // Initialization and test-data (public in Go)
+    let init = Router::new()
+        .route("/initialization/status", get(|| async { ok("GET /api/v1/initialization/status").await }))
+        .route("/initialization/config", get(|| async { ok("GET /api/v1/initialization/config").await }))
+        .route("/initialization/initialize", post(|| async { ok("POST /api/v1/initialization/initialize").await }))
+        .route("/initialization/ollama/status", get(|| async { ok("GET /api/v1/initialization/ollama/status").await }))
+        .route("/initialization/ollama/models", get(|| async { ok("GET /api/v1/initialization/ollama/models").await }))
+        .route("/initialization/ollama/models/check", post(|| async { ok("POST /api/v1/initialization/ollama/models/check").await }))
+        .route("/initialization/ollama/models/download", post(|| async { ok("POST /api/v1/initialization/ollama/models/download").await }))
+        .route("/initialization/ollama/download/progress/:taskId", get(|Path(task_id): Path<String>| async move { ok_with_params("GET /api/v1/initialization/ollama/download/progress/:taskId", serde_json::json!({"taskId": task_id})).await }))
+        .route("/initialization/ollama/download/tasks", get(|| async { ok("GET /api/v1/initialization/ollama/download/tasks").await }))
+        .route("/initialization/remote/check", post(|| async { ok("POST /api/v1/initialization/remote/check").await }))
+        .route("/initialization/embedding/test", post(|| async { ok("POST /api/v1/initialization/embedding/test").await }))
+        .route("/initialization/rerank/check", post(|| async { ok("POST /api/v1/initialization/rerank/check").await }))
+        .route("/initialization/multimodal/test", post(|| async { ok("POST /api/v1/initialization/multimodal/test").await }))
+        .route("/test-data", get(|| async { ok("GET /api/v1/test-data").await }));
+
+    let api_v1 = Router::new()
+        .nest("/tenants", tenants)
+        .nest("/knowledge-bases", knowledge_bases)
+        .nest("/knowledge-bases/:id/knowledge", kb_knowledge)
+        .nest("/knowledge", knowledge)
+        .nest("/chunks", chunks)
+        .nest("/sessions", sessions)
+        .nest("/messages", messages)
+        .nest("/knowledge-chat", knowledge_chat)
+        .nest("/knowledge-search", knowledge_search)
+        .nest("/models", models)
+        .nest("/evaluation", evaluation)
+        .merge(init);
+
     Router::new()
         .route("/health", get(health))
         .route("/health/db", get(health_db))
         .route("/health/stream", get(health_stream))
+        .nest("/api/v1", api_v1)
         .layer(middleware::from_fn(request_id_mw))
         .layer(middleware::from_fn(auth_mw))
         .with_state(state)

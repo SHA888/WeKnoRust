@@ -90,7 +90,7 @@ rust/
 - [x] Port `stream` manager (memory + redis) with TTL semantics.
 
 ### Phase 3: Web Layer
-- [ ] Implement `web` crate: `axum` router, middlewares (auth, error handler), request context propagation.
+- [x] Implement `web` crate: `axum` router, middlewares (auth, error handler), request context propagation.
 - [ ] Mirror route structure from `internal/router/router.go` and handlers.
 - [ ] Ensure JSON response shapes match Go versions.
 
