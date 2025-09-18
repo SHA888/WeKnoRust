@@ -82,7 +82,7 @@ rust/
 ### Phase 1: Foundations
 - [x] Implement `config` crate mapping current Go config structs.
 - [x] Implement `logger` crate with `tracing` JSON formatter compatible with logrus fields.
-- [ ] Implement `types` crate covering core serde models (`Tenant`, `Knowledge*`, `Chunk`, etc.).
+- [x] Implement `types` crate covering core serde models (`Tenant`, `Knowledge*`, `Chunk`, etc.).
 
 ### Phase 2: Infrastructure
 - [ ] Implement DB connection pool(s) and `repos` with `sqlx`.
