@@ -87,7 +87,7 @@ rust/
 ### Phase 2: Infrastructure
 - [x] Implement DB connection pool(s) and `repos` with `sqlx`.
 - [x] Port `tenant` repository: CRUD, `AdjustStorageUsed` with pessimistic lock.
-- [ ] Port `stream` manager (memory + redis) with TTL semantics.
+- [x] Port `stream` manager (memory + redis) with TTL semantics.
 
 ### Phase 3: Web Layer
 - [ ] Implement `web` crate: `axum` router, middlewares (auth, error handler), request context propagation.
