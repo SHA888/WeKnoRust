@@ -12,12 +12,50 @@ use uuid::Uuid;
 use wk_config::AppConfig;
 use wk_repos::PgPool;
 use wk_stream::{StreamManager, StreamInfo};
+use http::StatusCode;
 
 #[derive(Clone)]
 pub struct AppState {
     pub cfg: AppConfig,
     pub pool: Option<PgPool>,
     pub stream: Option<Arc<dyn StreamManager>>, // trait object behind Arc
+}
+
+// Basic auth identity captured from headers
+#[derive(Clone, Debug, Serialize)]
+pub struct ApiIdentity { pub api_key: Option<String> }
+
+// Auth middleware: capture x-api-key (no enforcement yet)
+async fn auth_mw(mut req: Request, next: Next) -> impl IntoResponse {
+    let key = req
+        .headers()
+        .get("x-api-key")
+        .and_then(|v| v.to_str().ok())
+        .map(|s| s.to_string());
+    req.extensions_mut().insert(ApiIdentity { api_key: key });
+    next.run(req).await
+}
+
+// JSON API error type
+#[derive(Debug, Serialize)]
+pub struct AppErrorBody { pub code: u16, pub message: String, pub request_id: Option<String> }
+
+pub struct AppError { pub status: StatusCode, pub message: String }
+
+impl AppError {
+    pub fn new(status: StatusCode, message: impl Into<String>) -> Self { Self { status, message: message.into() } }
+}
+
+impl IntoResponse for AppError {
+    fn into_response(self) -> axum::response::Response {
+        let mut res = (self.status, Json(AppErrorBody { code: self.status.as_u16(), message: self.message, request_id: None })).into_response();
+        // Echo x-request-id into body if present
+        if let Some(rid) = res.headers().get("x-request-id").and_then(|v| v.to_str().ok()).map(|s| s.to_string()) {
+            let body = AppErrorBody { code: self.status.as_u16(), message: String::from_utf8_lossy(res.body().to_owned().into_bytes().as_ref()).into_owned(), request_id: Some(rid) };
+            res = (self.status, Json(body)).into_response();
+        }
+        res
+    }
 }
 
 #[derive(Serialize)]
@@ -70,5 +108,6 @@ pub fn build_router_with_state(state: Arc<AppState>) -> Router {
         .route("/health/db", get(health_db))
         .route("/health/stream", get(health_stream))
         .layer(middleware::from_fn(request_id_mw))
+        .layer(middleware::from_fn(auth_mw))
         .with_state(state)
 }
