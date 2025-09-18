@@ -2,7 +2,7 @@
 
 # Show help
 help:
-	@echo "WeKnowRust Makefile Help"
+	@echo "WeKnoRust Makefile Help"
 	@echo ""
 	@echo "Basic Commands:"
 	@echo "  build             Build the application"
@@ -39,11 +39,11 @@ help:
 	@echo "  docs              Generate API documentation"
 
 # Go related variables
-BINARY_NAME=WeKnowRust
+BINARY_NAME=WeKnoRust
 MAIN_PATH=./cmd/server
 
 # Docker related variables
-DOCKER_IMAGE=WeKnowRust
+DOCKER_IMAGE=WeKnoRust
 DOCKER_TAG=latest
 
 # Build the application
@@ -141,14 +141,14 @@ build-prod:
 
 clean-db:
 	@echo "Cleaning database..."
-	@if [ $$(docker volume ls -q -f name=weknowrust_postgres-data) ]; then \
-		docker volume rm weknowrust_postgres-data; \
+	@if [ $$(docker volume ls -q -f name=weknorust_postgres-data) ]; then \
+		docker volume rm weknorust_postgres-data; \
 	fi
-	@if [ $$(docker volume ls -q -f name=weknowrust_minio_data) ]; then \
-		docker volume rm weknowrust_minio_data; \
+	@if [ $$(docker volume ls -q -f name=weknorust_minio_data) ]; then \
+		docker volume rm weknorust_minio_data; \
 	fi
-	@if [ $$(docker volume ls -q -f name=weknowrust_redis_data) ]; then \
-		docker volume rm weknowrust_redis_data; \
+	@if [ $$(docker volume ls -q -f name=weknorust_redis_data) ]; then \
+		docker volume rm weknorust_redis_data; \
 	fi
 
 

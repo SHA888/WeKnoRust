@@ -1,17 +1,17 @@
 <p align="center">
   <picture>
-    <img src="./docs/images/logo.png" alt="WeKnowRust Logo" height="120"/>
+    <img src="./docs/images/logo.png" alt="WeKnoRust Logo" height="120"/>
   </picture>
 </p>
 
 <p align="center">
-    <a href="https://weknowrust.weixin.qq.com" target="_blank">
-        <img alt="公式サイト" src="https://img.shields.io/badge/公式サイト-WeKnowRust-4e6b99">
+    <a href="https://weknorust.weixin.qq.com" target="_blank">
+        <img alt="公式サイト" src="https://img.shields.io/badge/公式サイト-WeKnowust-4e6b99">
     </a>
     <a href="https://chatbot.weixin.qq.com" target="_blank">
         <img alt="WeChat対話オープンプラットフォーム" src="https://img.shields.io/badge/WeChat対話オープンプラットフォーム-5ac725">
     </a>
-    <a href="https://github.com/Tencent/WeKnowRust/blob/main/LICENSE">
+    <a href="https://github.com/Tencent/WeKnoRust/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-MIT-ffffff?labelColor=d4eaf7&color=2e6cc4" alt="License">
     </a>
     <a href="./CHANGELOG.md">
@@ -31,21 +31,21 @@
   </h4>
 </p>
 
-# 💡 WeKnowRust - 大規模言語モデルベースの文書理解検索フレームワーク
+# 💡 WeKnoRust - 大規模言語モデルベースの文書理解検索フレームワーク
 
 ## 📌 プロジェクト紹介
 
-[**WeKnowRust（ウィーノラ）**](https://weknowrust.weixin.qq.com) は、大規模言語モデル（LLM）をベースとした文書理解と意味検索フレームワークで、構造が複雑で内容が異質な文書シナリオ向けに特別に設計されています。
+[**WeKnoRust（ウィーノラ）**](https://weknorust.weixin.qq.com) は、大規模言語モデル（LLM）をベースとした文書理解と意味検索フレームワークで、構造が複雑で内容が異質な文書シナリオ向けに特別に設計されています。
 
 フレームワークはモジュラーアーキテクチャを採用し、マルチモーダル前処理、意味ベクトルインデックス、インテリジェント検索、大規模モデル生成推論を統合して、効率的で制御可能な文書Q&Aワークフローを構築します。コア検索プロセスは **RAG（Retrieval-Augmented Generation）** メカニズムに基づいており、文脈関連フラグメントと言語モデルを組み合わせて、より高品質な意味的回答を実現します。
 
-**公式サイト：** https://weknowrust.weixin.qq.com
+**公式サイト：** https://weknorust.weixin.qq.com
 
 ## 🏗️ アーキテクチャ設計
 
-![weknowrust-pipelone.png](./docs/images/pipeline.jpg)
+![weknorust-pipelone.png](./docs/images/pipeline.jpg)
 
-WeKnowRustは現代的なモジュラー設計を採用し、完全な文書理解と検索パイプラインを構築しています。システムには主に文書解析、ベクトル化処理、検索エンジン、大規模モデル推論などのコアモジュールが含まれ、各コンポーネントは柔軟に設定および拡張できます。
+WeKnoRustは現代的なモジュラー設計を採用し、完全な文書理解と検索パイプラインを構築しています。システムには主に文書解析、ベクトル化処理、検索エンジン、大規模モデル推論などのコアモジュールが含まれ、各コンポーネントは柔軟に設定および拡張できます。
 
 ## 🎯 コア機能
 
@@ -96,8 +96,8 @@ WeKnowRustは現代的なモジュラー設計を採用し、完全な文書理�
 
 ```bash
 # メインリポジトリをクローン
-git clone https://github.com/Tencent/WeKnowRust.git
-cd WeKnowRust
+git clone https://github.com/SHA888/WeKnoRust.git
+cd WeKnoRust
 ```
 
 #### ② 環境変数の設定

@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.1.0] - 2025-09-08
 
-- Initial public release of WeKnowRust.
+- Initial public release of WeKnoRust.
 - Web UI for knowledge upload, chat, configuration, and settings.
 - RAG pipeline with chunking, embedding, retrieval, reranking, and generation.
 - Initialization wizard for configuring models (LLM, embedding, rerank, retriever).
@@ -14,4 +14,4 @@ All notable changes to this project will be documented in this file.
 - Docker Compose for quick startup and service orchestration.
 - MCP server support for integrating with MCP-compatible clients.
 
-[0.1.0]: https://github.com/SHA888/WeKnowRust/tree/v0.1.0
+[0.1.0]: https://github.com/SHA888/WeKnoRust/tree/v0.1.0

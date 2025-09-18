@@ -1,7 +1,7 @@
 services:
   app:
-    image: wechatopenai/weknowrust-app:latest
-    container_name: WeKnowRust-app
+    image: wechatopenai/weknorust-app:latest
+    container_name: WeKnoRust-app
     ports:
       - "8080:8080"
     volumes:
@@ -24,7 +24,7 @@ services:
       - DB_NAME=${DB_NAME}
       - TZ=Asia/Shanghai
       - OTEL_EXPORTER_OTLP_ENDPOINT=jaeger:4317
-      - OTEL_SERVICE_NAME=WeKnowRust
+      - OTEL_SERVICE_NAME=WeKnoRust
       - OTEL_TRACES_EXPORTER=otlp
       - OTEL_METRICS_EXPORTER=none
       - OTEL_LOGS_EXPORTER=none
@@ -69,14 +69,14 @@ services:
       minio:
         condition: service_started
     networks:
-      - WeKnowRust-network
+      - WeKnoRust-network
     restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
   minio:
     image: minio/minio:latest
-    container_name: WeKnowRust-minio
+    container_name: WeKnoRust-minio
     ports:
       - "${MINIO_PORT:-9000}:9000"
       - "${MINIO_CONSOLE_PORT:-9001}:9001"
@@ -92,22 +92,22 @@ services:
       timeout: 20s
       retries: 3
     networks:
-      - WeKnowRust-network
+      - WeKnoRust-network
 
   frontend:
-    image: wechatopenai/weknowrust-ui:latest
-    container_name: WeKnowRust-frontend
+    image: wechatopenai/weknorust-ui:latest
+    container_name: WeKnoRust-frontend
     ports:
       - "80:80"
     depends_on:
       - app
     networks:
-      - WeKnowRust-network
+      - WeKnoRust-network
     restart: unless-stopped
 
   docreader:
-    image: wechatopenai/weknowrust-docreader:latest
-    container_name: WeKnowRust-docreader
+    image: wechatopenai/weknorust-docreader:latest
+    container_name: WeKnoRust-docreader
     ports:
       - "50051:50051"
     environment:
@@ -130,7 +130,7 @@ services:
       - MINIO_USE_SSL=${MINIO_USE_SSL}
       - WEB_PROXY=${WEB_PROXY}
     networks:
-      - WeKnowRust-network
+      - WeKnoRust-network
     restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -153,12 +153,12 @@ services:
     volumes:
       - jaeger_data:/var/lib/jaeger # Persist Jaeger data
     networks:
-      - WeKnowRust-network
+      - WeKnoRust-network
     restart: unless-stopped
   # PostgreSQL configuration
   postgres:
     image: paradedb/paradedb:latest
-    container_name: WeKnowRust-postgres
+    container_name: WeKnoRust-postgres
     ports:
       - "${DB_PORT}:5432"
     environment:
@@ -171,7 +171,7 @@ services:
       - ./migrations/paradedb/00-init-db.sql:/docker-entrypoint-initdb.d/00-init-db.sql
       - ./migrations/paradedb/01-migrate-to-paradedb.sql:/docker-entrypoint-initdb.d/01-migrate-to-paradedb.sql
     networks:
-      - WeKnowRust-network
+      - WeKnoRust-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       interval: 10s # Increase interval
@@ -184,7 +184,7 @@ services:
 
   redis:
     image: redis:7.0-alpine
-    container_name: WeKnowRust-redis
+    container_name: WeKnoRust-redis
     ports:
       - "${REDIS_PORT}:6379"
     volumes:
@@ -192,10 +192,10 @@ services:
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
     restart: always
     networks:
-      - WeKnowRust-network
+      - WeKnoRust-network
 
 networks:
-  WeKnowRust-network:
+  WeKnoRust-network:
     driver: bridge
 
 volumes:

@@ -1,4 +1,4 @@
-module github.com/Tencent/WeKnowRust
+module github.com/SHA888/WeKnoRust
 
 go 1.24.0
 

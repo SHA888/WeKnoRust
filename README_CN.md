@@ -1,17 +1,17 @@
 <p align="center">
   <picture>
-    <img src="./docs/images/logo.png" alt="WeKnowRust Logo" height="120"/>
+    <img src="./docs/images/logo.png" alt="WeKnoRust Logo" height="120"/>
   </picture>
 </p>
 
 <p align="center">
-    <a href="https://weknowrust.weixin.qq.com" target="_blank">
-        <img alt="官方网站" src="https://img.shields.io/badge/官方网站-WeKnowRust-4e6b99">
+    <a href="https://weknorust.weixin.qq.com" target="_blank">
+        <img alt="官方网站" src="https://img.shields.io/badge/官方网站-WeKnoRust-4e6b99">
     </a>
     <a href="https://chatbot.weixin.qq.com" target="_blank">
         <img alt="微信对话开放平台" src="https://img.shields.io/badge/微信对话开放平台-5ac725">
     </a>
-    <a href="https://github.com/Tencent/WeKnowRust/blob/main/LICENSE">
+    <a href="https://github.com/SHA888/WeKnoRust/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-MIT-ffffff?labelColor=d4eaf7&color=2e6cc4" alt="License">
     </a>
     <a href="./CHANGELOG.md">
@@ -31,21 +31,21 @@
   </h4>
 </p>
 
-# 💡 WeKnowRust - 基于大模型的文档理解检索框架
+# 💡 WeKnoRust - 基于大模型的文档理解检索框架
 
 ## 📌 项目介绍
 
-[**WeKnowRust（维娜拉）**](https://weknowrust.weixin.qq.com) 是一款基于大语言模型（LLM）的文档理解与语义检索框架，专为结构复杂、内容异构的文档场景而打造。
+[**WeKnoRust（维娜拉）**](https://weknorust.weixin.qq.com) 是一款基于大语言模型（LLM）的文档理解与语义检索框架，专为结构复杂、内容异构的文档场景而打造。
 
 框架采用模块化架构，融合多模态预处理、语义向量索引、智能召回与大模型生成推理，构建起高效、可控的文档问答流程。核心检索流程基于 **RAG（Retrieval-Augmented Generation）** 机制，将上下文相关片段与语言模型结合，实现更高质量的语义回答。
 
-**官网：** https://weknowrust.weixin.qq.com
+**官网：** https://weknorust.weixin.qq.com
 
 ## 🏗️ 架构设计
 
-![weknowrust-pipelone.png](./docs/images/pipeline.jpg)
+![weknorust-pipelone.png](./docs/images/pipeline.jpg)
 
-WeKnowRust 采用现代化模块化设计，构建了一条完整的文档理解与检索流水线。系统主要包括文档解析、向量化处理、检索引擎和大模型推理等核心模块，每个组件均可灵活配置与扩展。
+WeKnoRust 采用现代化模块化设计，构建了一条完整的文档理解与检索流水线。系统主要包括文档解析、向量化处理、检索引擎和大模型推理等核心模块，每个组件均可灵活配置与扩展。
 
 ## 🎯 核心特性
 
@@ -96,8 +96,8 @@ WeKnowRust 采用现代化模块化设计，构建了一条完整的文档理解
 
 ```bash
 # 克隆主仓库
-git clone https://github.com/Tencent/WeKnowRust.git
-cd WeKnowRust
+git clone https://github.com/SHA888/WeKnoRust.git
+cd WeKnoRust
 ```
 
 #### ② 配置环境变量
@@ -147,29 +147,29 @@ make stop-all
 
 ### 🔌 使用微信对话开放平台
 
-WeKnowRust 作为[微信对话开放平台](https://chatbot.weixin.qq.com)的核心技术框架，提供更简便的使用方式：
+WeKnoRust 作为[微信对话开放平台](https://chatbot.weixin.qq.com)的核心技术框架，提供更简便的使用方式：
 
 - **零代码部署**：只需上传知识，即可在微信生态中快速部署智能问答服务，实现"即问即答"的体验
 - **高效问题管理**：支持高频问题的独立分类管理，提供丰富的数据工具，确保回答精准可靠且易于维护
-- **微信生态覆盖**：通过微信对话开放平台，WeKnowRust 的智能问答能力可无缝集成到公众号、小程序等微信场景中，提升用户交互体验
+- **微信生态覆盖**：通过微信对话开放平台，WeKnoRust 的智能问答能力可无缝集成到公众号、小程序等微信场景中，提升用户交互体验
 ### 🔗MCP服务器访问已经部署好的WEKnora
 #### 1️⃣克隆储存库
 ```
-git clone https://github.com/Tencent/WeKnowRust
+git clone https://github.com/Tencent/WeKnoRust
 ```
 #### 2️⃣配置MCP服务器
 mcp客户端配置服务器
 ```json
 {
   "mcpServers": {
-    "weknowrust": {
+    "weknorust": {
       "args": [
-        "path/to/WeKnowRust/mcp-server/run_server.py"
+        "path/to/WeKnoRust/mcp-server/run_server.py"
       ],
       "command": "python",
       "env":{
-        "WEKNORA_API_KEY":"进入你的weknowrust实例，打开开发者工具，查看请求头x-api-key，以sk开头",
-        "WEKNORA_BASE_URL":"http(s)://你的weknowrust地址/api/v1"
+        "WEKNORA_API_KEY":"进入你的weknorust实例，打开开发者工具，查看请求头x-api-key，以sk开头",
+        "WEKNORA_BASE_URL":"http(s)://你的weknorust地址/api/v1"
       }
     }
   }
@@ -177,8 +177,8 @@ mcp客户端配置服务器
 ```
 使用stdio命令直接运行
 ```
-pip install weknowrust-mcp-server
-python -m weknowrust-mcp-server
+pip install weknorust-mcp-server
+python -m weknorust-mcp-server
 ```
 
 ## 🔧 初始化配置引导
@@ -238,7 +238,7 @@ http://localhost
   </tr>
 </table>
 
-WeKnowRust 支持将文档转化为知识图谱，展示文档中不同段落之间的关联关系。开启知识图谱功能后，系统会分析并构建文档内部的语义关联网络，不仅帮助用户理解文档内容，还为索引和检索提供结构化支撑，提升检索结果的相关性和广度。
+WeKnoRust 支持将文档转化为知识图谱，展示文档中不同段落之间的关联关系。开启知识图谱功能后，系统会分析并构建文档内部的语义关联网络，不仅帮助用户理解文档内容，还为索引和检索提供结构化支撑，提升检索结果的相关性和广度。
 ### 配套MCP服务器调用效果
 <img width="950" height="2063" alt="118d078426f42f3d4983c13386085d7f" src="https://github.com/user-attachments/assets/09111ec8-0489-415c-969d-aa3835778e14" />
 
@@ -254,7 +254,7 @@ WeKnowRust 支持将文档转化为知识图谱，展示文档中不同段落之
 ### 📁 项目目录结构
 
 ```
-WeKnowRust/
+WeKnoRust/
 ├── cmd/         # 应用入口
 ├── internal/    # 核心业务逻辑
 ├── config/      # 配置文件
@@ -274,7 +274,7 @@ make clean-db
 
 ## 🤝 贡献指南
 
-我们欢迎社区用户参与贡献！如有建议、Bug 或新功能需求，请通过 [Issue](https://github.com/Tencent/WeKnowRust/issues) 提出，或直接提交 Pull Request。
+我们欢迎社区用户参与贡献！如有建议、Bug 或新功能需求，请通过 [Issue](https://github.com/SHA888/WeKnoRust/issues) 提出，或直接提交 Pull Request。
 
 ### 🎯 贡献方式
 
